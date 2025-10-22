@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "dev": "npm run migrate && npm start",
-    "migrate": "prisma migrate dev --name init",
+    "migrate": "prisma migrate dev --name remove_data_conclusao",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
