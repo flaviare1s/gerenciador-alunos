@@ -1,8 +1,8 @@
 import { Router } from "express";
+import alunoRoutes from "./aluno.routes.js";
+
 const router = Router();
 
-router.get("/", (_req, res) => {
-  res.send("API funcionando!");
-});
+router.use("/alunos", alunoRoutes);
 
 export default router;
