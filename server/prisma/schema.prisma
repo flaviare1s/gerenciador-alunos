@@ -29,13 +29,11 @@ model Aluno {
 }
 
 model Curso {
-  id            Int           @id @default(autoincrement())
-  nome          TipoCurso
-  descricao     String?
-  dataConclusao DateTime?
-  alunos        AlunoCurso[]  // relação N:N com Aluno
-  criadoEm      DateTime      @default(now())
-  atualizadoEm  DateTime      @updatedAt
+  id           Int           @id @default(autoincrement())
+  nome         TipoCurso     @unique
+  alunos       AlunoCurso[]  
+  criadoEm     DateTime      @default(now())
+  atualizadoEm DateTime      @updatedAt
 }
 
 model AlunoCurso {
@@ -46,7 +44,7 @@ model AlunoCurso {
   cursoId      Int
   status       StatusCurso @default(EM_ANDAMENTO)
   dataInicio   DateTime    @default(now())
-  dataFim      DateTime?
+  dataConclusao     DateTime?
 }
 
 enum StatusCurso {

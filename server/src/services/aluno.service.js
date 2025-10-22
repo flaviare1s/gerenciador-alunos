@@ -1,10 +1,15 @@
 import * as alunoRepository from "../repositories/aluno.repository.js";
 import { alunoSchema } from "../validations/aluno.validation.js";
 
-
 export const criarAluno = async (data) => {
-  const { error } = alunoSchema.validate(data);
-  if (error) throw new Error(`Erro de validação: ${error.message}`);
+  const { error } = alunoSchema.validate(data, { abortEarly: false });
+  if (error) {
+    throw {
+      type: "validation",
+      mensagem: "Erro de validação",
+      erros: error.details.map((d) => d.message),
+    };
+  }
 
   return await alunoRepository.criarAluno(data);
 };
@@ -15,7 +20,12 @@ export const listarAlunos = async () => {
 
 export const buscarAlunoPorId = async (id) => {
   const aluno = await alunoRepository.buscarAlunoPorId(id);
-  if (!aluno) throw new Error("Aluno não encontrado");
+  if (!aluno) {
+    throw {
+      type: "not_found",
+      mensagem: "Aluno não encontrado",
+    };
+  }
   return aluno;
 };
 

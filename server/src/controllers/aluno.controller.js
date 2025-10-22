@@ -3,21 +3,21 @@ import { alunoSchema } from "../validations/aluno.validation.js";
 
 export const criarAluno = async (req, res) => {
   try {
-    const { error } = alunoSchema.validate(req.body, { abortEarly: false });
-    if (error) {
-      const mensagens = error.details.map((d) => d.message);
-      return res
-        .status(400)
-        .json({ mensagem: "Erro de validação", erros: mensagens });
+    const aluno = await alunoService.criarAluno(req.body);
+    res.status(201).json(aluno);
+  } catch (error) {
+    if (error.code === "P2002") {
+      return res.status(400).json({
+        mensagem: "Erro de validação",
+        erros: [`${error.meta.target[0]} já cadastrado`],
+      });
     }
 
-    const aluno = await alunoService.criarAluno(req.body);
-    return res
-      .status(201)
-      .json({ mensagem: "Aluno cadastrado com sucesso", aluno });
-  } catch (err) {
-    console.error("Erro ao criar aluno:", err);
-    return res.status(500).json({ mensagem: "Erro interno ao criar aluno" });
+    if (error.erros) {
+      return res.status(400).json(error);
+    }
+
+    res.status(500).json({ mensagem: "Erro interno ao criar aluno" });
   }
 };
 
