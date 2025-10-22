@@ -7,7 +7,7 @@
     "start": "nodemon server.js",
     "dev": "npm run migrate && npm run seed && npm start",
     "seed": "node prisma/seed.js",
-    "migrate": "prisma migrate dev --name remove_data_conclusao",
+    "migrate": "prisma migrate dev --name fix_unique_aluno_curso",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
