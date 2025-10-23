@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="font-montserrat">
       <Header />
-      <main>
+      <main className="max-w-[1086px] mx-auto pt-[60px] pb-[42px] px-2">
         <AppRoutes />
       </main>
     </div>

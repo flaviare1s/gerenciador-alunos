@@ -1,5 +1,9 @@
+import { SearchBar } from "../components/SearchBar"
+
 export const Alunos = () => {
   return (
-    <div>Alunos</div>
+    <div>
+      <SearchBar />
+    </div>
   )
 }
