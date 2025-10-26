@@ -27,7 +27,7 @@ export const Alunos = () => {
     }
     fetchAlunos();
   }, [])
-  useEffect(() => {}, [alunos, search, filteredAlunos])
+  useEffect(() => { }, [alunos, search, filteredAlunos])
   return (
     <div>
       <SearchBar alunos={alunos} setSearch={setSearch} search={search} />
