@@ -1,22 +1,6 @@
-import { useEffect } from "react"
-import { useState } from "react"
-import { getAllAlunos } from "../services/aluno"
 import { Aluno } from "./Aluno"
 
-export const AlunosList = () => {
-  const [alunos, setAlunos] = useState([])
-
-  useEffect(() => {
-    const fetchAlunos = async () => {
-      try {
-        const data = await getAllAlunos();
-        setAlunos(data);
-      } catch (error) {
-        console.error("Erro ao buscar alunos:", error);
-      }
-    }
-    fetchAlunos();
-  }, [])
+export const AlunosList = ({ filteredAlunos = [] }) => {
 
   return (
     <div className="pt-[52px]">
@@ -31,7 +15,7 @@ export const AlunosList = () => {
           </tr>
         </thead>
         <tbody>
-          {alunos.map((aluno) => (
+          {filteredAlunos.map((aluno) => (
             <Aluno key={aluno.id} aluno={aluno} />
           ))}
         </tbody>
