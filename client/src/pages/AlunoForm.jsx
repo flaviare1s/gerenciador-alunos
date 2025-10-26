@@ -204,9 +204,11 @@ export const AlunoForm = () => {
           error={errors.estado?.message}
         />
       </div>
-      {isUpdateMode && (
-        <AlunoCursosManager alunoId={id} cursos={cursos} />
-      )}
+      <AlunoCursosManager
+        alunoId={id}
+        cursos={cursos}
+        isCreateMode={!isUpdateMode}
+      />
     </div>
   );
 };

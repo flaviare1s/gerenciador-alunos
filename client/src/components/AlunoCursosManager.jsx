@@ -5,8 +5,9 @@ import { createMatricula } from "../services/aluno-curso";
 import { getAlunoById } from "../services/aluno";
 import { toast } from "react-hot-toast";
 
-export const AlunoCursosManager = ({ alunoId, cursos }) => {
+export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) => {
   const [cursosMatriculados, setCursosMatriculados] = useState([]);
+  const [cursosPendentes, setCursosPendentes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cursoSelecionado, setCursoSelecionado] = useState("");
   const [dataConclusao, setDataConclusao] = useState("");
@@ -34,6 +35,26 @@ export const AlunoCursosManager = ({ alunoId, cursos }) => {
   const handleAddCurso = async () => {
     if (!cursoSelecionado) {
       toast.error("Selecione um curso");
+      return;
+    }
+
+    if (isCreateMode) {
+      const novoCurso = cursos.find(c => c.id === parseInt(cursoSelecionado));
+
+      if (novoCurso) {
+        setCursosPendentes([
+          ...cursosPendentes,
+          {
+            id: novoCurso.id,
+            nome: novoCurso.nome,
+            dataConclusao: dataConclusao || null
+          }
+        ]);
+
+        setCursoSelecionado("");
+        setDataConclusao("");
+        toast.success("Curso adicionado! Salve o aluno para confirmar a matrícula.");
+      }
       return;
     }
 
@@ -72,17 +93,21 @@ export const AlunoCursosManager = ({ alunoId, cursos }) => {
     }
   };
 
-  if (loading) {
+  if (loading && !isCreateMode) {
     return <p className="text-gray-medium">Carregando cursos...</p>;
   }
+
+  const todosCursos = isCreateMode
+    ? cursosPendentes
+    : cursosMatriculados;
 
   return (
     <>
       <h2 className="text-black font-medium text-[22px] py-4">Cursos</h2>
 
-      {cursosMatriculados.length > 0 && (
+      {todosCursos.length > 0 && (
         <div className="flex flex-col gap-4 w-full mb-[26px]">
-          {cursosMatriculados.map((curso, index) => (
+          {todosCursos.map((curso, index) => (
             <div key={curso.id || index} className="flex items-center gap-4">
               <div className="flex-1 md:flex-3 relative">
                 <select
@@ -129,7 +154,7 @@ export const AlunoCursosManager = ({ alunoId, cursos }) => {
           >
             <option value="">Selecione uma opção</option>
             {cursos
-              .filter(c => !cursosMatriculados.some(cm => cm.id === c.id))
+              .filter(c => !todosCursos.some(cm => cm.id === c.id))
               .map((curso) => (
                 <option key={curso.id} value={curso.id}>
                   {curso.nome}
