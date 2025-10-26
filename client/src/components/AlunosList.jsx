@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Aluno } from "./Aluno"
+import { Aluno } from "./Aluno";
 import { HiOutlineArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
+import { Pagination } from "./Pagination";
 
 export const AlunosList = ({ filteredAlunos = [] }) => {
   const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const sortAlunos = () => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -20,6 +23,9 @@ export const AlunosList = ({ filteredAlunos = [] }) => {
       }
     });
   };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentAlunos = filteredAlunos.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div className="pt-[52px] w-full overflow-x-auto">
@@ -41,22 +47,26 @@ export const AlunosList = ({ filteredAlunos = [] }) => {
                   </>
                 )}
               </button>
-              </th>
+            </th>
             <th className="font-medium text-dark-gray text-xs px-6 py-[13px]">Nome</th>
             <th className="font-medium text-dark-gray text-xs px-6 py-[13px] hidden md:table-cell">Estado</th>
             <th className="font-medium text-dark-gray text-xs px-6 py-[13px] table-cell">Cursos</th>
-            
+
             {/* Coluna de ações escondida, pois não está no design */}
             <th className="hidden font-medium text-dark-gray text-xs px-6 py-[13px]">Ações</th>
-
           </tr>
         </thead>
         <tbody>
-          {filteredAlunos.map((aluno) => (
+          {currentAlunos.map((aluno) => (
             <Aluno key={aluno.id} aluno={aluno} />
           ))}
         </tbody>
       </table>
+      <Pagination
+        totalPages={Math.ceil(filteredAlunos.length / itemsPerPage)}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
-  )
-}
+  );
+};

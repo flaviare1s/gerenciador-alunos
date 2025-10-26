@@ -1,11 +1,10 @@
-import { useState } from "react"
-import { AlunosList } from "../components/AlunosList"
-import { SearchBar } from "../components/SearchBar"
-import { useEffect } from "react"
-import { getAllAlunos } from "../services/aluno"
+import { useState, useEffect } from "react";
+import { AlunosList } from "../components/AlunosList";
+import { SearchBar } from "../components/SearchBar";
+import { getAllAlunos } from "../services/aluno";
 
 export const Alunos = () => {
-  const [alunos, setAlunos] = useState([])
+  const [alunos, setAlunos] = useState([]);
   const [search, setSearch] = useState("");
 
   const filteredAlunos = search
@@ -24,14 +23,14 @@ export const Alunos = () => {
       } catch (error) {
         console.error("Erro ao buscar alunos:", error);
       }
-    }
+    };
     fetchAlunos();
-  }, [])
-  useEffect(() => { }, [alunos, search, filteredAlunos])
+  }, []);
+
   return (
     <div>
       <SearchBar alunos={alunos} setSearch={setSearch} search={search} />
       <AlunosList filteredAlunos={filteredAlunos} />
     </div>
-  )
-}
+  );
+};
