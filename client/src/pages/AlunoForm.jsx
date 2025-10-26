@@ -1,7 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { InputField } from "../components/InputField";
 import { toast } from "react-hot-toast";
+import { createMatricula } from "../services/aluno-curso";
+import { getAllCursos } from "../services/curso";
+import { AlunoCursosList } from "../components/AlunoCursosList";
 
 export const AlunoForm = () => {
   const {
@@ -11,6 +14,7 @@ export const AlunoForm = () => {
     watch,
   } = useForm();
 
+  const [cursos, setCursos] = useState([]);
   const cep = watch("cep");
 
   useEffect(() => {
@@ -26,8 +30,7 @@ export const AlunoForm = () => {
             setValue("cidade", data.localidade);
             setValue("estado", data.uf);
           }
-        } catch (error) {
-          console.error("Erro ao buscar endereço:", error);
+        } catch {
           toast.error("Não foi possível buscar o endereço para o CEP informado.");
         }
       }
@@ -36,8 +39,34 @@ export const AlunoForm = () => {
     fetchAddress();
   }, [cep, setValue]);
 
+  useEffect(() => {
+    const fetchCursos = async () => {
+      try {
+        const data = await getAllCursos();
+        setCursos(data);
+      } catch {
+        toast.error("Não foi possível carregar os cursos disponíveis.");
+      }
+    };
+
+    fetchCursos();
+  }, []);
+
+  const handleMatricula = async (event) => {
+    event.preventDefault();
+    const cursoId = event.target.curso.value;
+    const dataConclusao = event.target.dataConclusao.value;
+
+    try {
+      await createMatricula({ cursoId, dataConclusao });
+      toast.success("Aluno matriculado com sucesso!");
+    } catch {
+      toast.error("Erro ao matricular aluno. Tente novamente.");
+    }
+  };
+
   return (
-    <form className="w-full m-auto">
+    <form className="w-full m-auto" onSubmit={handleMatricula}>
       <div className="flex flex-col sm:flex-row gap-6 w-full mb-[26px]">
         <InputField
           label="Nome*"
@@ -171,6 +200,7 @@ export const AlunoForm = () => {
         />
       </div>
       <h2 className="text-black font-medium text-[22px] py-4">Cursos</h2>
+      <AlunoCursosList cursos={cursos} register={register} errors={errors} />
     </form>
   );
 };
