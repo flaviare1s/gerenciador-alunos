@@ -20,7 +20,7 @@ export const Aluno = ({ aluno }) => {
           {aluno.cursos.slice(0, 3).map((curso, index) => (
             <li
               key={index}
-              className="text-xs bg-light-blue text-secondary px-3 py-1 rounded-full font-medium border border-secondary"
+              className="text-xs bg-bg-badge text-secondary px-3 py-1 rounded-full font-medium border border-light-blue"
             >
               {curso}
             </li>
