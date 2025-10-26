@@ -8,7 +8,9 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<Alunos />} />
       <Route path="/cadastro-aluno" element={<AlunoForm />} />
+      <Route path="/edicao-aluno/:id" element={<AlunoForm />} />
       <Route path="/cadastro-curso" element={<CursoForm />} />
+      <Route path="/edicao-curso/:id" element={<CursoForm />} />
     </Routes>
   );
 }

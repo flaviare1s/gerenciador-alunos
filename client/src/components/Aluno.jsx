@@ -1,5 +1,6 @@
 import { FaRegEdit } from "react-icons/fa";
 import { LuTrash2 } from "react-icons/lu";
+import { Link } from "react-router-dom";
 
 export const Aluno = ({ aluno }) => {
   const formatDate = (dateString) => {
@@ -34,7 +35,7 @@ export const Aluno = ({ aluno }) => {
         </ul>
       </td>
       <td className="px-6 py-[30px] flex gap-4 items-center justify-center">
-        <button className="text-secondary cursor-pointer text-xl"><FaRegEdit /></button>
+        <Link to={`/edicao-aluno/${aluno.id}`} className="text-secondary cursor-pointer text-xl"><FaRegEdit /></Link>
         <button className="text-primary cursor-pointer text-xl"><LuTrash2 /></button>
       </td>
     </tr>
