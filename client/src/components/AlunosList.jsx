@@ -1,13 +1,47 @@
+import { useState } from "react";
 import { Aluno } from "./Aluno"
+import { HiOutlineArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
 
 export const AlunosList = ({ filteredAlunos = [] }) => {
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  const sortAlunos = () => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+
+    filteredAlunos.sort((a, b) => {
+      const dateA = new Date(a.criadoEm);
+      const dateB = new Date(b.criadoEm);
+
+      if (newOrder === "asc") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+  };
 
   return (
     <div className="pt-[52px] w-full overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b border-gray-border text-left">
-            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] hidden sm:table-cell">Data de cadastro</th>
+            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] hidden sm:flex items-center gap-1">
+              Data de cadastro
+              <button className="flex cursor-pointer" onClick={sortAlunos}>
+                {sortOrder === "asc" ? (
+                  <>
+                    <HiOutlineArrowNarrowUp className="text-secondary -mr-1.5" />
+                    <HiOutlineArrowNarrowDown />
+                  </>
+                ) : (
+                  <>
+                    <HiOutlineArrowNarrowDown className="text-secondary -mr-1.5" />
+                    <HiOutlineArrowNarrowUp />
+                  </>
+                )}
+              </button>
+              </th>
             <th className="font-medium text-dark-gray text-xs px-6 py-[13px]">Nome</th>
             <th className="font-medium text-dark-gray text-xs px-6 py-[13px] hidden md:table-cell">Estado</th>
             <th className="font-medium text-dark-gray text-xs px-6 py-[13px] table-cell">Cursos</th>

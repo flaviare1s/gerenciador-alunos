@@ -10,12 +10,10 @@ export const Aluno = ({ aluno }) => {
     const updateSliceCount = () => {
       const width = window.innerWidth;
       if (width >= 1280) {
-        setSliceCount(5);
-      } else if (width >= 1024) {
         setSliceCount(4);
-      } else if (width >= 768) {
+      } else if (width >= 1024) {
         setSliceCount(3);
-      } else if (width >= 640) {
+      } else if (width >= 870) {
         setSliceCount(2);
       } else {
         setSliceCount(1);
