@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { toast } from "react-hot-toast";
-import { createMatricula } from "../services/aluno-curso";
 import { getAllCursos } from "../services/curso";
-import { AlunoCursosList } from "../components/AlunoCursosList";
+import { getAlunoById } from "../services/aluno";
+import { AlunoCursosManager } from "../components/AlunoCursosManager";
 
 export const AlunoForm = () => {
   const {
@@ -14,8 +15,25 @@ export const AlunoForm = () => {
     watch,
   } = useForm();
 
+  const { id } = useParams();
   const [cursos, setCursos] = useState([]);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
   const cep = watch("cep");
+
+  useEffect(() => {
+    if (id) {
+      setIsUpdateMode(true);
+      const fetchAluno = async () => {
+        try {
+          const aluno = await getAlunoById(id);
+          Object.keys(aluno).forEach((key) => setValue(key, aluno[key]));
+        } catch {
+          toast.error("Não foi possível carregar os dados do aluno.");
+        }
+      };
+      fetchAluno();
+    }
+  }, [id, setValue]);
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -52,21 +70,8 @@ export const AlunoForm = () => {
     fetchCursos();
   }, []);
 
-  const handleMatricula = async (event) => {
-    event.preventDefault();
-    const cursoId = event.target.curso.value;
-    const dataConclusao = event.target.dataConclusao.value;
-
-    try {
-      await createMatricula({ cursoId, dataConclusao });
-      toast.success("Aluno matriculado com sucesso!");
-    } catch {
-      toast.error("Erro ao matricular aluno. Tente novamente.");
-    }
-  };
-
   return (
-    <form className="w-full m-auto" onSubmit={handleMatricula}>
+    <div className="w-full m-auto">
       <div className="flex flex-col sm:flex-row gap-6 w-full mb-[26px]">
         <InputField
           label="Nome*"
@@ -199,8 +204,9 @@ export const AlunoForm = () => {
           error={errors.estado?.message}
         />
       </div>
-      <h2 className="text-black font-medium text-[22px] py-4">Cursos</h2>
-      <AlunoCursosList cursos={cursos} register={register} errors={errors} />
-    </form>
+      {isUpdateMode && (
+        <AlunoCursosManager alunoId={id} cursos={cursos} />
+      )}
+    </div>
   );
 };

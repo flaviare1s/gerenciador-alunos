@@ -34,16 +34,34 @@ export const listarAlunos = async (req, res) => {
 export const buscarAlunoPorId = async (req, res) => {
   try {
     const { id } = req.params;
-    const aluno = await alunoService.buscarAlunoPorId(Number(id));
-
-    if (!aluno) {
-      return res.status(404).json({ mensagem: "Aluno não encontrado" });
-    }
+    const aluno = await alunoService.buscarAlunoComCursosPorId(Number(id));
 
     return res.status(200).json(aluno);
   } catch (err) {
+    if (err.type === "not_found") {
+      return res.status(404).json({ mensagem: err.mensagem });
+    }
+
     console.error("Erro ao buscar aluno:", err);
     return res.status(500).json({ mensagem: "Erro interno ao buscar aluno" });
+  }
+};
+
+export const buscarAlunoComCursosPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const aluno = await alunoService.buscarAlunoComCursosPorId(Number(id));
+
+    return res.status(200).json(aluno);
+  } catch (err) {
+    if (err.type === "not_found") {
+      return res.status(404).json({ mensagem: err.mensagem });
+    }
+
+    console.error("Erro ao buscar aluno com cursos:", err);
+    return res
+      .status(500)
+      .json({ mensagem: "Erro interno ao buscar aluno com cursos" });
   }
 };
 
@@ -63,12 +81,10 @@ export const atualizarAluno = async (req, res) => {
       Number(id),
       req.body
     );
-    return res
-      .status(200)
-      .json({
-        mensagem: "Aluno atualizado com sucesso",
-        aluno: alunoAtualizado,
-      });
+    return res.status(200).json({
+      mensagem: "Aluno atualizado com sucesso",
+      aluno: alunoAtualizado,
+    });
   } catch (err) {
     console.error("Erro ao atualizar aluno:", err);
     return res
@@ -91,5 +107,17 @@ export const deletarAluno = async (req, res) => {
       return res.status(404).json({ mensagem: "Aluno não encontrado" });
     }
     return res.status(500).json({ mensagem: "Erro interno ao deletar aluno" });
+  }
+};
+
+export const listarAlunosComCursos = async (req, res) => {
+  try {
+    const alunos = await alunoService.listarAlunosComCursos();
+    return res.status(200).json(alunos);
+  } catch (err) {
+    console.error("Erro ao listar alunos com cursos:", err);
+    return res
+      .status(500)
+      .json({ mensagem: "Erro interno ao listar alunos com cursos" });
   }
 };

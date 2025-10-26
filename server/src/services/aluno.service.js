@@ -34,6 +34,19 @@ export const listarAlunos = async () => {
   return alunosComCursos;
 };
 
+export const listarAlunosComCursos = async () => {
+  const alunos = await alunoRepository.listarAlunosComCursos();
+
+  return alunos.map((aluno) => ({
+    ...aluno,
+    cursos: aluno.cursos.map((alunoCurso) => ({
+      nome: alunoCurso.curso.nome,
+      status: alunoCurso.status,
+      dataConclusao: alunoCurso.dataConclusao,
+    })),
+  }));
+};
+
 export const buscarAlunoPorId = async (id) => {
   const aluno = await prisma.aluno.findUnique({
     where: { id },
@@ -59,6 +72,27 @@ export const buscarAlunoPorId = async (id) => {
   };
 };
 
+export const buscarAlunoComCursosPorId = async (id) => {
+  const aluno = await alunoRepository.buscarAlunoComCursosPorId(id);
+
+  if (!aluno) {
+    throw {
+      type: "not_found",
+      mensagem: "Aluno não encontrado",
+    };
+  }
+
+  return {
+    ...aluno,
+    cursos:
+      aluno.cursos?.map((alunoCurso) => ({
+        nome: alunoCurso.curso.nome,
+        status: alunoCurso.status,
+        dataConclusao: alunoCurso.dataConclusao,
+      })) || [],
+  };
+};
+
 export const atualizarAluno = async (id, data) => {
   await buscarAlunoPorId(id);
   const alunoAtualizado = await prisma.aluno.update({
@@ -81,6 +115,6 @@ export const atualizarAluno = async (id, data) => {
 
 export const deletarAluno = async (id) => {
   await buscarAlunoPorId(id);
-  await prisma.alunoCurso.deleteMany({ where: { alunoId: id } }); // 
+  await prisma.alunoCurso.deleteMany({ where: { alunoId: id } }); //
   return await prisma.aluno.delete({ where: { id } });
 };
