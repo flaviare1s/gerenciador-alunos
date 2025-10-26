@@ -52,9 +52,6 @@ CREATE UNIQUE INDEX "Aluno_cpf_key" ON "Aluno"("cpf");
 CREATE UNIQUE INDEX "Aluno_email_key" ON "Aluno"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Curso_nome_key" ON "Curso"("nome");
-
--- CreateIndex
 CREATE UNIQUE INDEX "AlunoCurso_alunoId_cursoId_key" ON "AlunoCurso"("alunoId", "cursoId");
 
 -- AddForeignKey
