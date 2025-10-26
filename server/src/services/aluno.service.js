@@ -1,5 +1,6 @@
 import * as alunoRepository from "../repositories/aluno.repository.js";
 import { alunoSchema } from "../validations/aluno.validation.js";
+import prisma from "../config/database.js";
 
 export const criarAluno = async (data) => {
   const { error } = alunoSchema.validate(data, { abortEarly: false });
@@ -15,26 +16,71 @@ export const criarAluno = async (data) => {
 };
 
 export const listarAlunos = async () => {
-  return await alunoRepository.listarAlunos();
+  const alunos = await prisma.aluno.findMany({
+    include: {
+      cursos: {
+        include: {
+          curso: true,
+        },
+      },
+    },
+  });
+
+  const alunosComCursos = alunos.map((aluno) => ({
+    ...aluno,
+    cursos: aluno.cursos.map((alunoCurso) => alunoCurso.curso.nome),
+  }));
+
+  return alunosComCursos;
 };
 
 export const buscarAlunoPorId = async (id) => {
-  const aluno = await alunoRepository.buscarAlunoPorId(id);
+  const aluno = await prisma.aluno.findUnique({
+    where: { id },
+    include: {
+      cursos: {
+        include: {
+          curso: true,
+        },
+      },
+    },
+  });
+
   if (!aluno) {
     throw {
       type: "not_found",
       mensagem: "Aluno não encontrado",
     };
   }
-  return aluno;
+
+  return {
+    ...aluno,
+    cursos: aluno.cursos.map((alunoCurso) => alunoCurso.curso.nome),
+  };
 };
 
 export const atualizarAluno = async (id, data) => {
   await buscarAlunoPorId(id);
-  return await alunoRepository.atualizarAluno(id, data);
+  const alunoAtualizado = await prisma.aluno.update({
+    where: { id },
+    data,
+    include: {
+      cursos: {
+        include: {
+          curso: true,
+        },
+      },
+    },
+  });
+
+  return {
+    ...alunoAtualizado,
+    cursos: alunoAtualizado.cursos.map((alunoCurso) => alunoCurso.curso.nome),
+  };
 };
 
 export const deletarAluno = async (id) => {
   await buscarAlunoPorId(id);
-  return await alunoRepository.deletarAluno(id);
+  await prisma.alunoCurso.deleteMany({ where: { alunoId: id } }); // 
+  return await prisma.aluno.delete({ where: { id } });
 };
