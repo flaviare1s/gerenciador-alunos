@@ -1,5 +1,5 @@
 import { Header } from "./components/Header"
-import { AppRoutes } from "./components/AppRoutes"
+import { AppRoutes } from "./routes/AppRoutes"
 
 function App() {
 
