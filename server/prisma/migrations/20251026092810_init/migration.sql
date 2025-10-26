@@ -1,9 +1,6 @@
 -- CreateEnum
 CREATE TYPE "StatusCurso" AS ENUM ('EM_ANDAMENTO', 'CONCLUIDO');
 
--- CreateEnum
-CREATE TYPE "TipoCurso" AS ENUM ('DESIGN', 'MARKETING', 'PRODUCT', 'INTRODUCAO_AO_FIGMA', 'FULL_STACK', 'FRONT_END', 'BACK_END', 'UI_UX', 'BANCO_DE_DADOS', 'CIENCIA_DE_DADOS', 'DEVOPS');
-
 -- CreateTable
 CREATE TABLE "Aluno" (
     "id" SERIAL NOT NULL,
@@ -30,9 +27,7 @@ CREATE TABLE "Aluno" (
 -- CreateTable
 CREATE TABLE "Curso" (
     "id" SERIAL NOT NULL,
-    "nome" "TipoCurso" NOT NULL,
-    "descricao" TEXT,
-    "dataConclusao" TIMESTAMP(3),
+    "nome" TEXT NOT NULL,
     "criadoEm" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "atualizadoEm" TIMESTAMP(3) NOT NULL,
 
@@ -45,8 +40,7 @@ CREATE TABLE "AlunoCurso" (
     "alunoId" INTEGER NOT NULL,
     "cursoId" INTEGER NOT NULL,
     "status" "StatusCurso" NOT NULL DEFAULT 'EM_ANDAMENTO',
-    "dataInicio" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "dataFim" TIMESTAMP(3),
+    "dataConclusao" TIMESTAMP(3),
 
     CONSTRAINT "AlunoCurso_pkey" PRIMARY KEY ("id")
 );
@@ -56,6 +50,12 @@ CREATE UNIQUE INDEX "Aluno_cpf_key" ON "Aluno"("cpf");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Aluno_email_key" ON "Aluno"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Curso_nome_key" ON "Curso"("nome");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "AlunoCurso_alunoId_cursoId_key" ON "AlunoCurso"("alunoId", "cursoId");
 
 -- AddForeignKey
 ALTER TABLE "AlunoCurso" ADD CONSTRAINT "AlunoCurso_alunoId_fkey" FOREIGN KEY ("alunoId") REFERENCES "Aluno"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
