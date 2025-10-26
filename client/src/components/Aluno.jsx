@@ -34,8 +34,8 @@ export const Aluno = ({ aluno }) => {
         </ul>
       </td>
       <td className="px-6 py-[30px] flex gap-4 items-center justify-center">
-        <button className="text-secondary cursor-pointer"><FaRegEdit /></button>
-        <button className="text-primary cursor-pointer"><LuTrash2 /></button>
+        <button className="text-secondary cursor-pointer text-xl"><FaRegEdit /></button>
+        <button className="text-primary cursor-pointer text-xl"><LuTrash2 /></button>
       </td>
     </tr>
   );
