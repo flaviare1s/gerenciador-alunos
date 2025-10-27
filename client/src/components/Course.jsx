@@ -1,6 +1,6 @@
 import { SelectField } from "./SelectField"
 
-export const Curso = () => {
+export const Course = () => {
   return (
     <div>
       <SelectField />

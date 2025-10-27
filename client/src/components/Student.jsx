@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export const Aluno = ({ aluno }) => {
+export const Student = ({ aluno }) => {
   const [sliceCount, setSliceCount] = useState(1);
 
   useEffect(() => {

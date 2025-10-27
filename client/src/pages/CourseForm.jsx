@@ -1,4 +1,4 @@
-export const CursoForm = () => {
+export const CourseForm = () => {
   return (
     <div>CadastroCurso</div>
   )

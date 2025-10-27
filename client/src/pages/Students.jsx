@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { AlunosList } from "../components/AlunosList";
+import { StudentList } from "../components/StudentList";
 import { SearchBar } from "../components/SearchBar";
-import { getAllAlunos } from "../services/aluno";
+import { getAllAlunos } from "../services/student";
 
-export const Alunos = () => {
+export const Students = () => {
   const [alunos, setAlunos] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -30,7 +30,7 @@ export const Alunos = () => {
   return (
     <div>
       <SearchBar alunos={alunos} setSearch={setSearch} search={search} />
-      <AlunosList filteredAlunos={filteredAlunos} />
+      <StudentList filteredAlunos={filteredAlunos} />
     </div>
   );
 };

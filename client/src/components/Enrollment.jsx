@@ -1,6 +1,6 @@
 import { LiaPlusCircleSolid } from "react-icons/lia"
 
-export const Matricula = ({ cursos, todosCursos, setCursoSelecionado, setDataConclusao, submitting, cursoSelecionado, dataConclusao, handleAddCurso }) => {
+export const Enrollment = ({ cursos, todosCursos, setCursoSelecionado, setDataConclusao, submitting, cursoSelecionado, dataConclusao, handleAddCurso }) => {
   return (
     <div className="flex flex-col md:flex-row md:items-end gap-4 w-full">
       <div className="flex-1 md:flex-3">

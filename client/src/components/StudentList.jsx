@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Aluno } from "./Aluno";
+import { Student } from "./Student";
 import { HiOutlineArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
 import { Pagination } from "./Pagination";
 
-export const AlunosList = ({ filteredAlunos = [] }) => {
+export const StudentList = ({ filteredAlunos = [] }) => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -58,7 +58,7 @@ export const AlunosList = ({ filteredAlunos = [] }) => {
         </thead>
         <tbody>
           {currentAlunos.map((aluno) => (
-            <Aluno key={aluno.id} aluno={aluno} />
+            <Student key={aluno.id} aluno={aluno} />
           ))}
         </tbody>
       </table>

@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { toast } from "react-hot-toast";
-import { getAllCursos } from "../services/curso";
-import { getAlunoById } from "../services/aluno";
-import { AlunoCursosManager } from "../components/AlunoCursosManager";
+import { getAllCursos } from "../services/course";
+import { getAlunoById } from "../services/student";
+import { StudentCoursesManager } from "../components/StudentCoursesManager";
 
-export const AlunoForm = () => {
+export const StudentForm = () => {
   const {
     register,
     formState: { errors },
@@ -204,7 +204,7 @@ export const AlunoForm = () => {
           error={errors.estado?.message}
         />
       </div>
-      <AlunoCursosManager
+      <StudentCoursesManager
         alunoId={id}
         cursos={cursos}
         isCreateMode={!isUpdateMode}

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { createMatricula, updateMatricula, deleteMatricula } from "../services/aluno-curso";
-import { getAlunoById } from "../services/aluno";
+import { createMatricula, updateMatricula, deleteMatricula } from "../services/enrollment";
+import { getAlunoById } from "../services/student";
 import { toast } from "react-hot-toast";
 import { ConfirmationModal } from "./ConfirmationModal";
-import { AlunoCurso } from "./AlunoCurso";
-import { Matricula } from "./Matricula";
+import { StudentCourse } from "./StudentCourse";
+import { Enrollment } from "./Enrollment";
 
-export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) => {
+export const StudentCoursesManager = ({ alunoId, cursos, isCreateMode = false }) => {
   const [cursosMatriculados, setCursosMatriculados] = useState([]);
   const [cursosPendentes, setCursosPendentes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -162,14 +162,14 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
     <>
       <h2 className="text-black font-medium text-[22px] py-4">Cursos</h2>
 
-      <AlunoCurso
+      <StudentCourse
         todosCursos={todosCursos}
         handleRemoveCurso={handleRemoveCurso}
         handleUpdateCurso={handleUpdateCurso}
         isCreateMode={isCreateMode}
       />
 
-      <Matricula
+      <Enrollment
         todosCursos={todosCursos}
         cursos={cursos}
         setCursoSelecionado={setCursoSelecionado}

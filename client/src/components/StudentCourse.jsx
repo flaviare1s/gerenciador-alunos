@@ -1,7 +1,7 @@
 import { FiTrash2 } from "react-icons/fi";
 import check from "../assets/img/Check.png";
 
-export const AlunoCurso = ({ todosCursos, handleRemoveCurso, handleUpdateCurso, isCreateMode }) => {
+export const StudentCourse = ({ todosCursos, handleRemoveCurso, handleUpdateCurso, isCreateMode }) => {
   return (
     <div>
       {todosCursos.length > 0 && (
