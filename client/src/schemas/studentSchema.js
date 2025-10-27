@@ -1,22 +1,23 @@
 import { z } from "zod";
 
 const isValidCPF = (cpf) => {
+  const cleanedCPF = cpf.replace(/\D/g, "");
   let sum = 0;
   let remainder;
-  if (cpf === "00000000000") return false;
+  if (cleanedCPF === "00000000000") return false;
   for (let i = 1; i <= 9; i++) {
-    sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    sum += parseInt(cleanedCPF.substring(i - 1, i)) * (11 - i);
   }
   remainder = (sum * 10) % 11;
   if (remainder === 10 || remainder === 11) remainder = 0;
-  if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+  if (remainder !== parseInt(cleanedCPF.substring(9, 10))) return false;
   sum = 0;
   for (let i = 1; i <= 10; i++) {
-    sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    sum += parseInt(cleanedCPF.substring(i - 1, i)) * (12 - i);
   }
   remainder = (sum * 10) % 11;
   if (remainder === 10 || remainder === 11) remainder = 0;
-  return remainder === parseInt(cpf.substring(10, 11));
+  return remainder === parseInt(cleanedCPF.substring(10, 11));
 };
 
 export const studentSchema = z.object({
@@ -43,9 +44,7 @@ export const studentSchema = z.object({
       const isUnder100 = age < 100;
       return !isNaN(d.getTime()) && d <= today && isValidAge && isUnder100;
     }, "A idade deve estar entre 14 e 100 anos"),
-  cpf: z
-    .string()
-    .refine(isValidCPF, "O CPF informado é inválido"),
+  cpf: z.string().refine(isValidCPF, "O CPF informado é inválido"),
   gender: z.enum(["MALE", "FEMALE", "OTHER"], "O gênero é obrigatório"),
   email: z.string().email("O e-mail deve ser válido"),
   zipCode: z.string().nonempty("O CEP é obrigatório"),
