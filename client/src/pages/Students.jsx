@@ -9,7 +9,7 @@ export const Students = () => {
 
   const filteredstudents = search
     ? students.filter((student) =>
-      [student.name, student.lastName].some((field) =>
+      [student.firstName, student.lastName].some((field) =>
         field.toLowerCase().includes(search.toLowerCase())
       )
     )
