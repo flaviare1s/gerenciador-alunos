@@ -7,7 +7,9 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors("http://localhost:5173"));
+app.use(
+  cors("http://localhost:5173", "https://gerenciador-alunos-beta.vercel.app")
+);
 app.use(express.json());
 
 app.use("/api", routes);
