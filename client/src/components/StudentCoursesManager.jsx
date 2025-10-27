@@ -14,14 +14,25 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
   const [completionDate, setCompletionDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [courseToDelete, setcourseToDelete] = useState(null);
+  const [courseToDelete, setCourseToDelete] = useState(null);
 
   useEffect(() => {
     if (studentId) {
       setLoading(true);
       getStudentById(studentId)
         .then((data) => {
-          setEnrolledCourses(data.courses || []);
+          console.log("Dados do aluno:", data);
+
+          // Mapear enrollments para o formato esperado
+          const formattedCourses = data.enrollments?.map(enrollment => ({
+            id: enrollment.courseId,
+            matriculaId: enrollment.id,
+            name: enrollment.course?.name || "Curso desconhecido",
+            completionDate: enrollment.completionDate || null
+          })) || [];
+
+          console.log("Cursos formatados:", formattedCourses);
+          setEnrolledCourses(formattedCourses);
         })
         .catch((error) => {
           console.error("Erro ao buscar cursos do aluno:", error);
@@ -88,7 +99,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
 
       setSelectedCourse("");
       setCompletionDate("");
-      toast.success("student matriculado com sucesso!");
+      toast.success("Aluno matriculado com sucesso!");
     } catch (error) {
       console.error("Erro ao matricular:", error);
       toast.error("Erro ao matricular aluno. Tente novamente.");
@@ -126,7 +137,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
   };
 
   const handleRemoveCourse = (courseId) => {
-    setcourseToDelete(courseId);
+    setCourseToDelete(courseId);
     setModalOpen(true);
   };
 
@@ -146,13 +157,13 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
         toast.error("Erro ao remover matrícula. Tente novamente.");
       } finally {
         setModalOpen(false);
-        setcourseToDelete(null);
+        setCourseToDelete(null);
       }
     }
   };
 
   if (loading && !isCreateMode) {
-    return <p className="text-gray-medium">Carregando courses...</p>;
+    return <p className="text-gray-medium">Carregando cursos...</p>;
   }
 
   const allCourses = isCreateMode ? pendingCourses : enrolledCourses;

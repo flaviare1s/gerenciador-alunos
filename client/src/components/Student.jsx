@@ -64,9 +64,7 @@ export const Student = ({ student }) => {
           {formatDate(student.createdAt)}
         </td>
         <td className="table-cell px-6 py-[30px] text-sm text-neutral-black font-medium">
-          <Link to={`/edicao-student/${student.id}`} className="block">
-            {student.firstName} {student.lastName}
-          </Link>
+          {student.firstName} {student.lastName}
         </td>
         <td className="px-6 py-[30px] text-sm text-dark-gray hidden md:table-cell">
           {student.state}

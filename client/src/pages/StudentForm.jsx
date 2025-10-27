@@ -27,7 +27,19 @@ export const StudentForm = () => {
       const fetchStudent = async () => {
         try {
           const student = await getStudentById(id);
+          console.log(student)
+
           Object.keys(student).forEach((key) => setValue(key, student[key]));
+
+          const formattedCourses = student.enrollments?.map(enr => ({
+            id: enr.courseId,
+            matriculaId: enr.id,
+            name: enr.courseName || student.courses.find(c => c === enr.courseName) || "Curso desconhecido",
+            completionDate: enr.completionDate || null
+          })) || [];
+
+          setValue("enrolledCourses", formattedCourses);
+          setCourses(formattedCourses);
 
           setPageData({
             title: "Gerenciador de alunos",
