@@ -1,13 +1,14 @@
 import { FiTrash2 } from "react-icons/fi";
+import { RiProgress2Line } from "react-icons/ri";
 import check from "../assets/img/Check.png";
 
-export const StudentCourse = ({ allCourses, handleRemovecourse, handleUpdatecourse, isCreateMode }) => {
+export const StudentCourse = ({ allCourses, handleRemoveCourse, handleUpdateCourse, isCreateMode }) => {
   return (
     <div>
       {allCourses.length > 0 && (
         <div className="flex flex-col gap-4 w-full mb-[26px]">
           {allCourses.map((course, index) => (
-            <div key={course.enrollmentId || course.id || index} className="flex flex-col md:flex-row md:items-center gap-4">
+            <div key={course.matriculaId || course.id || index} className="flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex-1 md:flex-3 relative">
                 <select
                   disabled
@@ -17,10 +18,10 @@ export const StudentCourse = ({ allCourses, handleRemovecourse, handleUpdatecour
                 </select>
                 <button
                   type="button"
-                  onClick={() => handleRemovecourse(course.id, course.enrollmentId)}
+                  onClick={() => handleRemoveCourse(course.matriculaId)}
                   className="flex items-center justify-center text-primary cursor-pointer absolute right-3 top-2.5 center"
                   style={{ width: "30px", height: "30px" }}
-                  title="Remover course"
+                  title="Remover curso"
                 >
                   <FiTrash2 className="w-5 h-5" />
                 </button>
@@ -33,8 +34,8 @@ export const StudentCourse = ({ allCourses, handleRemovecourse, handleUpdatecour
                     defaultValue={course.completionDate || ""}
                     onChange={(e) => {
                       if (!isCreateMode) {
-                        handleUpdatecourse(
-                          course.enrollmentId,
+                        handleUpdateCourse(
+                          course.matriculaId,
                           course.id,
                           e.target.value
                         );
@@ -47,7 +48,11 @@ export const StudentCourse = ({ allCourses, handleRemovecourse, handleUpdatecour
 
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center" style={{ width: "30px", height: "30px" }}>
-                    <img className="w-6 h-6" src={check} alt="Check" />
+                    {course.status === "COMPLETED" ? (
+                      <img className="w-6 h-6" src={check} alt="Concluído" title="Curso concluído" />
+                    ) : (
+                      <RiProgress2Line className="w-6 h-6 text-primary" title="Curso em andamento" />
+                    )}
                   </div>
                 </div>
               </div>

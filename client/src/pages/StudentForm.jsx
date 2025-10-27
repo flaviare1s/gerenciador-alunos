@@ -27,7 +27,6 @@ export const StudentForm = () => {
       const fetchStudent = async () => {
         try {
           const student = await getStudentById(id);
-          console.log(student)
 
           Object.keys(student).forEach((key) => setValue(key, student[key]));
 

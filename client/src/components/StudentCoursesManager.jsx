@@ -21,17 +21,15 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       setLoading(true);
       getStudentById(studentId)
         .then((data) => {
-          console.log("Dados do aluno:", data);
-
-          // Mapear enrollments para o formato esperado
+          
           const formattedCourses = data.enrollments?.map(enrollment => ({
             id: enrollment.courseId,
             matriculaId: enrollment.id,
             name: enrollment.course?.name || "Curso desconhecido",
-            completionDate: enrollment.completionDate || null
+            completionDate: enrollment.completionDate ? enrollment.completionDate.split('T')[0] : null,
+            status: enrollment.status || "IN_PROGRESS"
           })) || [];
 
-          console.log("Cursos formatados:", formattedCourses);
           setEnrolledCourses(formattedCourses);
         })
         .catch((error) => {
