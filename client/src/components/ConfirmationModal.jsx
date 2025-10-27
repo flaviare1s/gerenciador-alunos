@@ -5,7 +5,7 @@ export const ConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
     <div className="fixed inset-0 flex items-center justify-center bg-[#0000007b]">
       <div className="bg-white rounded-lg shadow-lg p-6 w-96">
         <h2 className="text-lg font-semibold text-neutral-black mb-4">Confirmar Exclusão</h2>
-        <p className="text-sm text-dark-gray mb-6">Tem certeza de que deseja excluir este curso? Esta ação não pode ser desfeita.</p>
+        <p className="text-sm text-dark-gray mb-6">Tem certeza de que deseja excluir este item? Esta ação não pode ser desfeita.</p>
         <div className="flex justify-end gap-4">
           <button
             onClick={onClose}
@@ -15,7 +15,7 @@ export const ConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-red-600 cursor-pointer"
+            className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90 cursor-pointer"
           >
             Excluir
           </button>

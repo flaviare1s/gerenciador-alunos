@@ -3,18 +3,22 @@ import logo from "../assets/img/Logo.png";
 import trash from "../assets/img/Trash.png";
 import { IoIosArrowBack } from "react-icons/io";
 import { usePage } from "../contexts/PageContext";
+import { useState } from "react";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 export const Header = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isRoot = location.pathname === "/";
   const { pageData } = usePage();
 
   const handleDelete = async () => {
-    if (pageData.onDelete && confirm("Deseja realmente excluir este item?")) {
+    if (pageData.onDelete) {
       await pageData.onDelete();
       navigate("/");
     }
+    setIsModalOpen(false);
   };
 
   return (
@@ -43,7 +47,7 @@ export const Header = () => {
 
         {!isRoot && pageData.onDelete && (
           <button
-            onClick={handleDelete}
+            onClick={() => setIsModalOpen(true)}
             className="cursor-pointer w-5 h-5"
             title="Excluir"
           >
@@ -51,6 +55,11 @@ export const Header = () => {
           </button>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleDelete}
+      />
     </header>
   );
 };

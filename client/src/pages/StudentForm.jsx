@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { toast } from "react-hot-toast";
 import { getAllCursos } from "../services/course";
-import { getAlunoById } from "../services/student";
+import { getAlunoById, createAluno, deleteAluno } from "../services/student";
 import { StudentCoursesManager } from "../components/StudentCoursesManager";
-import { deleteAluno } from "../services/student";
 import { usePage } from "../contexts/PageContext";
 
 export const StudentForm = () => {
-  const { register, formState: { errors }, setValue, watch } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm();
   const { id } = useParams();
+  const navigate = useNavigate();
   const { setPageData } = usePage();
   const [cursos, setCursos] = useState([]);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
@@ -31,6 +31,7 @@ export const StudentForm = () => {
             onDelete: async () => {
               await deleteAluno(id);
               toast.success("Aluno deletado com sucesso!");
+              navigate("/");
             },
           });
         } catch {
@@ -45,7 +46,7 @@ export const StudentForm = () => {
         onDelete: null,
       });
     }
-  }, [id, setValue, setPageData]);
+  }, [id, setValue, setPageData, navigate]);
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -82,8 +83,19 @@ export const StudentForm = () => {
     fetchCursos();
   }, []);
 
+  const onSubmit = async (data) => {
+    try {
+      await createAluno(data);
+      toast.success("Aluno cadastrado com sucesso!");
+      reset();
+      navigate("/");
+    } catch (error) {
+      toast.error("Erro ao cadastrar aluno.", error);
+    }
+  };
+
   return (
-    <div className="w-full m-auto">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full m-auto">
       <div className="flex flex-col sm:flex-row gap-6 w-full mb-[26px]">
         <InputField
           label="Nome*"
@@ -109,7 +121,6 @@ export const StudentForm = () => {
           label="Data de nascimento*"
           name="dataNascimento"
           type="date"
-          placeholder="Digite sua data de nascimento"
           register={register}
           error={errors.dataNascimento?.message}
         />
@@ -141,86 +152,31 @@ export const StudentForm = () => {
           error={errors.email?.message}
         />
       </div>
+
       <h2 className="text-black font-medium text-[22px] py-4">Localização</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-[26px]">
-        <InputField
-          label="CEP*"
-          name="cep"
-          type="text"
-          placeholder="Digite seu CEP"
-          register={register}
-          validation={{ required: "O CEP é obrigatório" }}
-          error={errors.cep?.message}
-        />
-        <InputField
-          label="País*"
-          name="pais"
-          type="text"
-          placeholder="Digite seu país"
-          register={register}
-          validation={{ required: "O país é obrigatório" }}
-          error={errors.pais?.message}
-        />
-        <InputField
-          label="Rua*"
-          name="rua"
-          type="text"
-          placeholder="Digite sua rua"
-          register={register}
-          validation={{ required: "A rua é obrigatória" }}
-          error={errors.rua?.message}
-        />
-        <InputField
-          label="Bairro*"
-          name="bairro"
-          type="text"
-          placeholder="Digite seu bairro"
-          register={register}
-          validation={{ required: "O bairro é obrigatório" }}
-          error={errors.bairro?.message}
-        />
-        <InputField
-          label="Número*"
-          name="numero"
-          type="text"
-          placeholder="Digite o número"
-          register={register}
-          validation={{ required: "O número é obrigatório" }}
-          error={errors.numero?.message}
-        />
-        <InputField
-          label="Complemento"
-          name="complemento"
-          type="text"
-          placeholder="Digite o complemento"
-          register={register}
-          validation={{}}
-          error={errors.complemento?.message}
-        />
-        <InputField
-          label="Cidade*"
-          name="cidade"
-          type="text"
-          placeholder="Digite sua cidade"
-          register={register}
-          validation={{ required: "A cidade é obrigatória" }}
-          error={errors.cidade?.message}
-        />
-        <InputField
-          label="Estado*"
-          name="estado"
-          type="text"
-          placeholder="Digite seu estado"
-          register={register}
-          validation={{ required: "O estado é obrigatório" }}
-          error={errors.estado?.message}
-        />
+        <InputField label="CEP*" name="cep" type="text" placeholder="Digite seu CEP" register={register} validation={{ required: "O CEP é obrigatório" }} error={errors.cep?.message} />
+        <InputField label="País*" name="pais" type="text" placeholder="Digite seu país" register={register} validation={{ required: "O país é obrigatório" }} error={errors.pais?.message} />
+        <InputField label="Rua*" name="rua" type="text" placeholder="Digite sua rua" register={register} validation={{ required: "A rua é obrigatória" }} error={errors.rua?.message} />
+        <InputField label="Bairro*" name="bairro" type="text" placeholder="Digite seu bairro" register={register} validation={{ required: "O bairro é obrigatório" }} error={errors.bairro?.message} />
+        <InputField label="Número*" name="numero" type="text" placeholder="Digite o número" register={register} validation={{ required: "O número é obrigatório" }} error={errors.numero?.message} />
+        <InputField label="Complemento" name="complemento" type="text" placeholder="Digite o complemento" register={register} error={errors.complemento?.message} />
+        <InputField label="Cidade*" name="cidade" type="text" placeholder="Digite sua cidade" register={register} validation={{ required: "A cidade é obrigatória" }} error={errors.cidade?.message} />
+        <InputField label="Estado*" name="estado" type="text" placeholder="Digite seu estado" register={register} validation={{ required: "O estado é obrigatório" }} error={errors.estado?.message} />
       </div>
-      <StudentCoursesManager
-        alunoId={id}
-        cursos={cursos}
-        isCreateMode={!isUpdateMode}
-      />
-    </div>
+
+      <StudentCoursesManager alunoId={id} cursos={cursos} isCreateMode={!isUpdateMode} />
+
+      {!isUpdateMode && (
+        <div className="flex justify-end mt-4">
+          <button
+            type="submit"
+            className="text-white bg-primary hover:bg-primary/90 text-sm font-medium py-2 px-4 mt-2 rounded-md transition-colors cursor-pointer"
+          >
+            Cadastrar aluno
+          </button>
+        </div>
+      )}
+    </form>
   );
 };
