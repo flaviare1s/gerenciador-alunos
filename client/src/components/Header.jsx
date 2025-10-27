@@ -29,7 +29,7 @@ export const Header = () => {
 
   return (
     <header className="bg-primary">
-      <div className="py-[18px] px-[42px] flex justify-between items-center">
+      <div className="py-[18px] px-4 sm:px-[42px] flex justify-between items-center">
         <div className="flex items-center gap-[25px]">
           {!isRoot && (
             <Link to="/">
@@ -37,9 +37,11 @@ export const Header = () => {
             </Link>
           )}
           <Link to={isRoot ? location.pathname : "/"}>
-            <img src={logo} alt="Logo" />
+            <div className="w-7 sm:w-[38px]">
+              <img className="w-full" src={logo} alt="Logo" />
+            </div>
           </Link>
-          <h1 className="text-white font-extrabold tracking-[1%] leading-[30px] flex items-center gap-2">
+          <h1 className="text-white font-bold sm:font-extrabold tracking-[1%] leading-[30px] flex items-center gap-1 sm:gap-2 text-sm sm:text-base -ml-2.5 sm:-ml-0">
             {pageData.title}
           </h1>
         </div>
@@ -50,7 +52,7 @@ export const Header = () => {
           pageData.onDelete && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer w-5 h-5"
+              className="cursor-pointer w-4 h-4 sm:w-5 sm:h-5"
               title="Excluir"
             >
               <img className="w-full" src={trash} alt="Trash icon" />

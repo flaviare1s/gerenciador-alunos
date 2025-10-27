@@ -64,16 +64,16 @@ export const Student = ({ student, onStudentDeleted }) => {
   return (
     <>
       <tr className="hover:bg-gray-100 border-b border-gray-border">
-        <td className="px-6 py-[30px] text-xs text-neutral-black hidden sm:table-cell">
+        <td className="px-2 py-[30px] text-xs text-neutral-black hidden sm:table-cell">
           {formatDate(student.createdAt)}
         </td>
-        <td className="table-cell px-6 py-[30px] text-sm text-neutral-black font-medium">
+        <td className="table-cell px-2 py-[30px] text-sm text-neutral-black font-medium">
           {student.firstName} {student.lastName}
         </td>
-        <td className="px-6 py-[30px] text-sm text-dark-gray hidden md:table-cell">
+        <td className="px-2 py-[30px] text-sm text-dark-gray hidden md:table-cell">
           {student.state}
         </td>
-        <td className="px-6 py-[30px] table-cell">
+        <td className="px-2 py-[30px] table-cell">
           <ul className="flex flex-wrap gap-2">
             {student.courses.slice(0, sliceCount).map((course, index) => (
               <li
@@ -90,7 +90,7 @@ export const Student = ({ student, onStudentDeleted }) => {
             )}
           </ul>
         </td>
-        <td className="py-[30px] flex items-center gap-4 px-6">
+        <td className="py-[30px] flex items-center gap-4 px-2">
           <Link
             to={`/edicao-aluno/${student.id}`}
             className="text-sm text-secondary font-medium hover:text-secondary/80"

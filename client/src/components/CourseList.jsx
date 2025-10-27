@@ -24,8 +24,8 @@ export const CourseList = ({ filteredItems = [], setItems }) => {
       <table className="w-full">
         <thead>
           <tr className="border-b border-gray-border text-left">
-            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] text-left">Nome do curso</th>
-            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] text-right">Ações</th>
+            <th className="font-medium text-dark-gray text-xs px-2 py-[13px] text-left">Nome do curso</th>
+            <th className="font-medium text-dark-gray text-xs px-2 py-[13px] text-right">Ações</th>
           </tr>
         </thead>
         <tbody>

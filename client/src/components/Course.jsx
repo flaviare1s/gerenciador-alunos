@@ -29,10 +29,10 @@ export const Course = ({ course, onCourseDeleted }) => {
   return (
     <>
       <tr className="hover:bg-gray-100 border-b border-gray-border">
-        <td className="px-6 py-[30px] text-sm text-neutral-black font-medium">
+        <td className="px-2 py-[30px] text-sm text-neutral-black font-medium">
           {course.name}
         </td>
-        <td className="px-6 py-[30px] text-right">
+        <td className="px-2 py-[30px] text-right">
           <Link
             to={`/edicao-curso/${course.id}`}
             className="text-sm text-secondary font-medium hover:text-secondary/80 mr-4"

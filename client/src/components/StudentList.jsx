@@ -36,7 +36,7 @@ export const StudentList = ({ filteredstudents = [], setStudents }) => {
       <table className="w-full">
         <thead>
           <tr className="border-b border-gray-border text-left">
-            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] hidden sm:flex items-center gap-1">
+            <th className="font-medium text-dark-gray text-xs px-2 py-[13px] hidden sm:flex items-center gap-1">
               Data de cadastro
               <button className="flex cursor-pointer" onClick={sortstudents}>
                 {sortOrder === "asc" ? (
@@ -52,10 +52,10 @@ export const StudentList = ({ filteredstudents = [], setStudents }) => {
                 )}
               </button>
             </th>
-            <th className="font-medium text-dark-gray text-xs px-6 py-[13px]">Nome</th>
-            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] hidden md:table-cell">Estado</th>
-            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] table-cell">Cursos</th>
-            <th className="table-cell font-medium text-dark-gray text-xs px-6 py-[13px]">Ações</th>
+            <th className="font-medium text-dark-gray text-xs px-2 py-[13px]">Nome</th>
+            <th className="font-medium text-dark-gray text-xs px-2 py-[13px] hidden md:table-cell">Estado</th>
+            <th className="font-medium text-dark-gray text-xs px-2 py-[13px] table-cell">Cursos</th>
+            <th className="table-cell font-medium text-dark-gray text-xs px-2 py-[13px]">Ações</th>
           </tr>
         </thead>
         <tbody>
