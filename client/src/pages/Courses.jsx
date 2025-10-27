@@ -9,7 +9,7 @@ export const Courses = () => {
 
   const filteredCourses = search
     ? courses.filter((course) =>
-      [course.name, course.category].some((field) =>
+      [course.name].some((field) =>
         field.toLowerCase().includes(search.toLowerCase())
       )
     )
