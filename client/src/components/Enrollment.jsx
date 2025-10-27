@@ -8,7 +8,7 @@ export const Enrollment = ({
   submitting,
   selectedCourse,
   completionDate,
-  handleAddcourse
+  handleAddCourse
 }) => {
   return (
     <div className="flex flex-col md:flex-row md:items-end gap-4 w-full">
@@ -54,7 +54,7 @@ export const Enrollment = ({
 
         <button
           type="button"
-          onClick={handleAddcourse}
+          onClick={handleAddCourse}
           disabled={submitting}
           className="flex items-center justify-center cursor-pointer disabled:opacity-50"
           style={{ height: "30px", width: "30px" }}

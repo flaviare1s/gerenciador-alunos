@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { updateEnrollment, deleteEnrollment, createEnrollment } from "../services/enrollment";
+import { updateEnrollment, deleteEnrollment } from "../services/enrollment";
 import { toast } from "react-hot-toast";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { StudentCourse } from "./StudentCourse";
 import { Enrollment } from "./Enrollment";
 import { getStudentById } from "../services/student";
 
-export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false }) => {
+export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false, pendingCourses, setPendingCourses }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const [pendingCourses, setPendingCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [completionDate, setCompletionDate] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [submitting] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState(null);
 
@@ -21,7 +20,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       setLoading(true);
       getStudentById(studentId)
         .then((data) => {
-          
+
           const formattedCourses = data.enrollments?.map(enrollment => ({
             id: enrollment.courseId,
             matriculaId: enrollment.id,
@@ -44,66 +43,36 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
     }
   }, [studentId]);
 
-  const handleAddCourse = async () => {
+  const handleAddCourse = () => {
     if (!selectedCourse) {
       toast.error("Selecione um curso");
       return;
     }
 
-    if (isCreateMode) {
-      const newCourse = courses.find(c => c.id === parseInt(selectedCourse));
-
-      if (newCourse) {
-        setPendingCourses([
-          ...pendingCourses,
-          {
-            id: newCourse.id,
-            name: newCourse.name,
-            completionDate: completionDate || null
-          }
-        ]);
-
-        setSelectedCourse("");
-        setCompletionDate("");
-        toast.success("Curso adicionado! Salve o aluno para confirmar a matrícula.");
-      }
+    const alreadyAdded = pendingCourses.some((c) => c.id === parseInt(selectedCourse));
+    if (alreadyAdded) {
+      toast.error("Curso já adicionado!");
       return;
     }
 
-    const payload = {
-      studentId: parseInt(studentId),
-      courseId: parseInt(selectedCourse),
-      completionDate: completionDate || null
-    };
-
-    setSubmitting(true);
-
-    try {
-      const result = await createEnrollment(payload);
-
-      const newCourse = courses.find(c => c.id === parseInt(selectedCourse));
-
-      if (newCourse) {
-        setEnrolledCourses([
-          ...enrolledCourses,
-          {
-            id: newCourse.id,
-            matriculaId: result.id,
-            name: newCourse.name,
-            completionDate: completionDate || null
-          }
-        ]);
-      }
-
-      setSelectedCourse("");
-      setCompletionDate("");
-      toast.success("Aluno matriculado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao matricular:", error);
-      toast.error("Erro ao matricular aluno. Tente novamente.");
-    } finally {
-      setSubmitting(false);
+    const newCourse = courses.find((c) => c.id === parseInt(selectedCourse));
+    if (!newCourse) {
+      toast.error("Curso não encontrado");
+      return;
     }
+
+    setPendingCourses((prevCourses) => [
+      ...prevCourses,
+      {
+        id: newCourse.id,
+        name: newCourse.name,
+        completionDate: completionDate || null,
+      },
+    ]);
+
+    setSelectedCourse("");
+    setCompletionDate("");
+    toast.success("Curso adicionado! Salve o aluno para confirmar a matrícula.");
   };
 
   const handleUpdateCourse = async (matriculaId, courseId, novaData) => {

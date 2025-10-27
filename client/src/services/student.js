@@ -20,11 +20,13 @@ export const getAllStudents = () =>
 export const getStudentById = (id) =>
   handleRequest(() => api.get(`/alunos/${id}`), "Falha ao buscar aluno");
 
-export const createStudent = (studentData) =>
-  handleRequest(
+export const createStudent = (studentData) => {
+  console.log("Dados enviados para criar aluno:", studentData);
+  return handleRequest(
     () => api.post("/alunos", studentData),
     "Falha ao criar aluno"
   );
+};
 
 export const updateStudent = (id, studentData) =>
   handleRequest(
@@ -33,7 +35,4 @@ export const updateStudent = (id, studentData) =>
   );
 
 export const deleteStudent = (id) =>
-  handleRequest(
-    () => api.delete(`/alunos/${id}`),
-    "Falha ao deletar aluno"
-  );
+  handleRequest(() => api.delete(`/alunos/${id}`), "Falha ao deletar aluno");

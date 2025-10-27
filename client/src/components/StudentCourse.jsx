@@ -2,7 +2,7 @@ import { FiTrash2 } from "react-icons/fi";
 import { RiProgress2Line } from "react-icons/ri";
 import check from "../assets/img/Check.png";
 
-export const StudentCourse = ({ allCourses, handleRemoveCourse, handleUpdateCourse, isCreateMode }) => {
+export const StudentCourse = ({ allCourses = [], handleRemoveCourse, handleUpdateCourse, isCreateMode }) => {
   return (
     <div>
       {allCourses.length > 0 && (
@@ -61,5 +61,5 @@ export const StudentCourse = ({ allCourses, handleRemoveCourse, handleUpdateCour
         </div>
       )}
     </div>
-  )
-}
+  );
+};

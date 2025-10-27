@@ -9,6 +9,7 @@ import { studentSchema } from "../schemas/studentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createStudent, deleteStudent, getStudentById } from "../services/student";
 import { getAllCourses } from "../services/course";
+import { createEnrollment } from "../services/enrollment";
 
 export const StudentForm = () => {
   const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm({
@@ -17,9 +18,9 @@ export const StudentForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { setPageData } = usePage();
-
   const [allCourses, setAllCourses] = useState([]);
   const [_studentCourses, setStudentCourses] = useState([]);
+  const [pendingCourses, setPendingCourses] = useState([]);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
 
   const cep = watch("zipCode");
@@ -104,15 +105,27 @@ export const StudentForm = () => {
         gender: mapGenderToEnglish[data.gender] || "OTHER",
         birthDate: data.birthDate ? new Date(data.birthDate).toISOString() : null,
       };
-      await createStudent(payload);
+
+      const createdStudent = await createStudent(payload);
+      const studentId = createdStudent.id;
+
+      for (const course of pendingCourses) {
+        await createEnrollment({
+          studentId,
+          courseId: course.id,
+          completionDate: course.completionDate || null,
+        });
+      }
+
       toast.success("Aluno cadastrado com sucesso!");
       reset();
       navigate("/");
     } catch (error) {
-      console.error("Erro ao criar aluno:", error);
+      console.error("Erro ao cadastrar aluno e cursos:", error);
       toast.error("Erro ao cadastrar aluno. Verifique os dados.");
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full m-auto">
@@ -204,6 +217,8 @@ export const StudentForm = () => {
         studentId={id}
         courses={allCourses}
         isCreateMode={!isUpdateMode}
+        pendingCourses={pendingCourses}
+        setPendingCourses={setPendingCourses}
       />
 
       {!isUpdateMode && (

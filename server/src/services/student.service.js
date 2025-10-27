@@ -15,6 +15,34 @@ export const createStudent = async (data) => {
   return await studentRepository.createStudent(data);
 };
 
+export const createStudentWithCourses = async (data) => {
+  const { courses, ...studentData } = data;
+
+  const { error } = studentSchema.validate(studentData, { abortEarly: false });
+  if (error) {
+    throw {
+      type: "validation",
+      mensagem: "Erro de validação",
+      erros: error.details.map((d) => d.message),
+    };
+  }
+
+  const createdStudent = await prisma.student.create({
+    data: studentData,
+  });
+
+  if (courses && courses.length > 0) {
+    const enrollments = courses.map((courseId) => ({
+      studentId: createdStudent.id,
+      courseId,
+    }));
+
+    await prisma.enrollment.createMany({ data: enrollments });
+  }
+
+  return createdStudent;
+};
+
 export const getStudents = async () => {
   const students = await prisma.student.findMany({
     include: {
@@ -111,6 +139,52 @@ export const updateStudent = async (id, data) => {
       (enrollment) => enrollment.course.name
     ),
   };
+};
+
+export const updateStudentWithCourses = async (id, data) => {
+  const { courses, ...studentData } = data;
+
+  await getStudentById(id);
+
+  const updatedStudent = await prisma.student.update({
+    where: { id },
+    data: studentData,
+  });
+
+  if (courses) {
+    const existingEnrollments = await prisma.enrollment.findMany({
+      where: { studentId: id },
+    });
+
+    const existingCourseIds = existingEnrollments.map((e) => e.courseId);
+
+    const coursesToAdd = courses.filter(
+      (courseId) => !existingCourseIds.includes(courseId)
+    );
+    const coursesToRemove = existingCourseIds.filter(
+      (courseId) => !courses.includes(courseId)
+    );
+
+    if (coursesToAdd.length > 0) {
+      const newEnrollments = coursesToAdd.map((courseId) => ({
+        studentId: id,
+        courseId,
+      }));
+
+      await prisma.enrollment.createMany({ data: newEnrollments });
+    }
+
+    if (coursesToRemove.length > 0) {
+      await prisma.enrollment.deleteMany({
+        where: {
+          studentId: id,
+          courseId: { in: coursesToRemove },
+        },
+      });
+    }
+  }
+
+  return updatedStudent;
 };
 
 export const deleteStudent = async (id) => {
