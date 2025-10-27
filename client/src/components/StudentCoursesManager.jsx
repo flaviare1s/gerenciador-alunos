@@ -54,7 +54,6 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       return;
     }
 
-    // Modo criação: adiciona aos pending
     if (isCreateMode) {
       const alreadyAdded = pendingCourses.some((c) => c.id === parseInt(selectedCourse));
       if (alreadyAdded) {
@@ -77,7 +76,6 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       return;
     }
 
-    // Modo edição: cria matrícula direto no banco
     setSubmitting(true);
     try {
       const result = await createEnrollment({
@@ -114,12 +112,16 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       return;
     }
 
+    const completionDateISO = novaData ? new Date(novaData + 'T00:00:00').toISOString() : null;
+
+    const payload = {
+      studentId: parseInt(studentId),
+      courseId: parseInt(courseId),
+      completionDate: completionDateISO,
+    };
+
     try {
-      const result = await updateEnrollment(matriculaId, {
-        studentId: parseInt(studentId),
-        courseId: courseId,
-        completionDate: novaData || null,
-      });
+      const result = await updateEnrollment(matriculaId, payload);
 
       setEnrolledCourses(
         enrolledCourses.map((c) =>
@@ -135,7 +137,8 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
 
       toast.success("Data de conclusão atualizada!");
     } catch (error) {
-      console.error("Erro ao atualizar:", error);
+      console.error("Erro completo:", error);
+      console.error("Response data:", error.response?.data);
       toast.error("Erro ao atualizar data de conclusão.");
     }
   };
