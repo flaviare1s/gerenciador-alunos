@@ -1,6 +1,6 @@
 import { FiSearch } from "react-icons/fi"
 
-export const SearchInput = ({ search, setSearch}) => {
+export const SearchInput = ({ search, setSearch }) => {
 
   return (
     <div className="relative w-full">

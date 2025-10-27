@@ -1,9 +1,9 @@
-import * as alunoCursoService from "../services/alunoCurso.service.js";
+import * as enrollmentService from "../services/enrollment.service.js";
 
-export const criarAlunoCurso = async (req, res) => {
+export const createEnrollment = async (req, res) => {
   try {
-    const alunoCurso = await alunoCursoService.criarAlunoCurso(req.body);
-    return res.status(201).json(alunoCurso);
+    const enrollment = await enrollmentService.createEnrollment(req.body);
+    return res.status(201).json(enrollment);
   } catch (err) {
     return res.status(err.statusCode || 500).json({
       mensagem: err.mensagem || "Erro interno do servidor",
@@ -12,10 +12,10 @@ export const criarAlunoCurso = async (req, res) => {
   }
 };
 
-export const listarAlunoCursos = async (_req, res) => {
+export const getEnrollments = async (_req, res) => {
   try {
-    const alunoCursos = await alunoCursoService.listarAlunoCursos();
-    return res.status(200).json(alunoCursos);
+    const enrollments = await enrollmentService.getEnrollments();
+    return res.status(200).json(enrollments);
   } catch (err) {
     return res.status(err.statusCode || 500).json({
       mensagem: err.mensagem || "Erro interno do servidor",
@@ -24,13 +24,13 @@ export const listarAlunoCursos = async (_req, res) => {
   }
 };
 
-export const buscarAlunoCursoPorId = async (req, res) => {
+export const getEnrollmentById = async (req, res) => {
   try {
     const { id } = req.params;
-    const alunoCurso = await alunoCursoService.buscarAlunoCursoPorId(
+    const enrollment = await enrollmentService.getEnrollmentById(
       Number(id)
     );
-    return res.status(200).json(alunoCurso);
+    return res.status(200).json(enrollment);
   } catch (err) {
     return res.status(err.statusCode || 500).json({
       mensagem: err.mensagem || "Erro interno do servidor",
@@ -39,14 +39,14 @@ export const buscarAlunoCursoPorId = async (req, res) => {
   }
 };
 
-export const atualizarAlunoCurso = async (req, res) => {
+export const updateEnrollment = async (req, res) => {
   try {
     const { id } = req.params;
-    const alunoCurso = await alunoCursoService.atualizarAlunoCurso(
+    const enrollment = await enrollmentService.updateEnrollment(
       Number(id),
       req.body
     );
-    return res.status(200).json(alunoCurso);
+    return res.status(200).json(enrollment);
   } catch (err) {
     return res.status(err.statusCode || 500).json({
       mensagem: err.mensagem || "Erro interno do servidor",
@@ -55,10 +55,10 @@ export const atualizarAlunoCurso = async (req, res) => {
   }
 };
 
-export const deletarAlunoCurso = async (req, res) => {
+export const deleteEnrollment = async (req, res) => {
   try {
     const { id } = req.params;
-    await alunoCursoService.deletarAlunoCurso(Number(id));
+    await enrollmentService.deleteEnrollment(Number(id));
     return res.status(204).send();
   } catch (err) {
     return res.status(err.statusCode || 500).json({

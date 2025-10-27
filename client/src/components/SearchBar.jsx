@@ -1,10 +1,10 @@
 import { AddButton } from "./AddButton"
 import { SearchInput } from "./SearchInput"
 
-export const SearchBar = ({ alunos, setSearch, search }) => {
+export const SearchBar = ({ students, setSearch, search }) => {
   return (
-    <div className="flex justify-between items-center gap-5">
-      <SearchInput alunos={alunos} setSearch={setSearch} search={search} />
+    <div className="flex flex-col sm:flex-row justify-between items-center gap-5">
+      <SearchInput students={students} setSearch={setSearch} search={search} />
       <AddButton />
     </div>
   )

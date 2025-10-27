@@ -1,8 +1,34 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaRegEdit } from "react-icons/fa";
+import { FiTrash2 } from "react-icons/fi";
+import toast from "react-hot-toast";
+import { ConfirmationModal } from "./ConfirmationModal";
+import { deleteStudent } from "../services/student";
 
-export const Student = ({ aluno }) => {
+export const Student = ({ student }) => {
   const [sliceCount, setSliceCount] = useState(1);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [studentIdToDelete, setStudentIdToDelete] = useState(null);
+
+  const handleDeleteClick = (id) => {
+    setStudentIdToDelete(id);
+    setModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!studentIdToDelete) return;
+
+    try {
+      await deleteStudent(studentIdToDelete);
+      toast.success("Aluno deletado com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao deletar aluno.", error);
+    } finally {
+      setModalOpen(false);
+      setStudentIdToDelete(null);
+    }
+  };
 
   useEffect(() => {
     const updateSliceCount = () => {
@@ -32,35 +58,56 @@ export const Student = ({ aluno }) => {
   };
 
   return (
-    <tr className="hover:bg-gray-100 border-b border-gray-border">
-      <td className="px-6 py-[30px] text-xs text-neutral-black hidden sm:table-cell">
-        {formatDate(aluno.criadoEm)}
-      </td>
-      <td className="table-cell px-6 py-[30px] text-sm text-neutral-black font-medium">
-        <Link to={`/edicao-aluno/${aluno.id}`} className="block">
-          {aluno.nome} {aluno.sobrenome}
-        </Link>
-      </td>
-      <td className="px-6 py-[30px] text-sm text-dark-gray hidden md:table-cell">
-        {aluno.estado}
-      </td>
-      <td className="px-6 py-[30px] table-cell">
-        <ul className="flex flex-wrap gap-2">
-          {aluno.cursos.slice(0, sliceCount).map((curso, index) => (
-            <li
-              key={index}
-              className="text-xs bg-bg-badge text-secondary px-3 py-1 rounded-full font-medium border border-light-blue"
-            >
-              {curso}
-            </li>
-          ))}
-          {aluno.cursos.length > sliceCount && (
-            <li className="text-xs bg-gray-100 text-dark-gray px-3 py-1 rounded-full font-medium border border-light-gray">
-              +{aluno.cursos.length - sliceCount}
-            </li>
-          )}
-        </ul>
-      </td>
-    </tr>
+    <>
+      <tr className="hover:bg-gray-100 border-b border-gray-border">
+        <td className="px-6 py-[30px] text-xs text-neutral-black hidden sm:table-cell">
+          {formatDate(student.createdAt)}
+        </td>
+        <td className="table-cell px-6 py-[30px] text-sm text-neutral-black font-medium">
+          <Link to={`/edicao-student/${student.id}`} className="block">
+            {student.firstName} {student.lastName}
+          </Link>
+        </td>
+        <td className="px-6 py-[30px] text-sm text-dark-gray hidden md:table-cell">
+          {student.state}
+        </td>
+        <td className="px-6 py-[30px] table-cell">
+          <ul className="flex flex-wrap gap-2">
+            {student.courses.slice(0, sliceCount).map((course, index) => (
+              <li
+                key={index}
+                className="text-xs bg-bg-badge text-secondary px-3 py-1 rounded-full font-medium border border-light-blue"
+              >
+                {course}
+              </li>
+            ))}
+            {student.courses.length > sliceCount && (
+              <li className="text-xs bg-gray-100 text-dark-gray px-3 py-1 rounded-full font-medium border border-light-gray">
+                +{student.courses.length - sliceCount}
+              </li>
+            )}
+          </ul>
+        </td>
+        <td className="py-[30px] flex items-center gap-4 px-6">
+          <Link
+            to={`/edicao-student/${student.id}`}
+            className="text-sm text-secondary font-medium hover:text-secondary/80"
+          >
+            <FaRegEdit className="w-5 h-5" />
+          </Link>
+          <button
+            onClick={() => handleDeleteClick(student.id)}
+            className="text-sm text-primary font-medium hover:text-primary/80 cursor-pointer"
+          >
+            <FiTrash2 className="w-5 h-5" />
+          </button>
+        </td>
+      </tr>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={confirmDelete}
+      />
+    </>
   );
 };

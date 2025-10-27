@@ -1,15 +1,15 @@
 import { z } from "zod";
 
-export const alunoSchema = z.object({
-  nome: z
+export const studentSchema = z.object({
+  firstName: z
     .string()
-    .min(3, "O nome deve ter pelo menos 3 caracteres")
-    .max(100, "O nome deve ter no máximo 100 caracteres"),
-  sobrenome: z
+    .min(3, "O name deve ter pelo menos 3 caracteres")
+    .max(100, "O name deve ter no máximo 100 caracteres"),
+  lastName: z
     .string()
-    .min(2, "O sobrenome deve ter pelo menos 2 caracteres")
-    .max(100, "O sobrenome deve ter no máximo 100 caracteres"),
-  dataNascimento: z
+    .min(2, "O lastName deve ter pelo menos 2 caracteres")
+    .max(100, "O lastName deve ter no máximo 100 caracteres"),
+  birthDate: z
     .string()
     .optional()
     .refine(
@@ -17,14 +17,14 @@ export const alunoSchema = z.object({
       "A data de nascimento não pode ser futura"
     ),
   cpf: z.string().length(11, "O CPF deve ter 11 dígitos"),
-  genero: z.string().nonempty("O gênero é obrigatório"),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"], "O gênero é obrigatório"),
   email: z.string().email("O e-mail deve ser válido"),
-  cep: z.string().length(8, "O CEP deve ter 8 caracteres"),
-  rua: z.string().min(3, "A rua é obrigatória"),
-  numero: z.string().nonempty("O número é obrigatório"),
-  complemento: z.string().optional(),
-  bairro: z.string().optional(),
-  cidade: z.string().min(2, "A cidade é obrigatória"),
-  estado: z.string().length(2, "O estado deve ter 2 letras (UF)"),
-  pais: z.string().min(2, "O país é obrigatório"),
+  zipCode: z.string().length(8, "O CEP deve ter 8 caracteres"),
+  street: z.string().min(3, "A street é obrigatória"),
+  number: z.string().nonempty("O número é obrigatório"),
+  complement: z.string().optional(),
+  neighborhood: z.string().optional(),
+  city: z.string().min(2, "A cidade é obrigatória"),
+  state: z.string().length(2, "O estado deve ter 2 letras (UF)"),
+  country: z.string().min(2, "O país é obrigatório"),
 });

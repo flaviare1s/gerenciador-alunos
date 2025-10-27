@@ -1,26 +1,26 @@
 import { FiTrash2 } from "react-icons/fi";
 import check from "../assets/img/Check.png";
 
-export const StudentCourse = ({ todosCursos, handleRemoveCurso, handleUpdateCurso, isCreateMode }) => {
+export const StudentCourse = ({ allCourses, handleRemovecourse, handleUpdatecourse, isCreateMode }) => {
   return (
     <div>
-      {todosCursos.length > 0 && (
+      {allCourses.length > 0 && (
         <div className="flex flex-col gap-4 w-full mb-[26px]">
-          {todosCursos.map((curso, index) => (
-            <div key={curso.matriculaId || curso.id || index} className="flex flex-col md:flex-row md:items-center gap-4">
+          {allCourses.map((course, index) => (
+            <div key={course.enrollmentId || course.id || index} className="flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex-1 md:flex-3 relative">
                 <select
                   disabled
                   className="text-gray-medium w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input appearance-none bg-white"
                 >
-                  <option>{curso.nome}</option>
+                  <option>{course.name}</option>
                 </select>
                 <button
                   type="button"
-                  onClick={() => handleRemoveCurso(curso.id, curso.matriculaId)}
+                  onClick={() => handleRemovecourse(course.id, course.enrollmentId)}
                   className="flex items-center justify-center text-primary cursor-pointer absolute right-3 top-2.5 center"
                   style={{ width: "30px", height: "30px" }}
-                  title="Remover curso"
+                  title="Remover course"
                 >
                   <FiTrash2 className="w-5 h-5" />
                 </button>
@@ -30,12 +30,12 @@ export const StudentCourse = ({ todosCursos, handleRemoveCurso, handleUpdateCurs
                 <div className="flex-1 relative">
                   <input
                     type="date"
-                    defaultValue={curso.dataConclusao || ""}
+                    defaultValue={course.completionDate || ""}
                     onChange={(e) => {
                       if (!isCreateMode) {
-                        handleUpdateCurso(
-                          curso.matriculaId,
-                          curso.id,
+                        handleUpdatecourse(
+                          course.enrollmentId,
+                          course.id,
                           e.target.value
                         );
                       }

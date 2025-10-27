@@ -1,5 +1,5 @@
 export const CourseForm = () => {
   return (
-    <div>CadastroCurso</div>
+    <div>Cadastro Curso</div>
   )
 }

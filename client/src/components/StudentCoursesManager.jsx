@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
-import { createMatricula, updateMatricula, deleteMatricula } from "../services/enrollment";
-import { getAlunoById } from "../services/student";
+import { updateEnrollment, deleteEnrollment, createEnrollment } from "../services/enrollment";
 import { toast } from "react-hot-toast";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { StudentCourse } from "./StudentCourse";
 import { Enrollment } from "./Enrollment";
+import { getStudentById } from "../services/student";
 
-export const StudentCoursesManager = ({ alunoId, cursos, isCreateMode = false }) => {
-  const [cursosMatriculados, setCursosMatriculados] = useState([]);
-  const [cursosPendentes, setCursosPendentes] = useState([]);
+export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false }) => {
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [pendingCourses, setPendingCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cursoSelecionado, setCursoSelecionado] = useState("");
-  const [dataConclusao, setDataConclusao] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [completionDate, setcompletionDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [cursoToDelete, setCursoToDelete] = useState(null);
+  const [courseToDelete, setcourseToDelete] = useState(null);
 
   useEffect(() => {
-    if (alunoId) {
+    if (studentId) {
       setLoading(true);
-      getAlunoById(alunoId)
+      getStudentById(studentId)
         .then((data) => {
-          setCursosMatriculados(data.cursos || []);
+          setEnrolledCourses(data.courses || []);
         })
         .catch((error) => {
           console.error("Erro ao buscar cursos do aluno:", error);
@@ -33,62 +33,62 @@ export const StudentCoursesManager = ({ alunoId, cursos, isCreateMode = false })
     } else {
       setLoading(false);
     }
-  }, [alunoId]);
+  }, [studentId]);
 
-  const handleAddCurso = async () => {
-    if (!cursoSelecionado) {
+  const handleAddCourse = async () => {
+    if (!selectedCourse) {
       toast.error("Selecione um curso");
       return;
     }
 
     if (isCreateMode) {
-      const novoCurso = cursos.find(c => c.id === parseInt(cursoSelecionado));
+      const novocourse = courses.find(c => c.id === parseInt(selectedCourse));
 
-      if (novoCurso) {
-        setCursosPendentes([
-          ...cursosPendentes,
+      if (novocourse) {
+        setPendingCourses([
+          ...pendingCourses,
           {
-            id: novoCurso.id,
-            nome: novoCurso.nome,
-            dataConclusao: dataConclusao || null
+            id: novocourse.id,
+            name: novocourse.name,
+            completionDate: completionDate || null
           }
         ]);
 
-        setCursoSelecionado("");
-        setDataConclusao("");
+        setSelectedCourse("");
+        setcompletionDate("");
         toast.success("Curso adicionado! Salve o aluno para confirmar a matrícula.");
       }
       return;
     }
 
     const payload = {
-      alunoId: parseInt(alunoId),
-      cursoId: parseInt(cursoSelecionado),
-      dataConclusao: dataConclusao || null
+      studentId: parseInt(studentId),
+      courseId: parseInt(selectedCourse),
+      completionDate: completionDate || null
     };
 
     setSubmitting(true);
 
     try {
-      const result = await createMatricula(payload);
+      const result = await createEnrollment(payload);
 
-      const novoCurso = cursos.find(c => c.id === parseInt(cursoSelecionado));
+      const novocourse = courses.find(c => c.id === parseInt(selectedCourse));
 
-      if (novoCurso) {
-        setCursosMatriculados([
-          ...cursosMatriculados,
+      if (novocourse) {
+        setEnrolledCourses([
+          ...enrolledCourses,
           {
-            id: novoCurso.id,
+            id: novocourse.id,
             matriculaId: result.id,
-            nome: novoCurso.nome,
-            dataConclusao: dataConclusao || null
+            name: novocourse.name,
+            completionDate: completionDate || null
           }
         ]);
       }
 
-      setCursoSelecionado("");
-      setDataConclusao("");
-      toast.success("Aluno matriculado com sucesso!");
+      setSelectedCourse("");
+      setcompletionDate("");
+      toast.success("student matriculado com sucesso!");
     } catch (error) {
       console.error("Erro ao matricular:", error);
       toast.error("Erro ao matricular aluno. Tente novamente.");
@@ -97,24 +97,23 @@ export const StudentCoursesManager = ({ alunoId, cursos, isCreateMode = false })
     }
   };
 
-  const handleUpdateCurso = async (matriculaId, cursoId, novaData) => {
+  const handleUpdateCourse = async (matriculaId, courseId, novaData) => {
     if (!matriculaId) {
-      console.error("matriculaId está indefinido. Não é possível atualizar a matrícula.");
       toast.error("Erro ao atualizar matrícula: ID da matrícula não encontrado.");
       return;
     }
 
     try {
-      await updateMatricula(matriculaId, {
-        alunoId: parseInt(alunoId),
-        cursoId: cursoId,
-        dataConclusao: novaData || null,
+      await updateEnrollment(matriculaId, {
+        studentId: parseInt(studentId),
+        courseId: courseId,
+        completionDate: novaData || null,
       });
 
-      setCursosMatriculados(
-        cursosMatriculados.map((c) =>
+      setEnrolledCourses(
+        enrolledCourses.map((c) =>
           c.matriculaId === matriculaId
-            ? { ...c, dataConclusao: novaData }
+            ? { ...c, completionDate: novaData }
             : c
         )
       );
@@ -126,20 +125,20 @@ export const StudentCoursesManager = ({ alunoId, cursos, isCreateMode = false })
     }
   };
 
-  const handleRemoveCurso = (cursoId) => {
-    setCursoToDelete(cursoId);
+  const handleRemoveCourse = (courseId) => {
+    setcourseToDelete(courseId);
     setModalOpen(true);
   };
 
-  const confirmRemoveCurso = async () => {
-    if (cursoToDelete) {
+  const confirmRemoveCourse = async () => {
+    if (courseToDelete) {
       try {
         if (isCreateMode) {
-          setCursosPendentes(cursosPendentes.filter(c => c.id !== cursoToDelete));
+          setPendingCourses(pendingCourses.filter(c => c.id !== courseToDelete));
           toast.success("Curso removido!");
         } else {
-          await deleteMatricula(cursoToDelete);
-          setCursosMatriculados(cursosMatriculados.filter(c => c.matriculaId !== cursoToDelete));
+          await deleteEnrollment(courseToDelete);
+          setEnrolledCourses(enrolledCourses.filter(c => c.matriculaId !== courseToDelete));
           toast.success("Matrícula removida com sucesso!");
         }
       } catch (error) {
@@ -147,43 +146,43 @@ export const StudentCoursesManager = ({ alunoId, cursos, isCreateMode = false })
         toast.error("Erro ao remover matrícula. Tente novamente.");
       } finally {
         setModalOpen(false);
-        setCursoToDelete(null);
+        setcourseToDelete(null);
       }
     }
   };
 
   if (loading && !isCreateMode) {
-    return <p className="text-gray-medium">Carregando cursos...</p>;
+    return <p className="text-gray-medium">Carregando courses...</p>;
   }
 
-  const todosCursos = isCreateMode ? cursosPendentes : cursosMatriculados;
+  const allCourses = isCreateMode ? pendingCourses : enrolledCourses;
 
   return (
     <>
       <h2 className="text-black font-medium text-[22px] py-4">Cursos</h2>
 
       <StudentCourse
-        todosCursos={todosCursos}
-        handleRemoveCurso={handleRemoveCurso}
-        handleUpdateCurso={handleUpdateCurso}
+        allCourses={allCourses}
+        handleRemoveCourse={handleRemoveCourse}
+        handleUpdateCourse={handleUpdateCourse}
         isCreateMode={isCreateMode}
       />
 
       <Enrollment
-        todosCursos={todosCursos}
-        cursos={cursos}
-        setCursoSelecionado={setCursoSelecionado}
-        setDataConclusao={setDataConclusao}
+        allCourses={allCourses}
+        courses={courses}
+        setSelectedCourse={setSelectedCourse}
+        setcompletionDate={setcompletionDate}
         submitting={submitting}
-        cursoSelecionado={cursoSelecionado}
-        dataConclusao={dataConclusao}
-        handleAddCurso={handleAddCurso}
+        selectedCourse={selectedCourse}
+        completionDate={completionDate}
+        handleAddCourse={handleAddCourse}
       />
 
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
-        onConfirm={confirmRemoveCurso}
+        onConfirm={confirmRemoveCourse}
       />
     </>
   );

@@ -1,9 +1,9 @@
-import * as cursoService from "../services/curso.service.js";
+import * as courseService from "../services/course.service.js";
 
-export const criarCurso = async (req, res) => {
+export const createCourse = async (req, res) => {
   try {
-    const curso = await cursoService.criarCurso(req.body);
-    res.status(201).json(curso);
+    const course = await courseService.createCourse(req.body);
+    res.status(201).json(course);
   } catch (err) {
     if (err.type === "validation") {
       return res.status(400).json({ mensagem: err.mensagem, erros: err.erros });
@@ -17,20 +17,20 @@ export const criarCurso = async (req, res) => {
   }
 };
 
-export const listarCursos = async (_req, res) => {
+export const getCourses = async (_req, res) => {
   try {
-    const cursos = await cursoService.listarCursos();
-    return res.json(cursos);
+    const courses = await courseService.getCourses();
+    return res.json(courses);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ mensagem: "Erro interno do servidor" });
   }
 };
 
-export const buscarCursoPorId = async (req, res) => {
+export const getCourseById = async (req, res) => {
   try {
-    const curso = await cursoService.buscarCursoPorId(Number(req.params.id));
-    return res.json(curso);
+    const course = await courseService.getCourseById(Number(req.params.id));
+    return res.json(course);
   } catch (err) {
     if (err.type === "not_found") {
       return res.status(404).json({ mensagem: err.mensagem });
@@ -40,13 +40,13 @@ export const buscarCursoPorId = async (req, res) => {
   }
 };
 
-export const atualizarCurso = async (req, res) => {
+export const updateCourse = async (req, res) => {
   try {
-    const curso = await cursoService.atualizarCurso(
+    const course = await courseService.updateCourse(
       Number(req.params.id),
       req.body
     );
-    return res.json(curso);
+    return res.json(course);
   } catch (err) {
     if (err.type === "validation") {
       return res.status(400).json({ mensagem: err.mensagem, erros: err.erros });
@@ -59,9 +59,9 @@ export const atualizarCurso = async (req, res) => {
   }
 };
 
-export const deletarCurso = async (req, res) => {
+export const deleteCourse = async (req, res) => {
   try {
-    await cursoService.deletarCurso(Number(req.params.id));
+    await courseService.deleteCourse(Number(req.params.id));
     return res.status(204).send();
   } catch (err) {
     if (err.type === "not_found") {

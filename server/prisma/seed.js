@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const cursos = [
+const courses = [
   "Design",
   "Marketing",
   "Product",
@@ -16,116 +16,116 @@ const cursos = [
   "DevOps",
 ];
 
-const alunos = [
+const students = [
   {
-    nome: "Olivia",
-    sobrenome: "Rhye",
-    estado: "Rio Grande do Sul",
-    cursos: ["Design", "Marketing", "Product"],
+    firstName: "Olivia",
+    lastName: "Rhye",
+    state: "Rio Grande do Sul",
+    courses: ["Design", "Marketing", "Product"],
   },
   {
-    nome: "Phoenix",
-    sobrenome: "Baker",
-    estado: "Rio Grande do Sul",
-    cursos: ["Design", "Marketing", "Product"],
+    firstName: "Phoenix",
+    lastName: "Baker",
+    state: "Rio Grande do Sul",
+    courses: ["Design", "Marketing", "Product"],
   },
   {
-    nome: "Lana",
-    sobrenome: "Steiner",
-    estado: "Rio Grande do Sul",
-    cursos: ["Design", "Marketing", "Product"],
+    firstName: "Lana",
+    lastName: "Steiner",
+    state: "Rio Grande do Sul",
+    courses: ["Design", "Marketing", "Product"],
   },
   {
-    nome: "Demi",
-    sobrenome: "Wikinson",
-    estado: "Rio Grande do Sul",
-    cursos: ["Design", "Marketing", "Product"],
+    firstName: "Demi",
+    lastName: "Wikinson",
+    state: "Rio Grande do Sul",
+    courses: ["Design", "Marketing", "Product"],
   },
   {
-    nome: "Candice",
-    sobrenome: "Wu",
-    estado: "Bahia",
-    cursos: ["Design", "Marketing", "Product", "Full Stack"],
+    firstName: "Candice",
+    lastName: "Wu",
+    state: "Bahia",
+    courses: ["Design", "Marketing", "Product", "Full Stack"],
   },
   {
-    nome: "Natali",
-    sobrenome: "Craig",
-    estado: "Rio Grande do Sul",
-    cursos: ["Design", "Marketing", "Product"],
+    firstName: "Natali",
+    lastName: "Craig",
+    state: "Rio Grande do Sul",
+    courses: ["Design", "Marketing", "Product"],
   },
   {
-    nome: "Drew",
-    sobrenome: "Cano",
-    estado: "Bahia",
-    cursos: ["Design", "Marketing", "Product", "Full Stack", "Front End"],
+    firstName: "Drew",
+    lastName: "Cano",
+    state: "Bahia",
+    courses: ["Design", "Marketing", "Product", "Full Stack", "Front End"],
   },
   {
-    nome: "Orlando",
-    sobrenome: "Diggs",
-    estado: "Rio de Janeiro",
-    cursos: [],
+    firstName: "Orlando",
+    lastName: "Diggs",
+    state: "Rio de Janeiro",
+    courses: [],
   },
   {
-    nome: "Andi",
-    sobrenome: "Lane",
-    estado: "Santa Catarina",
-    cursos: [],
+    firstName: "Andi",
+    lastName: "Lane",
+    state: "Santa Catarina",
+    courses: [],
   },
   {
-    nome: "Kate",
-    sobrenome: "Morrison",
-    estado: "Rio Grande do Sul",
-    cursos: [],
+    firstName: "Kate",
+    lastName: "Morrison",
+    state: "Rio Grande do Sul",
+    courses: [],
   },
 ];
 
 async function main() {
-  // Criar cursos
-  for (const nome of cursos) {
-    const existe = await prisma.curso.findUnique({ where: { nome } });
-    if (!existe) {
-      await prisma.curso.create({ data: { nome } });
-      console.log(`Curso criado: ${nome}`);
+  for (const name of courses) {
+    const exists = await prisma.course.findUnique({ where: { name } });
+    if (!exists) {
+      await prisma.course.create({ data: { name } });
+      console.log(`Course created: ${name}`);
     } else {
-      console.log(`Curso já existe: ${nome}`);
+      console.log(`Course already exists: ${name}`);
     }
   }
 
-  // Criar alunos e associar aos cursos
-  for (const aluno of alunos) {
-    const { nome, sobrenome, estado, cursos } = aluno;
+  for (const student of students) {
+    const { firstName, lastName, state, courses } = student;
 
-    const novoAluno = await prisma.aluno.create({
+    const newStudent = await prisma.student.create({
       data: {
-        nome,
-        sobrenome,
-        estado,
-        email: `${nome.toLowerCase()}.${sobrenome.toLowerCase()}@example.com`,
+        firstName,
+        lastName,
+        state,
+        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`,
         cpf: `${Math.floor(10000000000 + Math.random() * 90000000000)}`,
-        genero: "Não especificado",
-        cep: "00000-000",
-        rua: "Rua Exemplo",
-        numero: "123",
-        pais: "Brasil",
+        gender: "OTHER",
+        zipCode: "00000-000",
+        street: "Rua Exemplo",
+        number: "123",
+        country: "Brasil",
+        birthDate: null,
       },
     });
 
-    for (const cursoNome of cursos) {
-      const curso = await prisma.curso.findUnique({
-        where: { nome: cursoNome },
+    for (const courseName of courses) {
+      const course = await prisma.course.findUnique({
+        where: { name: courseName },
       });
-      if (curso) {
-        await prisma.alunoCurso.create({
+      if (course) {
+        await prisma.enrollment.create({
           data: {
-            alunoId: novoAluno.id,
-            cursoId: curso.id,
-            status: "EM_ANDAMENTO",
+            studentId: newStudent.id,
+            courseId: course.id,
+            status: "IN_PROGRESS",
+            completionDate: new Date("2025-08-30"),
           },
         });
       }
     }
 
-    console.log(`Aluno criado: ${nome} ${sobrenome}`);
+    console.log(`Student created: ${firstName} ${lastName}`);
   }
 }
 

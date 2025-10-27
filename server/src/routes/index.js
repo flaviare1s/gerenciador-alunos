@@ -1,12 +1,12 @@
 import { Router } from "express";
-import alunoRoutes from "./aluno.routes.js";
-import cursoRoutes from "./curso.routes.js";
-import alunoCursoRoutes from "./alunoCurso.routes.js";
+import studentRoutes from "./student.routes.js";
+import courseRoutes from "./course.routes.js";
+import enrollmentRoutes from "./enrollment.routes.js";
 
 const router = Router();
 
-router.use("/alunos", alunoRoutes);
-router.use("/cursos", cursoRoutes);
-router.use("/aluno-cursos", alunoCursoRoutes);
+router.use("/alunos", studentRoutes);
+router.use("/cursos", courseRoutes);
+router.use("/matriculas", enrollmentRoutes);
 
 export default router;

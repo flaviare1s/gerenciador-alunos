@@ -1,26 +1,26 @@
 import { LiaPlusCircleSolid } from "react-icons/lia"
 
-export const Enrollment = ({ cursos, todosCursos, setCursoSelecionado, setDataConclusao, submitting, cursoSelecionado, dataConclusao, handleAddCurso }) => {
+export const Enrollment = ({ courses, allCourses, setSelectedCourse, setCompletionDate, submitting, selectedCourse, completionDate, handleAddcourse }) => {
   return (
     <div className="flex flex-col md:flex-row md:items-end gap-4 w-full">
       <div className="flex-1 md:flex-3">
-        <label className="text-sm font-medium text-neutral-black" htmlFor="curso">
+        <label className="text-sm font-medium text-neutral-black" htmlFor="course">
           Curso
         </label>
         <select
-          id="curso"
-          name="curso"
-          value={cursoSelecionado}
-          onChange={(e) => setCursoSelecionado(e.target.value)}
+          id="course"
+          name="course"
+          value={selectedCourse}
+          onChange={(e) => setSelectedCourse(e.target.value)}
           className="text-gray-medium w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input mt-2"
           disabled={submitting}
         >
           <option value="">Selecione uma opção</option>
-          {cursos
-            .filter(c => !todosCursos.some(cm => cm.id === c.id))
-            .map((curso) => (
-              <option key={curso.id} value={curso.id}>
-                {curso.nome}
+          {courses
+            .filter(c => !allCourses.some(cm => cm.id === c.id))
+            .map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name}
               </option>
             ))
           }
@@ -29,15 +29,15 @@ export const Enrollment = ({ cursos, todosCursos, setCursoSelecionado, setDataCo
 
       <div className="flex items-end gap-4 flex-1">
         <div className="flex-1">
-          <label className="text-sm font-medium text-neutral-black" htmlFor="dataConclusao">
+          <label className="text-sm font-medium text-neutral-black" htmlFor="completionDate">
             Data de Conclusão
           </label>
           <input
             type="date"
-            id="dataConclusao"
-            name="dataConclusao"
-            value={dataConclusao}
-            onChange={(e) => setDataConclusao(e.target.value)}
+            id="completionDate"
+            name="completionDate"
+            value={completionDate}
+            onChange={(e) => setCompletionDate(e.target.value)}
             className="text-gray-medium w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input mt-2"
             disabled={submitting}
           />
@@ -45,7 +45,7 @@ export const Enrollment = ({ cursos, todosCursos, setCursoSelecionado, setDataCo
 
         <button
           type="button"
-          onClick={handleAddCurso}
+          onClick={handleAddcourse}
           disabled={submitting}
           className="flex items-center justify-center cursor-pointer disabled:opacity-50"
           style={{ height: "30px", width: "30px" }}

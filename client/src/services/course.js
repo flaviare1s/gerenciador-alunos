@@ -14,20 +14,23 @@ const handleRequest = async (request, errorMessage) => {
   }
 };
 
-export const getAllCursos = () =>
+export const getAllCourses = () =>
   handleRequest(() => api.get("/cursos"), "Falha ao buscar cursos");
 
-export const getCursoById = (id) =>
+export const getCourseById = (id) =>
   handleRequest(() => api.get(`/cursos/${id}`), "Falha ao buscar curso");
 
-export const createCurso = (cursoData) =>
-  handleRequest(() => api.post("/cursos", cursoData), "Falha ao criar curso");
-
-export const updateCurso = (id, cursoData) =>
+export const createCourse = (courseData) =>
   handleRequest(
-    () => api.put(`/cursos/${id}`, cursoData),
+    () => api.post("/cursos", courseData),
+    "Falha ao criar curso"
+  );
+
+export const updateCourse = (id, courseData) =>
+  handleRequest(
+    () => api.put(`/cursos/${id}`, courseData),
     "Falha ao atualizar curso"
   );
 
-export const deleteCurso = (id) =>
+export const deleteCourse = (id) =>
   handleRequest(() => api.delete(`/cursos/${id}`), "Falha ao deletar curso");

@@ -14,29 +14,29 @@ const handleRequest = async (request, errorMessage) => {
   }
 };
 
-export const getAllMatriculas = () =>
-  handleRequest(() => api.get("/aluno-cursos"), "Falha ao buscar matrículas");
+export const getAllEnrollments = () =>
+  handleRequest(() => api.get("/matriculas"), "Falha ao buscar matrículas");
 
-export const getMatriculaById = (id) =>
+export const getEnrollmentById = (id) =>
   handleRequest(
-    () => api.get(`/aluno-cursos/${id}`),
+    () => api.get(`/matriculas/${id}`),
     "Falha ao buscar matrícula"
   );
 
-export const createMatricula = (matriculaData) =>
+export const createEnrollment = (enrollmentData) =>
   handleRequest(
-    () => api.post("/aluno-cursos", matriculaData),
+    () => api.post("/matriculas", enrollmentData),
     "Falha ao criar matrícula"
   );
 
-export const updateMatricula = (id, matriculaData) =>
+export const updateEnrollment = (id, enrollmentData) =>
   handleRequest(
-    () => api.put(`/aluno-cursos/${id}`, matriculaData),
+    () => api.put(`/matriculas/${id}`, enrollmentData),
     "Falha ao atualizar matrícula"
   );
 
-export const deleteMatricula = (id) =>
+export const deleteEnrollment = (id) =>
   handleRequest(
-    () => api.delete(`/aluno-cursos/${id}`),
+    () => api.delete(`/matriculas/${id}`),
     "Falha ao deletar matrícula"
   );

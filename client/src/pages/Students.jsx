@@ -1,36 +1,36 @@
 import { useState, useEffect } from "react";
 import { StudentList } from "../components/StudentList";
 import { SearchBar } from "../components/SearchBar";
-import { getAllAlunos } from "../services/student";
+import { getAllStudents } from "../services/student";
 
 export const Students = () => {
-  const [alunos, setAlunos] = useState([]);
+  const [students, setstudents] = useState([]);
   const [search, setSearch] = useState("");
 
-  const filteredAlunos = search
-    ? alunos.filter((aluno) =>
-      [aluno.nome, aluno.sobrenome].some((field) =>
+  const filteredstudents = search
+    ? students.filter((student) =>
+      [student.name, student.lastName].some((field) =>
         field.toLowerCase().includes(search.toLowerCase())
       )
     )
-    : alunos;
+    : students;
 
   useEffect(() => {
-    const fetchAlunos = async () => {
+    const fetchstudents = async () => {
       try {
-        const data = await getAllAlunos();
-        setAlunos(data);
+        const data = await getAllStudents();
+        setstudents(data);
       } catch (error) {
-        console.error("Erro ao buscar alunos:", error);
+        console.error("Erro ao buscar students:", error);
       }
     };
-    fetchAlunos();
+    fetchstudents();
   }, []);
 
   return (
     <div>
-      <SearchBar alunos={alunos} setSearch={setSearch} search={search} />
-      <StudentList filteredAlunos={filteredAlunos} />
+      <SearchBar students={students} setSearch={setSearch} search={search} />
+      <StudentList filteredstudents={filteredstudents} />
     </div>
   );
 };

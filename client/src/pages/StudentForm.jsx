@@ -3,37 +3,37 @@ import { useForm } from "react-hook-form";
 import { useParams, useNavigate } from "react-router-dom";
 import { InputField } from "../components/InputField";
 import { toast } from "react-hot-toast";
-import { getAllCursos } from "../services/course";
-import { getAlunoById, createAluno, deleteAluno } from "../services/student";
 import { StudentCoursesManager } from "../components/StudentCoursesManager";
 import { usePage } from "../contexts/PageContext";
-import { alunoSchema } from "../schemas/studentSchema";
+import { studentSchema } from "../schemas/studentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createStudent, deleteStudent, getStudentById } from "../services/student";
+import { getAllCourses } from "../services/course";
 
 export const StudentForm = () => {
   const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm({
-    resolver: zodResolver(alunoSchema)
+    resolver: zodResolver(studentSchema)
   });
   const { id } = useParams();
   const navigate = useNavigate();
   const { setPageData } = usePage();
-  const [cursos, setCursos] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const cep = watch("cep");
+  const cep = watch("zipCode");
 
   useEffect(() => {
     if (id) {
       setIsUpdateMode(true);
-      const fetchAluno = async () => {
+      const fetchStudent = async () => {
         try {
-          const aluno = await getAlunoById(id);
-          Object.keys(aluno).forEach((key) => setValue(key, aluno[key]));
+          const student = await getStudentById(id);
+          Object.keys(student).forEach((key) => setValue(key, student[key]));
 
           setPageData({
             title: "Gerenciador de alunos",
-            subtitle: `${aluno.nome} ${aluno.sobrenome}`,
+            subtitle: `${student.firstName} ${student.lastName}`,
             onDelete: async () => {
-              await deleteAluno(id);
+              await deleteStudent(id);
               toast.success("Aluno deletado com sucesso!");
               navigate("/");
             },
@@ -42,7 +42,7 @@ export const StudentForm = () => {
           toast.error("Não foi possível carregar os dados do aluno.");
         }
       };
-      fetchAluno();
+      fetchStudent();
     } else {
       setPageData({
         title: "Gerenciador de alunos",
@@ -60,7 +60,7 @@ export const StudentForm = () => {
           const data = await response.json();
 
           if (!data.erro) {
-            setValue("rua", data.logradouro);
+            setValue("street", data.logradouro);
             setValue("bairro", data.bairro);
             setValue("cidade", data.localidade);
             setValue("estado", data.uf);
@@ -75,25 +75,32 @@ export const StudentForm = () => {
   }, [cep, setValue]);
 
   useEffect(() => {
-    const fetchCursos = async () => {
+    const fetchCourses = async () => {
       try {
-        const data = await getAllCursos();
-        setCursos(data);
+        const data = await getAllCourses();
+        setCourses(data);
       } catch {
         toast.error("Não foi possível carregar os cursos disponíveis.");
       }
     };
 
-    fetchCursos();
+    fetchCourses();
   }, []);
+
+  const mapGenderToEnglish = {
+    Masculino: "MALE",
+    Feminino: "FEMALE",
+    Outro: "OTHER",
+  };
 
   const onSubmit = async (data) => {
     try {
       const payload = {
         ...data,
-        dataNascimento: data.dataNascimento ? new Date(data.dataNascimento).toISOString() : null
+        gender: mapGenderToEnglish[data.gender] || "OTHER",
+        birthDate: data.birthDate ? new Date(data.birthDate).toISOString() : null,
       };
-      await createAluno(payload);
+      await createStudent(payload);
       toast.success("Aluno cadastrado com sucesso!");
       reset();
       navigate("/");
@@ -108,49 +115,64 @@ export const StudentForm = () => {
       <div className="flex flex-col sm:flex-row gap-6 w-full mb-[26px]">
         <InputField
           label="Nome*"
-          name="nome"
+          name="firstName"
           type="text"
           placeholder="Digite seu nome"
           register={register}
           validation={{ required: "O nome é obrigatório" }}
-          error={errors.nome?.message}
+          error={errors.firstName?.message}
         />
         <InputField
           label="Sobrenome*"
-          name="sobrenome"
+          name="lastName"
           type="text"
           placeholder="Digite seu sobrenome"
           register={register}
           validation={{ required: "O sobrenome é obrigatório" }}
-          error={errors.sobrenome?.message}
+          error={errors.lastName?.message}
         />
       </div>
-      <div className="flex flex-col sm:flex-row gap-6 w-full mb-[26px]">
-        <InputField
-          label="Data de nascimento*"
-          name="dataNascimento"
-          type="date"
-          register={register}
-          error={errors.dataNascimento?.message}
-        />
-        <InputField
-          label="CPF*"
-          name="cpf"
-          type="text"
-          placeholder="Digite seu CPF"
-          register={register}
-          validation={{ required: "O CPF é obrigatório" }}
-          error={errors.cpf?.message}
-        />
-        <InputField
-          label="Gênero"
-          name="genero"
-          type="text"
-          placeholder="Digite seu gênero"
-          register={register}
-          error={errors.genero?.message}
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full mb-[26px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+          <InputField
+            label="Data de nascimento*"
+            name="birthDate"
+            type="date"
+            register={register}
+            error={errors.birthDate?.message}
+          />
+          <InputField
+            label="CPF*"
+            name="cpf"
+            type="text"
+            placeholder="Digite seu CPF"
+            register={register}
+            validation={{ required: "O CPF é obrigatório" }}
+            error={errors.cpf?.message}
+          />
+        </div>
+
+        <div className="flex flex-col w-full mt-0 sm:mt-1">
+          <label htmlFor="gender" className="text-sm font-medium text-neutral-black">
+            Gênero*
+          </label>
+          <select
+            id="gender"
+            name="gender"
+            {...register("gender", { required: "O gênero é obrigatório" })}
+            className="text-gray-medium bg-[#dbdbdb20] w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input mt-2"
+          >
+            <option value="">Selecione</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+            <option value="Outro">Outro</option>
+          </select>
+          {errors.gender && (
+            <span className="text-red-500 text-xs mt-1">{errors.gender.message}</span>
+          )}
+        </div>
       </div>
+
       <div className="w-full md:w-1/2 mb-[26px]">
         <InputField
           label="Email*"
@@ -164,17 +186,17 @@ export const StudentForm = () => {
 
       <h2 className="text-black font-medium text-[22px] py-4">Localização</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-[26px]">
-        <InputField label="CEP*" name="cep" type="text" placeholder="Digite seu CEP" register={register} validation={{ required: "O CEP é obrigatório" }} error={errors.cep?.message} />
-        <InputField label="País*" name="pais" type="text" placeholder="Digite seu país" register={register} validation={{ required: "O país é obrigatório" }} error={errors.pais?.message} />
-        <InputField label="Rua*" name="rua" type="text" placeholder="Digite sua rua" register={register} validation={{ required: "A rua é obrigatória" }} error={errors.rua?.message} />
-        <InputField label="Bairro*" name="bairro" type="text" placeholder="Digite seu bairro" register={register} validation={{ required: "O bairro é obrigatório" }} error={errors.bairro?.message} />
-        <InputField label="Número*" name="numero" type="text" placeholder="Digite o número" register={register} validation={{ required: "O número é obrigatório" }} error={errors.numero?.message} />
-        <InputField label="Complemento" name="complemento" type="text" placeholder="Digite o complemento" register={register} error={errors.complemento?.message} />
-        <InputField label="Cidade*" name="cidade" type="text" placeholder="Digite sua cidade" register={register} validation={{ required: "A cidade é obrigatória" }} error={errors.cidade?.message} />
-        <InputField label="Estado*" name="estado" type="text" placeholder="Digite seu estado" register={register} validation={{ required: "O estado é obrigatório" }} error={errors.estado?.message} />
+        <InputField label="CEP*" name="zipCode" type="text" placeholder="Digite seu CEP" register={register} validation={{ required: "O CEP é obrigatório" }} error={errors.zipCode?.message} />
+        <InputField label="País*" name="country" type="text" placeholder="Digite seu país" register={register} validation={{ required: "O país é obrigatório" }} error={errors.country?.message} />
+        <InputField label="street*" name="street" type="text" placeholder="Digite sua rua" register={register} validation={{ required: "A rua é obrigatória" }} error={errors.street?.message} />
+        <InputField label="Bairro*" name="neighborhood" type="text" placeholder="Digite seu bairro" register={register} validation={{ required: "O bairro é obrigatório" }} error={errors.neighborhood?.message} />
+        <InputField label="Número*" name="number" type="text" placeholder="Digite o número" register={register} validation={{ required: "O número é obrigatório" }} error={errors.number?.message} />
+        <InputField label="Complemento" name="complement" type="text" placeholder="Digite o complemento" register={register} error={errors.complement?.message} />
+        <InputField label="Cidade*" name="city" type="text" placeholder="Digite sua cidade" register={register} validation={{ required: "A cidade é obrigatória" }} error={errors.city?.message} />
+        <InputField label="Estado*" name="state" type="text" placeholder="Digite seu estado" register={register} validation={{ required: "O estado é obrigatório" }} error={errors.state?.message} />
       </div>
 
-      <StudentCoursesManager alunoId={id} cursos={cursos} isCreateMode={!isUpdateMode} />
+      <StudentCoursesManager studentId={id} courses={courses} isCreateMode={!isUpdateMode} />
 
       {!isUpdateMode && (
         <div className="flex justify-end mt-4">

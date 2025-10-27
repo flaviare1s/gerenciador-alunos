@@ -14,38 +14,26 @@ const handleRequest = async (request, errorMessage) => {
   }
 };
 
-export const getAllCursos = () =>
-  handleRequest(() => api.get("/cursos"), "Falha ao buscar cursos");
-
-export const getCursoById = (id) =>
-  handleRequest(() => api.get(`/cursos/${id}`), "Falha ao buscar curso");
-
-export const createCurso = (cursoData) =>
-  handleRequest(() => api.post("/cursos", cursoData), "Falha ao criar curso");
-
-export const updateCurso = (id, cursoData) =>
-  handleRequest(
-    () => api.put(`/cursos/${id}`, cursoData),
-    "Falha ao atualizar curso"
-  );
-
-export const deleteCurso = (id) =>
-  handleRequest(() => api.delete(`/cursos/${id}`), "Falha ao deletar curso");
-
-export const getAllAlunos = () =>
+export const getAllStudents = () =>
   handleRequest(() => api.get("/alunos"), "Falha ao buscar alunos");
 
-export const getAlunoById = (id) =>
+export const getStudentById = (id) =>
   handleRequest(() => api.get(`/alunos/${id}`), "Falha ao buscar aluno");
 
-export const createAluno = (alunoData) =>
-  handleRequest(() => api.post("/alunos", alunoData), "Falha ao criar aluno");
-
-export const updateAluno = (id, alunoData) =>
+export const createStudent = (studentData) =>
   handleRequest(
-    () => api.put(`/alunos/${id}`, alunoData),
+    () => api.post("/alunos", studentData),
+    "Falha ao criar aluno"
+  );
+
+export const updateStudent = (id, studentData) =>
+  handleRequest(
+    () => api.put(`/alunos/${id}`, studentData),
     "Falha ao atualizar aluno"
   );
 
-export const deleteAluno = (id) =>
-  handleRequest(() => api.delete(`/alunos/${id}`), "Falha ao deletar aluno");
+export const deleteStudent = (id) =>
+  handleRequest(
+    () => api.delete(`/alunos/${id}`),
+    "Falha ao deletar aluno"
+  );

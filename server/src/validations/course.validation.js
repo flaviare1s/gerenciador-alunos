@@ -1,7 +1,7 @@
 import Joi from "joi";
 
-export const cursoSchema = Joi.object({
-  nome: Joi.string()
+export const courseSchema = Joi.object({
+  name: Joi.string()
     .valid(
       "DESIGN",
       "MARKETING",
@@ -17,7 +17,7 @@ export const cursoSchema = Joi.object({
     )
     .required()
     .messages({
-      "any.required": "Selecione o nome do curso",
+      "any.required": "Selecione o name do curso",
       "any.only": "O valor selecionado para o curso é inválido",
     }),
 });

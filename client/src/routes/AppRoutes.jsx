@@ -7,10 +7,10 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Students />} />
-      <Route path="/cadastro-aluno" element={<StudentForm />} />
-      <Route path="/edicao-aluno/:id" element={<StudentForm />} />
-      <Route path="/cadastro-curso" element={<CourseForm />} />
-      <Route path="/edicao-curso/:id" element={<CourseForm />} />
+      <Route path="/cadastro-student" element={<StudentForm />} />
+      <Route path="/edicao-student/:id" element={<StudentForm />} />
+      <Route path="/cadastro-course" element={<CourseForm />} />
+      <Route path="/edicao-course/:id" element={<CourseForm />} />
     </Routes>
   );
 }

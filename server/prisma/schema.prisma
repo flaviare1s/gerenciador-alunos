@@ -7,49 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Aluno {
+model Student {
   id             Int           @id @default(autoincrement())
-  nome           String
-  sobrenome      String
-  dataNascimento DateTime?
+  firstName      String
+  lastName       String
+  birthDate      DateTime?
   cpf            String        @unique
-  genero         String
+  gender         Gender
   email          String        @unique
-  cep            String
-  rua            String
-  numero         String
-  complemento    String?
-  bairro         String?
-  cidade         String?
-  estado         String?
-  pais           String
-  cursos         AlunoCurso[]  // relação N:N com Curso
-  criadoEm       DateTime      @default(now())
-  atualizadoEm   DateTime      @updatedAt
+  zipCode        String
+  street         String
+  number         String
+  complement     String?
+  neighborhood   String?
+  city           String?
+  state          String?
+  country        String
+  enrollments    Enrollment[]  // N:N relation with Course
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
-model Curso {
+model Course {
   id           Int           @id @default(autoincrement())
-  nome         String     @unique
-  alunos       AlunoCurso[]  
-  criadoEm     DateTime      @default(now())
-  atualizadoEm DateTime      @updatedAt
+  name         String        @unique
+  students     Enrollment[]  
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
-model AlunoCurso {
+model Enrollment {
   id           Int         @id @default(autoincrement())
-  aluno        Aluno       @relation(fields: [alunoId], references: [id])
-  alunoId      Int
-  curso        Curso       @relation(fields: [cursoId], references: [id])
-  cursoId      Int
-  status       StatusCurso @default(EM_ANDAMENTO)
-  dataConclusao     DateTime?
+  student      Student     @relation(fields: [studentId], references: [id])
+  studentId    Int
+  course       Course      @relation(fields: [courseId], references: [id])
+  courseId     Int
+  status       CourseStatus @default(IN_PROGRESS)
+  completionDate DateTime?
 
-  @@unique([alunoId, cursoId])
-
+  @@unique([studentId, courseId])
 }
 
-enum StatusCurso {
-  EM_ANDAMENTO
-  CONCLUIDO
+enum CourseStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }
