@@ -17,15 +17,11 @@ export const alunoSchema = z.object({
       "A data de nascimento não pode ser futura"
     ),
   cpf: z.string().length(11, "O CPF deve ter 11 dígitos"),
-  genero: z.enum(["Feminino", "Masculino", "Outro"], {
-    errorMap: () => ({
-      message: "O gênero deve ser Feminino, Masculino ou Outro",
-    }),
-  }),
+  genero: z.string().nonempty("O gênero é obrigatório"),
   email: z.string().email("O e-mail deve ser válido"),
   cep: z.string().length(8, "O CEP deve ter 8 caracteres"),
   rua: z.string().min(3, "A rua é obrigatória"),
-  numero: z.string().min(1, "O número é obrigatório"),
+  numero: z.string().nonempty("O número é obrigatório"),
   complemento: z.string().optional(),
   bairro: z.string().optional(),
   cidade: z.string().min(2, "A cidade é obrigatória"),

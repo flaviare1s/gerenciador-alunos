@@ -7,9 +7,13 @@ import { getAllCursos } from "../services/course";
 import { getAlunoById, createAluno, deleteAluno } from "../services/student";
 import { StudentCoursesManager } from "../components/StudentCoursesManager";
 import { usePage } from "../contexts/PageContext";
+import { alunoSchema } from "../schemas/studentSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const StudentForm = () => {
-  const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm({
+    resolver: zodResolver(alunoSchema)
+  });
   const { id } = useParams();
   const navigate = useNavigate();
   const { setPageData } = usePage();
@@ -85,12 +89,17 @@ export const StudentForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      await createAluno(data);
+      const payload = {
+        ...data,
+        dataNascimento: data.dataNascimento ? new Date(data.dataNascimento).toISOString() : null
+      };
+      await createAluno(payload);
       toast.success("Aluno cadastrado com sucesso!");
       reset();
       navigate("/");
     } catch (error) {
-      toast.error("Erro ao cadastrar aluno.", error);
+      console.error("Erro ao criar aluno:", error);
+      toast.error("Erro ao cadastrar aluno. Verifique os dados.");
     }
   };
 

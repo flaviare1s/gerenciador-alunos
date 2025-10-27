@@ -16,12 +16,9 @@ export const alunoSchema = Joi.object({
     "string.length": "O CPF deve ter 11 dígitos",
     "any.required": "O CPF é obrigatório",
   }),
-  genero: Joi.string()
-    .valid("Feminino", "Masculino", "Outro")
-    .required()
-    .messages({
-      "any.only": "O gênero deve ser Feminino, Masculino ou Outro",
-    }),
+  genero: Joi.string().required().messages({
+    "string.empty": "O gênero é obrigatório",
+  }),
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .required()
