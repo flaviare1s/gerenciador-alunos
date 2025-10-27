@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { LiaPlusCircleSolid } from "react-icons/lia";
+import { FiTrash2 } from "react-icons/fi";
 import check from "../assets/img/Check.png";
-import { createMatricula } from "../services/aluno-curso";
+import { createMatricula, updateMatricula, deleteMatricula } from "../services/aluno-curso";
 import { getAlunoById } from "../services/aluno";
 import { toast } from "react-hot-toast";
 
@@ -67,7 +68,7 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
     setSubmitting(true);
 
     try {
-      await createMatricula(payload);
+      const result = await createMatricula(payload);
 
       const novoCurso = cursos.find(c => c.id === parseInt(cursoSelecionado));
 
@@ -76,6 +77,7 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
           ...cursosMatriculados,
           {
             id: novoCurso.id,
+            matriculaId: result.id,
             nome: novoCurso.nome,
             dataConclusao: dataConclusao || null
           }
@@ -93,13 +95,61 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
     }
   };
 
+  const handleUpdateCurso = async (matriculaId, cursoId, novaData) => {
+    if (!matriculaId) {
+      console.error("matriculaId está indefinido. Não é possível atualizar a matrícula.");
+      toast.error("Erro ao atualizar matrícula: ID da matrícula não encontrado.");
+      return;
+    }
+
+    try {
+      await updateMatricula(matriculaId, {
+        alunoId: parseInt(alunoId),
+        cursoId: cursoId,
+        dataConclusao: novaData || null,
+      });
+
+      setCursosMatriculados(
+        cursosMatriculados.map((c) =>
+          c.matriculaId === matriculaId
+            ? { ...c, dataConclusao: novaData }
+            : c
+        )
+      );
+
+      toast.success("Data de conclusão atualizada!");
+    } catch (error) {
+      console.error("Erro ao atualizar:", error);
+      toast.error("Erro ao atualizar data de conclusão.");
+    }
+  };
+
+  const handleRemoveCurso = async (cursoId, matriculaId) => {
+    if (isCreateMode) {
+      setCursosPendentes(cursosPendentes.filter(c => c.id !== cursoId));
+      toast.success("Curso removido!");
+      return;
+    }
+
+    if (!window.confirm("Deseja realmente remover este curso?")) {
+      return;
+    }
+
+    try {
+      await deleteMatricula(matriculaId);
+      setCursosMatriculados(cursosMatriculados.filter(c => c.matriculaId !== matriculaId));
+      toast.success("Matrícula removida com sucesso!");
+    } catch (error) {
+      console.error("Erro ao remover:", error);
+      toast.error("Erro ao remover matrícula. Tente novamente.");
+    }
+  };
+
   if (loading && !isCreateMode) {
     return <p className="text-gray-medium">Carregando cursos...</p>;
   }
 
-  const todosCursos = isCreateMode
-    ? cursosPendentes
-    : cursosMatriculados;
+  const todosCursos = isCreateMode ? cursosPendentes : cursosMatriculados;
 
   return (
     <>
@@ -108,38 +158,56 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
       {todosCursos.length > 0 && (
         <div className="flex flex-col gap-4 w-full mb-[26px]">
           {todosCursos.map((curso, index) => (
-            <div key={curso.id || index} className="flex items-center gap-4">
+            <div key={curso.matriculaId || curso.id || index} className="flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex-1 md:flex-3 relative">
                 <select
                   disabled
                   className="text-gray-medium w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input appearance-none bg-white"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239CA3AF'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E")`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 0.5rem center',
-                    backgroundSize: '1.25rem 1.25rem'
-                  }}
                 >
                   <option>{curso.nome}</option>
                 </select>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveCurso(curso.id, curso.matriculaId)}
+                  className="flex items-center justify-center text-primary cursor-pointer absolute right-3 top-2.5 center"
+                  style={{ width: "30px", height: "30px" }}
+                  title="Remover curso"
+                >
+                  <FiTrash2 className="w-5 h-5" />
+                </button>
               </div>
-              <div className="flex-1 relative">
-                <input
-                  type="date"
-                  defaultValue={curso.dataConclusao || ""}
-                  disabled
-                  className="text-gray-medium w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input"
-                />
-              </div>
-              <div className="flex items-center justify-center" style={{ width: "30px", height: "30px" }}>
-                <img className="w-6 h-6" src={check} alt="Check" />
+
+              <div className="flex items-center gap-4 flex-1">
+                <div className="flex-1 relative">
+                  <input
+                    type="date"
+                    defaultValue={curso.dataConclusao || ""}
+                    onChange={(e) => {
+                      if (!isCreateMode) {
+                        handleUpdateCurso(
+                          curso.matriculaId,
+                          curso.id,
+                          e.target.value
+                        );
+                      }
+                    }}
+                    disabled={isCreateMode}
+                    className="text-gray-medium w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center" style={{ width: "30px", height: "30px" }}>
+                    <img className="w-6 h-6" src={check} alt="Check" />
+                  </div>
+                </div>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      <div className="flex items-center gap-4 w-full">
+      <div className="flex flex-col md:flex-row md:items-end gap-4 w-full">
         <div className="flex-1 md:flex-3">
           <label className="text-sm font-medium text-neutral-black" htmlFor="curso">
             Curso
@@ -163,29 +231,33 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
             }
           </select>
         </div>
-        <div className="flex-1">
-          <label className="text-sm font-medium text-neutral-black" htmlFor="dataConclusao">
-            Data de Conclusão
-          </label>
-          <input
-            type="date"
-            id="dataConclusao"
-            name="dataConclusao"
-            value={dataConclusao}
-            onChange={(e) => setDataConclusao(e.target.value)}
-            className="text-gray-medium w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input mt-2"
+
+        <div className="flex items-end gap-4 flex-1">
+          <div className="flex-1">
+            <label className="text-sm font-medium text-neutral-black" htmlFor="dataConclusao">
+              Data de Conclusão
+            </label>
+            <input
+              type="date"
+              id="dataConclusao"
+              name="dataConclusao"
+              value={dataConclusao}
+              onChange={(e) => setDataConclusao(e.target.value)}
+              className="text-gray-medium w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input mt-2"
+              disabled={submitting}
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAddCurso}
             disabled={submitting}
-          />
+            className="flex items-center justify-center cursor-pointer disabled:opacity-50"
+            style={{ height: "30px", width: "30px" }}
+          >
+            <LiaPlusCircleSolid className="w-full h-full -mt-5" />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={handleAddCurso}
-          disabled={submitting}
-          className="ml-2 flex items-center justify-center cursor-pointer mt-7"
-          style={{ height: "30px", width: "30px" }}
-        >
-          <LiaPlusCircleSolid className="w-full h-full" />
-        </button>
       </div>
     </>
   );
