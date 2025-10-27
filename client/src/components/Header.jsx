@@ -5,13 +5,14 @@ import { IoIosArrowBack } from "react-icons/io";
 import { usePage } from "../contexts/PageContext";
 import { useState } from "react";
 import { ConfirmationModal } from "./ConfirmationModal";
+import { useEffect } from "react";
 
 export const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const isRoot = location.pathname === "/";
-  const { pageData } = usePage();
+  const { pageData, setPageData } = usePage();
 
   const handleDelete = async () => {
     if (pageData.onDelete) {
@@ -20,6 +21,16 @@ export const Header = () => {
     }
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setPageData({
+        title: "Gerenciador de alunos",
+        subtitle: "",
+        onDelete: null,
+      });
+    }
+  }, [location.pathname, setPageData]);
 
   return (
     <header className="bg-primary">
