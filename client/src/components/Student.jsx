@@ -5,8 +5,9 @@ import { FiTrash2 } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { deleteStudent } from "../services/student";
+import ReactDOM from "react-dom";
 
-export const Student = ({ student }) => {
+export const Student = ({ student, onStudentDeleted }) => {
   const [sliceCount, setSliceCount] = useState(1);
   const [isModalOpen, setModalOpen] = useState(false);
   const [studentIdToDelete, setStudentIdToDelete] = useState(null);
@@ -22,8 +23,11 @@ export const Student = ({ student }) => {
     try {
       await deleteStudent(studentIdToDelete);
       toast.success("Aluno deletado com sucesso!");
-    } catch (error) {
-      toast.error("Erro ao deletar aluno.", error);
+      if (onStudentDeleted) {
+        onStudentDeleted(studentIdToDelete);
+      }
+    } catch {
+      toast.error("Erro ao deletar aluno.");
     } finally {
       setModalOpen(false);
       setStudentIdToDelete(null);
@@ -101,11 +105,14 @@ export const Student = ({ student }) => {
           </button>
         </td>
       </tr>
-      <ConfirmationModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        onConfirm={confirmDelete}
-      />
+      {ReactDOM.createPortal(
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={confirmDelete}
+        />,
+        document.body
+      )}
     </>
   );
 };

@@ -3,10 +3,14 @@ import { Student } from "./Student";
 import { HiOutlineArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
 import { Pagination } from "./Pagination";
 
-export const StudentList = ({ filteredstudents = [] }) => {
+export const StudentList = ({ filteredstudents = [], setStudents }) => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const handleStudentDeleted = (id) => {
+    setStudents(prev => prev.filter(s => s.id !== id));
+  };
 
   const sortstudents = () => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -56,7 +60,11 @@ export const StudentList = ({ filteredstudents = [] }) => {
         </thead>
         <tbody>
           {currentstudents.map((student) => (
-            <Student key={student.id} student={student} />
+            <Student
+              key={student.id}
+              student={student}
+              onStudentDeleted={handleStudentDeleted}
+            />
           ))}
         </tbody>
       </table>

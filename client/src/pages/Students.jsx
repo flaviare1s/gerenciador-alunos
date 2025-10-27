@@ -29,8 +29,15 @@ export const Students = () => {
 
   return (
     <div>
-      <SearchBar students={students} setSearch={setSearch} search={search} />
-      <StudentList filteredstudents={filteredstudents} />
+      <SearchBar
+        students={students}
+        setSearch={setSearch}
+        search={search}
+      />
+      <StudentList
+        filteredstudents={filteredstudents}
+        setStudents={setstudents}
+      />
     </div>
   );
 };
