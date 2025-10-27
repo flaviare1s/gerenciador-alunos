@@ -5,6 +5,7 @@ import check from "../assets/img/Check.png";
 import { createMatricula, updateMatricula, deleteMatricula } from "../services/aluno-curso";
 import { getAlunoById } from "../services/aluno";
 import { toast } from "react-hot-toast";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) => {
   const [cursosMatriculados, setCursosMatriculados] = useState([]);
@@ -13,6 +14,8 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
   const [cursoSelecionado, setCursoSelecionado] = useState("");
   const [dataConclusao, setDataConclusao] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [cursoToDelete, setCursoToDelete] = useState(null);
 
   useEffect(() => {
     if (alunoId) {
@@ -124,24 +127,29 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
     }
   };
 
-  const handleRemoveCurso = async (cursoId, matriculaId) => {
-    if (isCreateMode) {
-      setCursosPendentes(cursosPendentes.filter(c => c.id !== cursoId));
-      toast.success("Curso removido!");
-      return;
-    }
+  const handleRemoveCurso = (cursoId) => {
+    setCursoToDelete(cursoId);
+    setModalOpen(true);
+  };
 
-    if (!window.confirm("Deseja realmente remover este curso?")) {
-      return;
-    }
-
-    try {
-      await deleteMatricula(matriculaId);
-      setCursosMatriculados(cursosMatriculados.filter(c => c.matriculaId !== matriculaId));
-      toast.success("Matrícula removida com sucesso!");
-    } catch (error) {
-      console.error("Erro ao remover:", error);
-      toast.error("Erro ao remover matrícula. Tente novamente.");
+  const confirmRemoveCurso = async () => {
+    if (cursoToDelete) {
+      try {
+        if (isCreateMode) {
+          setCursosPendentes(cursosPendentes.filter(c => c.id !== cursoToDelete));
+          toast.success("Curso removido!");
+        } else {
+          await deleteMatricula(cursoToDelete);
+          setCursosMatriculados(cursosMatriculados.filter(c => c.matriculaId !== cursoToDelete));
+          toast.success("Matrícula removida com sucesso!");
+        }
+      } catch (error) {
+        console.error("Erro ao remover:", error);
+        toast.error("Erro ao remover matrícula. Tente novamente.");
+      } finally {
+        setModalOpen(false);
+        setCursoToDelete(null);
+      }
     }
   };
 
@@ -259,6 +267,12 @@ export const AlunoCursosManager = ({ alunoId, cursos, isCreateMode = false }) =>
           </button>
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={confirmRemoveCurso}
+      />
     </>
   );
 };
