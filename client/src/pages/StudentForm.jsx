@@ -22,6 +22,7 @@ export const StudentForm = () => {
   const [_studentCourses, setStudentCourses] = useState([]);
   const [pendingCourses, setPendingCourses] = useState([]);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
 
   const cep = watch("zipCode");
 
@@ -98,15 +99,20 @@ export const StudentForm = () => {
 
   const mapGenderToEnglish = { Masculino: "MALE", Feminino: "FEMALE", Outro: "OTHER" };
 
+  const sanitizeZipCode = (zipCode) => zipCode.replace(/[^0-9]/g, "");
+  const sanitizeCPF = (cpf) => cpf.replace(/[^0-9]/g, "");
+
   const onSubmit = async (data) => {
     try {
-      const payload = {
+      const sanitizedData = {
         ...data,
+        zipCode: sanitizeZipCode(data.zipCode),
+        cpf: sanitizeCPF(data.cpf),
         gender: mapGenderToEnglish[data.gender] || "OTHER",
         birthDate: data.birthDate ? new Date(data.birthDate).toISOString() : null,
       };
 
-      const createdStudent = await createStudent(payload);
+      const createdStudent = await createStudent(sanitizedData);
       const studentId = createdStudent.id;
 
       for (const course of pendingCourses) {
@@ -122,13 +128,21 @@ export const StudentForm = () => {
       navigate("/");
     } catch (error) {
       console.error("Erro ao cadastrar aluno e cursos:", error);
-      toast.error("Erro ao cadastrar aluno. Verifique os dados.");
+      if (error.response && error.response.status === 409) {
+        setErrorMessage(error.response.data.message || "Erro de duplicidade: CPF ou email já cadastrado.");
+      } else {
+        setErrorMessage("Erro ao cadastrar aluno. Verifique os dados.");
+      }
+      toast.error("Erro ao cadastrar aluno.");
     }
   };
 
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full m-auto">
+      {errorMessage && (
+        <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+      )}
       <div className="flex flex-col sm:flex-row gap-6 w-full mb-[26px]">
         <InputField
           label="Nome*"

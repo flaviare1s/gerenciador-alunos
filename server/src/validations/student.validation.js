@@ -46,8 +46,7 @@ export const studentSchema = Joi.object({
     "string.empty": "A cidade é obrigatória",
     "string.min": "A cidade deve ter pelo menos 2 caracteres",
   }),
-  state: Joi.string().length(2).required().messages({
-    "string.length": "O estado deve ter 2 letras (UF)",
+  state: Joi.string().required().messages({
     "string.empty": "O estado é obrigatório",
   }),
   country: Joi.string().min(2).required().messages({
