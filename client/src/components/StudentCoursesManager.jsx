@@ -11,7 +11,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
   const [pendingCourses, setPendingCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState("");
-  const [completionDate, setcompletionDate] = useState("");
+  const [completionDate, setCompletionDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [courseToDelete, setcourseToDelete] = useState(null);
@@ -42,20 +42,20 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
     }
 
     if (isCreateMode) {
-      const novocourse = courses.find(c => c.id === parseInt(selectedCourse));
+      const newCourse = courses.find(c => c.id === parseInt(selectedCourse));
 
-      if (novocourse) {
+      if (newCourse) {
         setPendingCourses([
           ...pendingCourses,
           {
-            id: novocourse.id,
-            name: novocourse.name,
+            id: newCourse.id,
+            name: newCourse.name,
             completionDate: completionDate || null
           }
         ]);
 
         setSelectedCourse("");
-        setcompletionDate("");
+        setCompletionDate("");
         toast.success("Curso adicionado! Salve o aluno para confirmar a matrícula.");
       }
       return;
@@ -72,22 +72,22 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
     try {
       const result = await createEnrollment(payload);
 
-      const novocourse = courses.find(c => c.id === parseInt(selectedCourse));
+      const newCourse = courses.find(c => c.id === parseInt(selectedCourse));
 
-      if (novocourse) {
+      if (newCourse) {
         setEnrolledCourses([
           ...enrolledCourses,
           {
-            id: novocourse.id,
+            id: newCourse.id,
             matriculaId: result.id,
-            name: novocourse.name,
+            name: newCourse.name,
             completionDate: completionDate || null
           }
         ]);
       }
 
       setSelectedCourse("");
-      setcompletionDate("");
+      setCompletionDate("");
       toast.success("student matriculado com sucesso!");
     } catch (error) {
       console.error("Erro ao matricular:", error);
@@ -172,7 +172,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
         allCourses={allCourses}
         courses={courses}
         setSelectedCourse={setSelectedCourse}
-        setcompletionDate={setcompletionDate}
+        setCompletionDate={setCompletionDate}
         submitting={submitting}
         selectedCourse={selectedCourse}
         completionDate={completionDate}

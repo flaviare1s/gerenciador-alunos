@@ -163,9 +163,9 @@ export const StudentForm = () => {
             className="text-gray-medium bg-[#dbdbdb20] w-full px-5 h-[50px] font-medium font-sm rounded-md border border-border-input mt-2"
           >
             <option value="">Selecione</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Outro">Outro</option>
+            <option value="MALE">Masculino</option>
+            <option value="FEMALE">Feminino</option>
+            <option value="OTHER">Outro</option>
           </select>
           {errors.gender && (
             <span className="text-red-500 text-xs mt-1">{errors.gender.message}</span>

@@ -10,12 +10,13 @@ export const studentSchema = z.object({
     .min(2, "O lastName deve ter pelo menos 2 caracteres")
     .max(100, "O lastName deve ter no máximo 100 caracteres"),
   birthDate: z
-    .string()
-    .optional()
-    .refine(
-      (date) => !date || new Date(date) <= new Date(),
-      "A data de nascimento não pode ser futura"
-    ),
+  .string()
+  .nonempty("A data de nascimento é obrigatória")
+  .refine((date) => {
+    const d = new Date(date);
+    const today = new Date();
+    return !isNaN(d.getTime()) && d <= today;
+  }, "A data de nascimento não pode ser futura"),
   cpf: z.string().length(11, "O CPF deve ter 11 dígitos"),
   gender: z.enum(["MALE", "FEMALE", "OTHER"], "O gênero é obrigatório"),
   email: z.string().email("O e-mail deve ser válido"),
