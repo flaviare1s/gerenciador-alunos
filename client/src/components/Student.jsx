@@ -92,7 +92,7 @@ export const Student = ({ student, onStudentDeleted }) => {
         </td>
         <td className="py-[30px] flex items-center gap-4 px-6">
           <Link
-            to={`/edicao-student/${student.id}`}
+            to={`/edicao-aluno/${student.id}`}
             className="text-sm text-secondary font-medium hover:text-secondary/80"
           >
             <FaRegEdit className="w-5 h-5" />

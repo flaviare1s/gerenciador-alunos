@@ -1,12 +1,15 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { StudentForm } from "../pages/StudentForm";
 import { CourseForm } from "../pages/CourseForm";
 import { Students } from "../pages/Students";
+import { Courses } from "../pages/Courses";
 
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Students />} />
+      <Route path="/" element={<Navigate to="/alunos" replace />} />
+      <Route path="/alunos" element={<Students />} />
+      <Route path="/cursos" element={<Courses />} />
       <Route path="/cadastro-aluno" element={<StudentForm />} />
       <Route path="/edicao-aluno/:id" element={<StudentForm />} />
       <Route path="/cadastro-curso" element={<CourseForm />} />
