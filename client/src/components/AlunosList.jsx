@@ -32,7 +32,7 @@ export const AlunosList = ({ filteredAlunos = [] }) => {
       <table className="w-full">
         <thead>
           <tr className="border-b border-gray-border text-left">
-            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] hidden sm:flex items-center gap-1">
+            <th className="font-medium text-dark-gray text-xs px-6 py-[13px] hidden sm:table-cell items-center gap-1">
               Data de cadastro
               <button className="flex cursor-pointer" onClick={sortAlunos}>
                 {sortOrder === "asc" ? (
