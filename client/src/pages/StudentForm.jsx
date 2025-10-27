@@ -6,16 +6,13 @@ import { toast } from "react-hot-toast";
 import { getAllCursos } from "../services/course";
 import { getAlunoById } from "../services/student";
 import { StudentCoursesManager } from "../components/StudentCoursesManager";
+import { deleteAluno } from "../services/student";
+import { usePage } from "../contexts/PageContext";
 
 export const StudentForm = () => {
-  const {
-    register,
-    formState: { errors },
-    setValue,
-    watch,
-  } = useForm();
-
+  const { register, formState: { errors }, setValue, watch } = useForm();
   const { id } = useParams();
+  const { setPageData } = usePage();
   const [cursos, setCursos] = useState([]);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const cep = watch("cep");
@@ -27,13 +24,28 @@ export const StudentForm = () => {
         try {
           const aluno = await getAlunoById(id);
           Object.keys(aluno).forEach((key) => setValue(key, aluno[key]));
+
+          setPageData({
+            title: "Gerenciador de alunos",
+            subtitle: `${aluno.nome} ${aluno.sobrenome}`,
+            onDelete: async () => {
+              await deleteAluno(id);
+              toast.success("Aluno deletado com sucesso!");
+            },
+          });
         } catch {
           toast.error("Não foi possível carregar os dados do aluno.");
         }
       };
       fetchAluno();
+    } else {
+      setPageData({
+        title: "Gerenciador de alunos",
+        subtitle: "",
+        onDelete: null,
+      });
     }
-  }, [id, setValue]);
+  }, [id, setValue, setPageData]);
 
   useEffect(() => {
     const fetchAddress = async () => {
