@@ -21,9 +21,9 @@ export const Header = () => {
 
   useEffect(() => {
     if (location.pathname === "/alunos") {
-      setPageData({ title: "Alunos", onDelete: null });
+      setPageData({ title: "Gerenciador de alunos", onDelete: null });
     } else if (location.pathname === "/cursos") {
-      setPageData({ title: "Cursos", onDelete: null });
+      setPageData({ title: "Gerenciador de cursos", onDelete: null });
     }
   }, [location.pathname, setPageData]);
 

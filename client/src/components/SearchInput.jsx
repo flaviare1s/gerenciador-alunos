@@ -1,12 +1,12 @@
 import { FiSearch } from "react-icons/fi"
 
-export const SearchInput = ({ search, setSearch }) => {
+export const SearchInput = ({ search, setSearch, placeholder }) => {
 
   return (
     <div className="relative w-full">
       <input
         type="search"
-        placeholder="Buscar por aluno"
+        placeholder={placeholder}
         className="text-gray-medium py-2 pl-3 pr-10 font-medium border border-gray-light rounded-md w-full focus:outline-none focus:ring-1 focus:ring-primary"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
