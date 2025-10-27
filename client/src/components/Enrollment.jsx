@@ -1,6 +1,15 @@
 import { LiaPlusCircleSolid } from "react-icons/lia"
 
-export const Enrollment = ({ courses, allCourses, setSelectedCourse, setCompletionDate, submitting, selectedCourse, completionDate, handleAddcourse }) => {
+export const Enrollment = ({
+  courses = [],
+  allCourses = [],
+  setSelectedCourse,
+  setCompletionDate,
+  submitting,
+  selectedCourse,
+  completionDate,
+  handleAddcourse
+}) => {
   return (
     <div className="flex flex-col md:flex-row md:items-end gap-4 w-full">
       <div className="flex-1 md:flex-3">
@@ -16,8 +25,8 @@ export const Enrollment = ({ courses, allCourses, setSelectedCourse, setCompleti
           disabled={submitting}
         >
           <option value="">Selecione uma opção</option>
-          {courses
-            .filter(c => !allCourses.some(cm => cm.id === c.id))
+          {(courses || [])
+            .filter(c => !(allCourses || []).some(cm => cm.id === c.id))
             .map((course) => (
               <option key={course.id} value={course.id}>
                 {course.name}
@@ -54,5 +63,5 @@ export const Enrollment = ({ courses, allCourses, setSelectedCourse, setCompleti
         </button>
       </div>
     </div>
-  )
+  );
 }

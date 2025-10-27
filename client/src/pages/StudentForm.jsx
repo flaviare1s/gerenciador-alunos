@@ -17,92 +17,85 @@ export const StudentForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { setPageData } = usePage();
-  const [courses, setCourses] = useState([]);
+
+  const [allCourses, setAllCourses] = useState([]);
+  const [_studentCourses, setStudentCourses] = useState([]);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
+
   const cep = watch("zipCode");
 
   useEffect(() => {
-    if (id) {
-      setIsUpdateMode(true);
-      const fetchStudent = async () => {
-        try {
-          const student = await getStudentById(id);
+    if (!id) return;
 
-          Object.keys(student).forEach((key) => setValue(key, student[key]));
+    setIsUpdateMode(true);
 
-          const formattedCourses = student.enrollments?.map(enr => ({
-            id: enr.courseId,
-            matriculaId: enr.id,
-            name: enr.courseName || student.courses.find(c => c === enr.courseName) || "Curso desconhecido",
-            completionDate: enr.completionDate || null
-          })) || [];
+    const fetchStudent = async () => {
+      try {
+        const student = await getStudentById(id);
 
-          setValue("enrolledCourses", formattedCourses);
-          setCourses(formattedCourses);
+        Object.keys(student).forEach((key) => setValue(key, student[key]));
 
-          setPageData({
-            title: "Gerenciador de alunos",
-            subtitle: `${student.firstName} ${student.lastName}`,
-            onDelete: async () => {
-              await deleteStudent(id);
-              toast.success("Aluno deletado com sucesso!");
-              navigate("/");
-            },
-          });
-        } catch {
-          toast.error("Não foi possível carregar os dados do aluno.");
-        }
-      };
-      fetchStudent();
-    } else {
-      setPageData({
-        title: "Gerenciador de alunos",
-        subtitle: "",
-        onDelete: null,
-      });
-    }
+        const formattedCourses = student.enrollments?.map(enr => ({
+          id: enr.courseId,
+          matriculaId: enr.id,
+          name: enr.courseName,
+          completionDate: enr.completionDate || "",
+          status: enr.status
+        })) || [];
+
+        setStudentCourses(formattedCourses);
+
+        setPageData({
+          title: "Gerenciador de alunos",
+          subtitle: `${student.firstName} ${student.lastName}`,
+          onDelete: async () => {
+            await deleteStudent(id);
+            toast.success("Aluno deletado com sucesso!");
+            navigate("/");
+          },
+        });
+      } catch {
+        toast.error("Não foi possível carregar os dados do aluno.");
+      }
+    };
+
+    fetchStudent();
   }, [id, setValue, setPageData, navigate]);
 
   useEffect(() => {
-    const fetchAddress = async () => {
-      if (cep && cep.length === 8) {
-        try {
-          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-          const data = await response.json();
+    const fetchCourses = async () => {
+      try {
+        const data = await getAllCourses();
+        setAllCourses(data);
+      } catch {
+        toast.error("Não foi possível carregar os cursos disponíveis.");
+      }
+    };
+    fetchCourses();
+  }, []);
 
-          if (!data.erro) {
-            setValue("street", data.logradouro);
-            setValue("bairro", data.bairro);
-            setValue("cidade", data.localidade);
-            setValue("estado", data.uf);
-          }
-        } catch {
-          toast.error("Não foi possível buscar o endereço para o CEP informado.");
+  useEffect(() => {
+    if (!cep || cep.length !== 8) return;
+
+    const fetchAddress = async () => {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+        if (!data.erro) {
+          setValue("street", data.logradouro);
+          setValue("neighborhood", data.bairro);
+          setValue("city", data.localidade);
+          setValue("state", data.uf);
         }
+      } catch {
+        toast.error("Não foi possível buscar o endereço para o CEP informado.");
       }
     };
 
     fetchAddress();
   }, [cep, setValue]);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getAllCourses();
-        setCourses(data);
-      } catch {
-        toast.error("Não foi possível carregar os cursos disponíveis.");
-      }
-    };
-
-    fetchCourses();
-  }, []);
-
-  const mapGenderToEnglish = {
-    Masculino: "MALE",
-    Feminino: "FEMALE",
-    Outro: "OTHER",
-  };
+  const mapGenderToEnglish = { Masculino: "MALE", Feminino: "FEMALE", Outro: "OTHER" };
 
   const onSubmit = async (data) => {
     try {
@@ -207,7 +200,11 @@ export const StudentForm = () => {
         <InputField label="Estado*" name="state" type="text" placeholder="Digite seu estado" register={register} validation={{ required: "O estado é obrigatório" }} error={errors.state?.message} />
       </div>
 
-      <StudentCoursesManager studentId={id} courses={courses} isCreateMode={!isUpdateMode} />
+      <StudentCoursesManager
+        studentId={id}
+        courses={allCourses}
+        isCreateMode={!isUpdateMode}
+      />
 
       {!isUpdateMode && (
         <div className="flex justify-end mt-4">
