@@ -7,7 +7,7 @@ import { StudentCoursesManager } from "../components/StudentCoursesManager";
 import { usePage } from "../contexts/PageContext";
 import { studentSchema } from "../schemas/studentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createStudent, deleteStudent, getStudentById } from "../services/student";
+import { createStudent, deleteStudent, getStudentById, updateStudent } from "../services/student";
 import { getAllCourses } from "../services/course";
 import { createEnrollment } from "../services/enrollment";
 
@@ -111,30 +111,36 @@ export const StudentForm = () => {
         birthDate: data.birthDate ? new Date(data.birthDate).toISOString() : null,
       };
 
-      const createdStudent = await createStudent(sanitizedData);
-      const studentId = createdStudent.id;
-      if (pendingCourses.length > 0) {
-        const enrollmentPromises = pendingCourses.map(course => {
-          const completionDate = course.completionDate
-            ? new Date(course.completionDate + 'T00:00:00').toISOString()
-            : new Date().toISOString();
+      if (isUpdateMode) {
+        await updateStudent(id, sanitizedData);
+        toast.success("Aluno atualizado com sucesso!");
+      } else {
+        const createdStudent = await createStudent(sanitizedData);
+        const studentId = createdStudent.id;
 
-          return createEnrollment({
-            studentId,
-            courseId: course.id,
-            completionDate: completionDate,
+        if (pendingCourses.length > 0) {
+          const enrollmentPromises = pendingCourses.map(course => {
+            const completionDate = course.completionDate
+              ? new Date(course.completionDate + 'T00:00:00').toISOString()
+              : new Date().toISOString();
+
+            return createEnrollment({
+              studentId,
+              courseId: course.id,
+              completionDate: completionDate,
+            });
           });
-        });
 
-        await Promise.all(enrollmentPromises);
+          await Promise.all(enrollmentPromises);
+        }
+
+        toast.success("Aluno cadastrado com sucesso!");
       }
-
-      toast.success("Aluno cadastrado com sucesso!");
 
       reset();
       navigate("/");
     } catch (error) {
-      console.error("Erro ao cadastrar aluno:", error);
+      console.error("Erro ao cadastrar/atualizar aluno:", error);
       console.error("Response completo:", error.response);
       console.error("Data completo:", error.response?.data);
 
@@ -260,16 +266,14 @@ export const StudentForm = () => {
         setPendingCourses={setPendingCourses}
       />
 
-      {!isUpdateMode && (
-        <div className="flex justify-end mt-4">
-          <button
-            type="submit"
-            className="text-white bg-primary hover:bg-primary/90 text-sm font-medium py-2 px-4 mt-2 rounded-md transition-colors cursor-pointer"
-          >
-            Cadastrar aluno
-          </button>
-        </div>
-      )}
+      <div className="flex justify-end mt-4">
+        <button
+          type="submit"
+          className="text-white bg-primary hover:bg-primary/90 text-sm font-medium py-2 px-4 mt-2 rounded-md transition-colors cursor-pointer"
+        >
+          {isUpdateMode ? "Atualizar aluno" : "Cadastrar aluno"}
+        </button>
+      </div>
     </form>
   );
 };

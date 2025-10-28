@@ -52,9 +52,7 @@ export const getStudentById = async (req, res) => {
 export const getStudentWithCoursesById = async (req, res) => {
   try {
     const { id } = req.params;
-    const student = await studentService.getStudentWithCoursesById(
-      Number(id)
-    );
+    const student = await studentService.getStudentWithCoursesById(Number(id));
 
     return res.status(200).json(student);
   } catch (err) {
@@ -87,7 +85,7 @@ export const updateStudent = async (req, res) => {
     );
     return res.status(200).json({
       mensagem: "student atualizado com sucesso",
-      student: studentAtualizado,
+      student: studentUpdated,
     });
   } catch (err) {
     console.error("Erro ao atualizar student:", err);
