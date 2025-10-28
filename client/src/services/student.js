@@ -6,11 +6,16 @@ const handleRequest = async (request, errorMessage) => {
     return response.data;
   } catch (error) {
     console.error(`${errorMessage}:`, error.response || error.message);
-    throw new Error(
+
+    const customError = new Error(
       `${errorMessage}. Detalhes: ${
         error.response?.data?.message || error.message
       }`
     );
+    customError.response = error.response;
+    customError.status = error.response?.status;
+
+    throw customError;
   }
 };
 

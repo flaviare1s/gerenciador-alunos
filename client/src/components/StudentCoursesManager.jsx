@@ -78,10 +78,14 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
 
     setSubmitting(true);
     try {
+      const completionDateISO = completionDate
+        ? new Date(completionDate + 'T00:00:00').toISOString()
+        : new Date().toISOString();
+
       const result = await createEnrollment({
         studentId: parseInt(studentId),
         courseId: parseInt(selectedCourse),
-        completionDate: completionDate || null
+        completionDate: completionDateISO
       });
 
       setEnrolledCourses([
