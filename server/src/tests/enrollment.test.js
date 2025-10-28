@@ -49,7 +49,7 @@ describe("Enrollments API", () => {
   });
 
   describe("Happy Path", () => {
-    it("should create a new enrollment", async () => {
+    it("deve criar uma nova matricula", async () => {
       const response = await request(app).post("/api/matriculas").send({
         studentId,
         courseId,
@@ -64,7 +64,7 @@ describe("Enrollments API", () => {
       enrollmentId = response.body.id;
     });
 
-    it("should list all enrollments", async () => {
+    it("deve listar todas as matriculas", async () => {
       const response = await request(app).get("/api/matriculas");
 
       expect(response.status).toBe(200);
@@ -72,7 +72,7 @@ describe("Enrollments API", () => {
       expect(response.body.length).toBeGreaterThan(0);
     });
 
-    it("should get enrollment by id", async () => {
+    it("deve obter a matricula pelo id", async () => {
       const response = await request(app).get(
         `/api/matriculas/${enrollmentId}`
       );
@@ -83,7 +83,7 @@ describe("Enrollments API", () => {
       expect(response.body.courseId).toBe(courseId);
     });
 
-    it("should update an enrollment", async () => {
+    it("deve atualizar uma matricula", async () => {
       const response = await request(app)
         .put(`/api/matriculas/${enrollmentId}`)
         .send({ completionDate: "2025-11-30" });
@@ -92,7 +92,7 @@ describe("Enrollments API", () => {
       expect(response.body.completionDate).toBe("2025-11-30T00:00:00.000Z");
     });
 
-    it("should delete an enrollment", async () => {
+    it("deve deletar uma matricula", async () => {
       const response = await request(app).delete(
         `/api/matriculas/${enrollmentId}`
       );
@@ -100,20 +100,20 @@ describe("Enrollments API", () => {
     });
   });
 
-  describe("Error Scenarios", () => {
-    it("should return 404 when deleting non-existing enrollment", async () => {
+  describe("Cenários de Erro", () => {
+    it("deve retornar 404 ao deletar matricula inexistente", async () => {
       const response = await request(app).delete("/api/matriculas/99999");
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty("mensagem");
     });
 
-    it("should return 400 when creating enrollment with invalid data", async () => {
+    it("deve retornar 400 ao criar matricula com dados invalidos", async () => {
       const response = await request(app).post("/api/matriculas").send({});
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty("mensagem");
     });
 
-    it("should return conflict when student already enrolled", async () => {
+    it("deve retornar 409 quando aluno ja estiver matriculado", async () => {
       await request(app).post("/api/matriculas").send({
         studentId,
         courseId,
