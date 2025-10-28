@@ -1,49 +1,112 @@
-# Sistema de Gerenciamento de courses e students
+# Sistema de Gerenciamento de Cursos e Alunos
 
 ## Visão Geral do Projeto
 
-Módulo de sistema para gerenciar courses e students, permitindo criar, visualizar, editar e deletar courses e students, bem como associar students a courses específicos.
+Este sistema permite gerenciar cursos e alunos, oferecendo funcionalidades para criar, visualizar, editar e deletar cursos e alunos, além de associar alunos a cursos específicos.
 
-## Tecnologias
+## Tecnologias Utilizadas
 
 ### Front-end
 
-- React
-- Tailwind
-- Axios
+- **React**
+- **Tailwind CSS**
+- **Axios**
 
 ### Back-end
 
-- Node.js
-- Express
-- Prisma
+- **Node.js**
+- **Express**
+- **Prisma**
+- **Swagger** (para documentação da API)
 
-### Banco de dados
+### Banco de Dados
 
-- PostgreSQL
+- **PostgreSQL**
 
-## Front-end:
+## Funcionalidades
 
-1. Funcionalidades:
+### Front-end
 
-- Filtro de pesquisa de student
-- Listagem de students
-- Tabela com lista de students cadastrados
-- Botão de ação a cada linha da tabela (deletar / editar)
-- Interface para adicionar e editar students.
-- Ao optar por adicionar um novo student ou detalhar o student já cadastrado, deve abrir uma tela de detalhamento do student para que possam ser incluídas/atualizadas informações.
-- Integrar com alguma api de CEP's para auto preenchimento dos campos adicionais de localização.
-- Associação de students a courses:
-- Permitir que sejam adicionados courses que o student concluiu e também courses em andamento.
+- Filtro de pesquisa para alunos e cursos.
+- Listagem de alunos e cursos cadastrados.
+- Tabelas com ações (deletar/editar) para cada linha.
+- Interface para adicionar e editar alunos e cursos.
+- Tela de detalhamento do aluno, permitindo inclusão/atualização de informações.
+- Integração com a API ViaCEP para preenchimento automático de campos de localização.
+- Associação de alunos a cursos:
+  - Inclusão de cursos concluídos e em andamento.
 
-## Back-end:
+### Back-end
 
-1. API:
+1. **API**:
 
-- Endpoints REST para operações de CRUD de courses e students.
-- Endpoint para vincular/desvincular students a courses.
-- Validações para garantir que os dados sejam recebidos corretamente pela API.
+   - Endpoints REST para operações de CRUD de cursos, alunos e matrículas.
+   - Endpoint para vincular/desvincular alunos a cursos.
+   - Validações para garantir a integridade dos dados recebidos.
 
-2. Banco de Dados:
+2. **Banco de Dados**:
+   - Armazenamento de dados de cursos e alunos, incluindo associações (matrículas).
 
-- Para armazenar os dados dos courses e dos students, incluindo as associações entre eles.
+## Como Rodar o Projeto
+
+### Backend
+
+1. Entre na pasta `server`:
+   ```bash
+   cd server
+   ```
+2. Crie o banco de dados no PostgreSQL (exemplo: `escola_db`). Certifique-se de que o nome do banco está compatível com o arquivo `.env`.
+3. Copie o arquivo `.env.example` e renomeie para `.env`, ajustando as credenciais (usuário, senha e nome do banco).
+4. Instale as dependências:
+   ```bash
+   npm install
+   ```
+5. Execute o comando para iniciar o servidor e criar as tabelas e seeds no banco:
+   ```bash
+   npm run dev
+   ```
+6. Para rodar apenas o servidor:
+   ```bash
+   npm start
+   ```
+
+### Frontend
+
+1. Entre na pasta `client`:
+   ```bash
+   cd client
+   ```
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Copie o arquivo `.env.example` e renomeie para `.env`.
+4. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+5. Acesse o sistema no navegador pelo link gerado pelo servidor de desenvolvimento.
+
+## Documentação
+
+### Scripts do Banco de Dados
+
+Os scripts do banco estão disponíveis na pasta `docs`. No entanto, não é necessário utilizá-los diretamente, pois o comando `npm run dev` já executa as migrations e seeds, criando e populando o banco automaticamente.
+
+### Coleção do Insomnia
+
+A coleção do Insomnia também está disponível na pasta `docs`.
+
+### Documentação com Swagger
+
+A documentação da API está disponível em:
+[http://localhost:3000/api-docs/](http://localhost:3000/api-docs/)
+
+## Deploy
+
+- **Banco de Dados**: Supabase
+- **Back-end**: Render
+- **Front-end**: Vercel
+
+Acesse o sistema em produção:
+[https://gerenciador-alunos-beta.vercel.app/alunos](https://gerenciador-alunos-beta.vercel.app/alunos)
