@@ -67,6 +67,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
           id: newCourse.id,
           name: newCourse.name,
           completionDate: completionDate || null,
+          status: completionDate ? "COMPLETED" : "IN_PROGRESS",
         },
       ]);
 
@@ -125,7 +126,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
     };
 
     try {
-      const result = await updateEnrollment(matriculaId, payload);
+      await updateEnrollment(matriculaId, payload);
 
       setEnrolledCourses(
         enrolledCourses.map((c) =>
@@ -133,7 +134,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
             ? {
               ...c,
               completionDate: novaData,
-              status: result.status || c.status
+              status: novaData ? "COMPLETED" : "IN_PROGRESS",
             }
             : c
         )

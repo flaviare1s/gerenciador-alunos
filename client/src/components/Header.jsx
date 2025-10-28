@@ -41,7 +41,7 @@ export const Header = () => {
               <img className="w-full" src={logo} alt="Logo" />
             </div>
           </Link>
-          <h1 className="text-white font-bold sm:font-extrabold tracking-[1%] leading-[30px] flex items-center gap-1 sm:gap-2 text-sm sm:text-base -ml-2.5 sm:-ml-0">
+          <h1 className="text-white font-bold sm:font-extrabold tracking-[1%] leading-[30px] flex items-center gap-1 sm:gap-2 text-sm sm:text-base -ml-2.5 sm:ml-0">
             {pageData.title}
           </h1>
         </div>
