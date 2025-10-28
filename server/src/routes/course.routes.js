@@ -86,7 +86,6 @@ const router = Router();
  *                 createdAt: "2025-10-27T20:24:51.241Z"
  *                 updatedAt: "2025-10-27T20:25:13.208Z"
  */
-router.get("/", getCourses);
 
 /**
  * @swagger
@@ -129,7 +128,6 @@ router.get("/", getCourses);
  *               createdAt: "2025-10-28T10:41:30.875Z"
  *               updatedAt: "2025-10-28T10:41:30.875Z"
  */
-router.post("/", createCourse);
 
 /**
  * @swagger
@@ -171,7 +169,6 @@ router.post("/", createCourse);
  *       404:
  *         description: Curso não encontrado
  */
-router.get("/:id", getCourseById);
 
 /**
  * @swagger
@@ -223,7 +220,6 @@ router.get("/:id", getCourseById);
  *       404:
  *         description: Curso não encontrado
  */
-router.put("/:id", updateCourse);
 
 /**
  * @swagger
@@ -240,9 +236,34 @@ router.put("/:id", updateCourse);
  *           type: integer
  *         description: ID do curso a ser excluído
  *     responses:
- *       200:
+ *       204:
  *         description: Curso excluído com sucesso
+ *       404:
+ *         description: Curso não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                   example: "Curso não encontrado"
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensagem:
+ *                   type: string
+ *                   example: "Erro interno do servidor"
  */
+
+router.post("/", createCourse);
+router.get("/", getCourses);
+router.get("/:id", getCourseById);
+router.put("/:id", updateCourse);
 router.delete("/:id", deleteCourse);
 
 export default router;

@@ -60,7 +60,6 @@ const router = Router();
  *               status: "IN_PROGRESS"
  *               completionDate: "2025-12-31T00:00:00.000Z"
  */
-router.post("/", createEnrollment);
 
 /**
  * @swagger
@@ -171,7 +170,6 @@ router.post("/", createEnrollment);
  *                         format: date-time
  *                         example: 2025-10-27T16:15:15.827Z
  */
-router.get("/", getEnrollments);
 
 /**
  * @swagger
@@ -288,7 +286,6 @@ router.get("/", getEnrollments);
  *       404:
  *         description: Matrícula não encontrada
  */
-router.get("/:id", getEnrollmentById);
 
 /**
  * @swagger
@@ -348,7 +345,6 @@ router.get("/:id", getEnrollmentById);
  *       404:
  *         description: Matrícula não encontrada
  */
-router.put("/:id", updateEnrollment);
 
 /**
  * @swagger
@@ -365,11 +361,17 @@ router.put("/:id", updateEnrollment);
  *           type: integer
  *         description: ID da matrícula a ser excluída
  *     responses:
- *       200:
+ *       204:
  *         description: Matrícula excluída com sucesso
  *       404:
  *         description: Matrícula não encontrada
+ *       500:
+ *         description: Erro interno do servidor
  */
+router.post("/", createEnrollment);
+router.get("/", getEnrollments);
+router.get("/:id", getEnrollmentById);
+router.put("/:id", updateEnrollment);
 router.delete("/:id", deleteEnrollment);
 
 export default router;
