@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../../server.js";
+import { app } from "../../app.js";
 import prisma from "../../src/config/database.js";
 
 describe("Enrollments API", () => {
@@ -34,7 +34,6 @@ describe("Enrollments API", () => {
     const course = await prisma.course.create({
       data: {
         name: "Curso Teste",
-        description: "Descrição do curso teste",
       },
     });
 

@@ -13,10 +13,14 @@ export const createStudent = async (req, res) => {
       });
     }
 
-    if (error.erros) {
-      return res.status(400).json(error);
+    if (error.type === "validation") {
+      return res.status(400).json({
+        mensagem: error.mensagem,
+        erros: error.erros,
+      });
     }
 
+    console.error("Erro ao criar aluno:", error);
     res.status(500).json({ mensagem: "Erro interno ao criar aluno" });
   }
 };
@@ -35,7 +39,6 @@ export const getStudentById = async (req, res) => {
   try {
     const { id } = req.params;
     const student = await studentService.getStudentById(Number(id));
-
     return res.status(200).json(student);
   } catch (err) {
     if (err.type === "not_found") {
@@ -51,7 +54,6 @@ export const getStudentWithCoursesById = async (req, res) => {
   try {
     const { id } = req.params;
     const student = await studentService.getStudentWithCoursesById(Number(id));
-
     return res.status(200).json(student);
   } catch (err) {
     if (err.type === "not_found") {
@@ -68,11 +70,6 @@ export const getStudentWithCoursesById = async (req, res) => {
 export const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const student = await studentService.getStudentById(Number(id));
-    if (!student) {
-      return res.status(404).json({ mensagem: "Aluno não encontrado" });
-    }
 
     const { error } = studentSchema.validate(req.body, { abortEarly: false });
     if (error) {
@@ -91,6 +88,10 @@ export const updateStudent = async (req, res) => {
       student: studentUpdated,
     });
   } catch (err) {
+    if (err.type === "not_found") {
+      return res.status(404).json({ mensagem: err.mensagem });
+    }
+
     console.error("Erro ao atualizar aluno:", err);
     return res
       .status(500)
@@ -101,14 +102,14 @@ export const updateStudent = async (req, res) => {
 export const deleteStudent = async (req, res) => {
   try {
     const { id } = req.params;
-    const student = await studentService.deleteStudent(Number(id));
-
+    await studentService.deleteStudent(Number(id));
     return res.status(204).send();
   } catch (err) {
-    console.error("Erro ao deletar aluno:", err);
-    if (err.code === "P2025" || err.type === "not_found") {
-      return res.status(404).json({ mensagem: "Aluno não encontrado" });
+    if (err.type === "not_found") {
+      return res.status(404).json({ mensagem: err.mensagem });
     }
+
+    console.error("Erro ao deletar aluno:", err);
     return res.status(500).json({ mensagem: "Erro interno ao deletar aluno" });
   }
 };

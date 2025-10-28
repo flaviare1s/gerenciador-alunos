@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../../server.js";
+import { app } from "../../app.js";
 import prisma from "../../src/config/database.js";
 
 beforeAll(async () => {
