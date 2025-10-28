@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">17.64% </span>
+                <span class="strong">29.41% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/68</span>
+                <span class='fraction'>20/68</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">15% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>3/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">8.69% </span>
+                <span class="strong">21.73% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/23</span>
+                <span class='fraction'>5/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">17.46% </span>
+                <span class="strong">30.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/63</span>
+                <span class='fraction'>19/63</span>
             </div>
         
             
@@ -262,16 +262,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -313,7 +313,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -333,25 +333,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -455,17 +455,17 @@
 import { studentSchema } from "../validations/student.validation.js";
 import prisma from "../config/database.js";
 &nbsp;
-export const createStudent = <span class="fstat-no" title="function not covered" >as</span>ync (data) =&gt; {
-  const { error } = <span class="cstat-no" title="statement not covered" >studentSchema.validate(data, { abortEarly: false });</span>
-<span class="cstat-no" title="statement not covered" >  if (error) {</span>
-<span class="cstat-no" title="statement not covered" >    throw {</span>
+export const createStudent = async (data) =&gt; {
+  const { error } = studentSchema.validate(data, { abortEarly: false });
+  if (error) {
+    throw {
       type: "validation",
       mensagem: "Erro de validação",
-      erros: error.details.map(<span class="fstat-no" title="function not covered" >(d</span>) =&gt; <span class="cstat-no" title="statement not covered" >d.message)</span>,
+      erros: error.details.map((d) =&gt; d.message),
     };
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return await studentRepository.createStudent(data);</span>
+  return await studentRepository.createStudent(data);
 };
 &nbsp;
 export const createStudentWithCourses = <span class="fstat-no" title="function not covered" >as</span>ync (data) =&gt; {
@@ -526,8 +526,8 @@ export const getStudentsWithCourses = <span class="fstat-no" title="function not
   }));
 };
 &nbsp;
-export const getStudentById = <span class="fstat-no" title="function not covered" >as</span>ync (id) =&gt; {
-  const student = <span class="cstat-no" title="statement not covered" >await prisma.student.findUnique({</span>
+export const getStudentById = async (id) =&gt; {
+  const student = await prisma.student.findUnique({
     where: { id },
     include: {
       enrollments: {
@@ -538,14 +538,14 @@ export const getStudentById = <span class="fstat-no" title="function not covered
     },
   });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!student) {</span>
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!student) {
 <span class="cstat-no" title="statement not covered" >    throw {</span>
       type: "not_found",
       mensagem: "Aluno não encontrado",
     };
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return {</span>
+  return {
     ...student,
     courses: student.enrollments.map(<span class="fstat-no" title="function not covered" >(e</span>nrollment) =&gt; <span class="cstat-no" title="statement not covered" >enrollment.course.name)</span>,
   };
@@ -652,7 +652,7 @@ export const deleteStudent = <span class="fstat-no" title="function not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-28T12:26:03.135Z
+                at 2025-10-28T12:48:42.095Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
