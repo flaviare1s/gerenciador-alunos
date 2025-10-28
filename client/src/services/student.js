@@ -26,7 +26,6 @@ export const getStudentById = (id) =>
   handleRequest(() => api.get(`/alunos/${id}`), "Falha ao buscar aluno");
 
 export const createStudent = (studentData) => {
-  console.log("Dados enviados para criar aluno:", studentData);
   return handleRequest(
     () => api.post("/alunos", studentData),
     "Falha ao criar aluno"
