@@ -106,7 +106,7 @@ export const deleteStudent = async (req, res) => {
     return res.status(204).send();
   } catch (err) {
     console.error("Erro ao deletar aluno:", err);
-    if (err.code === "P2025") {
+    if (err.code === "P2025" || err.type === "not_found") {
       return res.status(404).json({ mensagem: "Aluno não encontrado" });
     }
     return res.status(500).json({ mensagem: "Erro interno ao deletar aluno" });
