@@ -1,2 +1,2 @@
 import dotenv from "dotenv";
-dotenv.config({ path: ".env.teste" });
+dotenv.config({ path: ".env.test" });

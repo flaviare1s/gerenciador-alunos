@@ -10,7 +10,9 @@
     "migrate": "prisma migrate dev --name init",
     "test": "cross-env NODE_ENV=teste node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "coverage": "cross-env NODE_ENV=teste node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
-    "open-coverage": "start ./coverage/lcov-report/index.html"
+    "open-coverage": "start ./coverage/lcov-report/index.html",
+    "migrate:test": "cross-env DATABASE_URL=postgresql://postgres:admin@localhost:5432/test_db prisma migrate dev --name init",
+    "seed:test": "cross-env DATABASE_URL=postgresql://postgres:admin@localhost:5432/test_db node prisma/seed.js"
   },
   "keywords": [],
   "author": "",
