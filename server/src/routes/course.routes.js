@@ -11,8 +11,10 @@ const router = Router();
 
 /**
  * @swagger
- * /courses:
+ * /cursos:
  *   get:
+ *     tags:
+ *       - Cursos
  *     summary: Retorna a lista de cursos
  *     responses:
  *       200:
@@ -88,8 +90,10 @@ router.get("/", getCourses);
 
 /**
  * @swagger
- * /courses:
+ * /cursos:
  *   post:
+ *     tags:
+ *       - Cursos
  *     summary: Cria um novo curso
  *     requestBody:
  *       required: true
@@ -129,8 +133,10 @@ router.post("/", createCourse);
 
 /**
  * @swagger
- * /courses/{id}:
+ * /cursos/{id}:
  *   get:
+ *     tags:
+ *       - Cursos
  *     summary: Retorna um curso pelo ID
  *     parameters:
  *       - in: path
@@ -169,8 +175,10 @@ router.get("/:id", getCourseById);
 
 /**
  * @swagger
- * /courses/{id}:
+ * /cursos/{id}:
  *   put:
+ *     tags:
+ *       - Cursos
  *     summary: Atualiza um curso pelo ID
  *     parameters:
  *       - in: path
@@ -219,51 +227,21 @@ router.put("/:id", updateCourse);
 
 /**
  * @swagger
- * /courses/{id}:
- *   put:
- *     summary: Atualiza um curso pelo ID
+ * /cursos/{id}:
+ *   delete:
+ *     tags:
+ *       - Cursos
+ *     summary: Exclui um curso pelo ID
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do curso a ser atualizado
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: "FrontEnd"
+ *         description: ID do curso a ser excluído
  *     responses:
  *       200:
- *         description: Curso atualizado com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                 name:
- *                   type: string
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
- *             example:
- *               id: 6
- *               name: "FrontEnd"
- *               createdAt: "2025-10-27T16:15:15.842Z"
- *               updatedAt: "2025-10-28T10:44:15.010Z"
- *       404:
- *         description: Curso não encontrado
+ *         description: Curso excluído com sucesso
  */
 router.delete("/:id", deleteCourse);
 
