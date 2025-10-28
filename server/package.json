@@ -8,8 +8,8 @@
     "dev": "npm run migrate && npm run seed && npm start",
     "seed": "node prisma/seed.js",
     "migrate": "prisma migrate dev --name init",
-    "test": "cross-env NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
-    "coverage": "cross-env NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
+    "test": "cross-env NODE_ENV=teste node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "coverage": "cross-env NODE_ENV=teste node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
     "open-coverage": "start ./coverage/lcov-report/index.html"
   },
   "keywords": [],
