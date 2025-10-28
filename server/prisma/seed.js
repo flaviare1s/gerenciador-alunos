@@ -101,11 +101,13 @@ async function main() {
         email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`,
         cpf: `${Math.floor(10000000000 + Math.random() * 90000000000)}`,
         gender: "OTHER",
-        zipCode: "00000-000",
-        street: "Rua Exemplo",
+        zipCode: "91530566",
+        street: "Beco H",
         number: "123",
         country: "Brasil",
-        birthDate: null,
+        neighborhood: "Partenon",
+        city: "Porto Alegre",
+        birthDate: new Date("1990-01-01"),
       },
     });
 
