@@ -1,0 +1,452 @@
+type: collection.insomnia.rest/5.0
+name: Trindtech
+meta:
+  id: wrk_f9699f3f39c94a3e9f20c1d45db35c26
+  created: 1761129638154
+  modified: 1761129638154
+  description: ""
+collection:
+  - name: Alunos
+    meta:
+      id: fld_6dc59e03e58f440eab1a718a6734c990
+      created: 1761129646458
+      modified: 1761129646458
+      sortKey: -1761129646458
+      description: ""
+    children:
+      - url: http://localhost:3000/api/alunos
+        name: Criar aluno
+        meta:
+          id: req_696fd1b4573344db97aad334405ac0fd
+          created: 1761129649583
+          modified: 1761645415955
+          isPrivate: false
+          description: ""
+          sortKey: -1761129649583
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "firstName": "Matheus2",
+              "lastName": "Souza",
+              "birthDate": "2002-10-10T00:00:00.000Z",
+              "cpf": "12345678906",
+              "gender": "MALE",
+              "email": "matheues2@example.com",
+              "zipCode": "60115060",
+              "street": "Rua das Palmeiras",
+              "number": "123",
+              "complement": "Apto 402",
+              "neighborhood": "Aldeota",
+              "city": "Fortaleza",
+              "state": "CE",
+              "country": "Brasil",
+            	"enrollments": [
+            		{
+            			"id": 1,
+            			"studentId": 71,
+            			"courseId": 1,
+            			"status": "IN_PROGRESS",
+            			"completionDate": "2025-08-30T00:00:00.000Z",
+            			"course": {
+            				"id": 1,
+            				"name": "Design",
+            				"createdAt": "2025-10-27T16:15:15.827Z",
+            				"updatedAt": "2025-10-27T16:15:15.827Z"
+            			}
+            		}]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/alunos
+        name: Listar alunos
+        meta:
+          id: req_b8cf2cac2ac348488326029ad3b69bd9
+          created: 1761129890540
+          modified: 1761136522211
+          isPrivate: false
+          description: ""
+          sortKey: -1761129890540
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/alunos/1
+        name: Listar aluno por ID
+        meta:
+          id: req_d63b3597f72343c7bb4b9cc4b0ef4115
+          created: 1761129916514
+          modified: 1761136530861
+          isPrivate: false
+          description: ""
+          sortKey: -1761129916514
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/alunos/61
+        name: Deletar aluno
+        meta:
+          id: req_0e77dfcf8fcf41a988052bdab8f211e8
+          created: 1761129948715
+          modified: 1761646691727
+          isPrivate: false
+          description: ""
+          sortKey: -1761129948715
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/alunos/70
+        name: Atualizar aluno
+        meta:
+          id: req_c12bad8c90304244a93d6fe655aa8f8c
+          created: 1761129980224
+          modified: 1761645600056
+          isPrivate: false
+          description: ""
+          sortKey: -1761129980224
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+              	"firstName": "Matheus",
+            		"lastName": "Souza",
+            		"birthDate": "2002-10-10T00:00:00.000Z",
+            		"cpf": "12345678903",
+            		"gender": "MALE",
+            		"email": "matheue@example.com",
+            		"zipCode": "60115060",
+            		"street": "Rua das Palmeiras",
+            		"number": "123",
+            		"complement": "Apto 402",
+            		"neighborhood": "Aldeota",
+            		"city": "Fortaleza",
+            		"state": "CE",
+            		"country": "Brasil"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Cursos
+    meta:
+      id: fld_6b6e58f1cc38418d846c74126d37f239
+      created: 1761131380797
+      modified: 1761131380797
+      sortKey: -1759935218140
+      description: ""
+    children:
+      - url: http://localhost:3000/api/cursos
+        name: Criar curso
+        meta:
+          id: req_96e43f6b4aca4cacb56d22c1afc6d55f
+          created: 1761131380798
+          modified: 1761596453379
+          isPrivate: false
+          description: ""
+          sortKey: -1761129649583
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+            		"name": "Teste"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/cursos
+        name: Listar cursos
+        meta:
+          id: req_fb0a9032ab1c4c99b7a580dce188748f
+          created: 1761131380800
+          modified: 1761136495213
+          isPrivate: false
+          description: ""
+          sortKey: -1761129890540
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/cursos/2
+        name: Listar curso por ID
+        meta:
+          id: req_6290ff2b58034a9daf00853d106cb35c
+          created: 1761131380801
+          modified: 1761136503089
+          isPrivate: false
+          description: ""
+          sortKey: -1761129916514
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/cursos/6
+        name: Atualizar curso
+        meta:
+          id: req_1856fc9f4afe4672b79ee7215f98de8e
+          created: 1761131380802
+          modified: 1761646753251
+          isPrivate: false
+          description: ""
+          sortKey: -1761129980224
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+            		"name": "FrontEnd"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/cursos/15
+        name: Deletar curso
+        meta:
+          id: req_ce22163720994acd8d9119d6501ecbc3
+          created: 1761131380802
+          modified: 1761646777377
+          isPrivate: false
+          description: ""
+          sortKey: -1761129948715
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Aluno-Curso
+    meta:
+      id: fld_b48c096c7ab54136813f10729ea68237
+      created: 1761136193521
+      modified: 1761136193521
+      sortKey: -1759338003981
+      description: ""
+    children:
+      - url: http://localhost:3000/api/matriculas
+        name: Matricular aluno  em curso
+        meta:
+          id: req_f89102d7523f4840b7942d425b2868b1
+          created: 1761136193523
+          modified: 1761645656897
+          isPrivate: false
+          description: ""
+          sortKey: -1761129649583
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "studentId": 2,
+              "courseId": 8,
+               "completionDate": "2025-12-31T00:00:00.000Z"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/matriculas
+        name: Listar matrículas
+        meta:
+          id: req_9d89a4afe0614654b502ba6500c53e1a
+          created: 1761136193526
+          modified: 1761586429115
+          isPrivate: false
+          description: ""
+          sortKey: -1761129890540
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/matriculas/2
+        name: Listar matrícula por ID
+        meta:
+          id: req_8a9de14a9d1d44e4a05196b681e04359
+          created: 1761136193527
+          modified: 1761586393475
+          isPrivate: false
+          description: ""
+          sortKey: -1761129916514
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/matriculas/1
+        name: Atualizar matrícula
+        meta:
+          id: req_34826df1ad8346e1b52f5b722c195ba5
+          created: 1761136193528
+          modified: 1761645694251
+          isPrivate: false
+          description: ""
+          sortKey: -1761129980224
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "studentId": 2,
+              "courseId": 8,
+               "completionDate": "2026-12-31T00:00:00.000Z"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/matriculas/1
+        name: Deletar matrícula
+        meta:
+          id: req_26860afe84bc46cba17e68ae602c3789
+          created: 1761136193529
+          modified: 1761586419691
+          isPrivate: false
+          description: ""
+          sortKey: -1761129948715
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_212269ce5832db151eacdcccf95e2d456ba0c370
+    created: 1761129638159
+    modified: 1761129638159
+environments:
+  name: Base Environment
+  meta:
+    id: env_212269ce5832db151eacdcccf95e2d456ba0c370
+    created: 1761129638157
+    modified: 1761129638157
+    isPrivate: false

@@ -7,7 +7,7 @@ import { StudentCoursesManager } from "../components/StudentCoursesManager";
 import { usePage } from "../contexts/PageContext";
 import { studentSchema } from "../schemas/studentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createStudent, deleteStudent, getStudentById } from "../services/student";
+import { createStudent, deleteStudent, getStudentById, updateStudent } from "../services/student";
 import { getAllCourses } from "../services/course";
 import { createEnrollment } from "../services/enrollment";
 
@@ -22,7 +22,6 @@ export const StudentForm = () => {
   const [_studentCourses, setStudentCourses] = useState([]);
   const [pendingCourses, setPendingCourses] = useState([]);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
 
   const cep = watch("zipCode");
 
@@ -112,37 +111,69 @@ export const StudentForm = () => {
         birthDate: data.birthDate ? new Date(data.birthDate).toISOString() : null,
       };
 
-      const createdStudent = await createStudent(sanitizedData);
-      const studentId = createdStudent.id;
+      if (isUpdateMode) {
+        await updateStudent(id, sanitizedData);
+        toast.success("Aluno atualizado com sucesso!");
+      } else {
+        const createdStudent = await createStudent(sanitizedData);
+        const studentId = createdStudent.id;
 
-      for (const course of pendingCourses) {
-        await createEnrollment({
-          studentId,
-          courseId: course.id,
-          completionDate: course.completionDate || null,
-        });
+        if (pendingCourses.length > 0) {
+          const enrollmentPromises = pendingCourses.map(course => {
+            const completionDate = course.completionDate
+              ? new Date(course.completionDate + 'T00:00:00').toISOString()
+              : new Date().toISOString();
+
+            return createEnrollment({
+              studentId,
+              courseId: course.id,
+              completionDate: completionDate,
+            });
+          });
+
+          await Promise.all(enrollmentPromises);
+        }
+
+        toast.success("Aluno cadastrado com sucesso!");
       }
 
-      toast.success("Aluno cadastrado com sucesso!");
       reset();
       navigate("/");
     } catch (error) {
-      console.error("Erro ao cadastrar aluno e cursos:", error);
-      if (error.response && error.response.status === 409) {
-        setErrorMessage(error.response.data.message || "Erro de duplicidade: CPF ou email já cadastrado.");
-      } else {
-        setErrorMessage("Erro ao cadastrar aluno. Verifique os dados.");
+      console.error("Erro ao cadastrar/atualizar aluno:", error);
+      console.error("Response completo:", error.response);
+      console.error("Data completo:", error.response?.data);
+
+      const backendData = error.response?.data;
+      let backendMessage = backendData?.message ||
+        backendData?.mensagem ||
+        backendData?.error ||
+        error.message;
+
+      if (backendData?.erros && Array.isArray(backendData.erros) && backendData.erros.length > 0) {
+        backendMessage = backendData.erros[0];
       }
-      toast.error("Erro ao cadastrar aluno.");
+
+      if (error.response?.status === 409 || backendMessage?.toLowerCase().includes('já cadastrado')) {
+        if (backendMessage?.toLowerCase().includes('cpf')) {
+          toast.error('CPF já cadastrado no sistema!', { duration: 5000 });
+        } else if (backendMessage?.toLowerCase().includes('email') || backendMessage?.toLowerCase().includes('e-mail')) {
+          toast.error('E-mail já cadastrado no sistema!', { duration: 5000 });
+        } else {
+          toast.error(backendMessage || 'Já existe um cadastro com esses dados!', { duration: 5000 });
+        }
+      }
+      else if (error.response?.status === 400) {
+        toast.error(backendMessage || 'Dados inválidos. Verifique os campos.', { duration: 5000 });
+      }
+      else {
+        toast.error(backendMessage || 'Erro ao cadastrar aluno. Tente novamente.', { duration: 4000 });
+      }
     }
   };
 
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full m-auto">
-      {errorMessage && (
-        <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
-      )}
       <div className="flex flex-col sm:flex-row gap-6 w-full mb-[26px]">
         <InputField
           label="Nome*"
@@ -219,7 +250,7 @@ export const StudentForm = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-[26px]">
         <InputField label="CEP*" name="zipCode" type="text" placeholder="Digite seu CEP" register={register} validation={{ required: "O CEP é obrigatório" }} error={errors.zipCode?.message} />
         <InputField label="País*" name="country" type="text" placeholder="Digite seu país" register={register} validation={{ required: "O país é obrigatório" }} error={errors.country?.message} />
-        <InputField label="street*" name="street" type="text" placeholder="Digite sua rua" register={register} validation={{ required: "A rua é obrigatória" }} error={errors.street?.message} />
+        <InputField label="Rua*" name="street" type="text" placeholder="Digite sua rua" register={register} validation={{ required: "A rua é obrigatória" }} error={errors.street?.message} />
         <InputField label="Bairro*" name="neighborhood" type="text" placeholder="Digite seu bairro" register={register} validation={{ required: "O bairro é obrigatório" }} error={errors.neighborhood?.message} />
         <InputField label="Número*" name="number" type="text" placeholder="Digite o número" register={register} validation={{ required: "O número é obrigatório" }} error={errors.number?.message} />
         <InputField label="Complemento" name="complement" type="text" placeholder="Digite o complemento" register={register} error={errors.complement?.message} />
@@ -235,16 +266,14 @@ export const StudentForm = () => {
         setPendingCourses={setPendingCourses}
       />
 
-      {!isUpdateMode && (
-        <div className="flex justify-end mt-4">
-          <button
-            type="submit"
-            className="text-white bg-primary hover:bg-primary/90 text-sm font-medium py-2 px-4 mt-2 rounded-md transition-colors cursor-pointer"
-          >
-            Cadastrar aluno
-          </button>
-        </div>
-      )}
+      <div className="flex justify-end mt-4">
+        <button
+          type="submit"
+          className="text-white bg-primary hover:bg-primary/90 text-sm font-medium py-2 px-4 mt-2 rounded-md transition-colors cursor-pointer"
+        >
+          {isUpdateMode ? "Atualizar aluno" : "Cadastrar aluno"}
+        </button>
+      </div>
     </form>
   );
 };

@@ -6,11 +6,16 @@ const handleRequest = async (request, errorMessage) => {
     return response.data;
   } catch (error) {
     console.error(`${errorMessage}:`, error.response || error.message);
-    throw new Error(
+
+    const customError = new Error(
       `${errorMessage}. Detalhes: ${
         error.response?.data?.message || error.message
       }`
     );
+    customError.response = error.response;
+    customError.status = error.response?.status;
+
+    throw customError;
   }
 };
 
@@ -21,7 +26,6 @@ export const getStudentById = (id) =>
   handleRequest(() => api.get(`/alunos/${id}`), "Falha ao buscar aluno");
 
 export const createStudent = (studentData) => {
-  console.log("Dados enviados para criar aluno:", studentData);
   return handleRequest(
     () => api.post("/alunos", studentData),
     "Falha ao criar aluno"

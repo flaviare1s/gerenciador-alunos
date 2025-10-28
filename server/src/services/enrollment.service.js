@@ -1,7 +1,6 @@
 import * as enrollmentRepository from "../repositories/enrollment.repository.js";
 import { enrollmentSchema } from "../validations/enrollment.validation.js";
-import * as studentRepository from "../repositories/student.repository.js";
-import * as courseRepository from "../repositories/course.repository.js";
+import prisma from "../config/database.js";
 
 const calculateStatus = (completionDate) => {
   if (!completionDate) return "IN_PROGRESS";
@@ -20,51 +19,47 @@ export const createEnrollment = async (data) => {
     };
   }
 
-  try {
-    const student = await studentRepository.getStudentById(data.studentId);
-    if (!student) {
-      throw {
-        type: "not_found",
-        mensagem: "O aluno especificado não foi encontrado.",
-      };
-    }
-
-    const course = await courseRepository.getCourseById(data.courseId);
-    if (!course) {
-      throw {
-        type: "not_found",
-        mensagem: "O curso especificado não foi encontrado.",
-      };
-    }
-
-    const existe = await enrollmentRepository.getEnrollmentByStudentAndCourse(
-      data.studentId,
-      data.courseId
-    );
-    if (existe) {
-      throw {
-        type: "conflict",
-        mensagem: "O aluno já está matriculado neste curso.",
-      };
-    }
-
-    const completionDateObj = new Date(data.completionDate);
-    const status = calculateStatus(completionDateObj);
-
-    return await enrollmentRepository.createEnrollment({
-      ...data,
-      completionDate: completionDateObj,
-      status,
-    });
-  } catch (err) {
-    if (!err.type) {
-      throw {
-        type: "server_error",
-        mensagem: "Erro interno ao processar a solicitação.",
-      };
-    }
-    throw err;
+  const student = await prisma.student.findUnique({
+    where: { id: data.studentId },
+  });
+  if (!student) {
+    throw {
+      type: "not_found",
+      mensagem: "O aluno especificado não foi encontrado.",
+    };
   }
+
+  const course = await prisma.course.findUnique({
+    where: { id: data.courseId },
+  });
+  if (!course) {
+    throw {
+      type: "not_found",
+      mensagem: "O curso especificado não foi encontrado.",
+    };
+  }
+
+  const existe = await enrollmentRepository.getEnrollmentByStudentAndCourse(
+    data.studentId,
+    data.courseId
+  );
+  if (existe) {
+    throw {
+      type: "conflict",
+      mensagem: "O aluno já está matriculado neste curso.",
+    };
+  }
+
+  const completionDateObj = data.completionDate
+    ? new Date(data.completionDate)
+    : null;
+  const status = calculateStatus(completionDateObj);
+
+  return await enrollmentRepository.createEnrollment({
+    ...data,
+    completionDate: completionDateObj,
+    status,
+  });
 };
 
 export const getEnrollments = async () => {
@@ -85,22 +80,33 @@ export const getEnrollmentById = async (id) => {
 export const updateEnrollment = async (id, data) => {
   await getEnrollmentById(id);
 
-  const { error } = enrollmentSchema.validate(data, {
-    abortEarly: false,
-    allowUnknown: true,
-  });
-  if (error) {
-    throw {
-      type: "validation",
-      mensagem: "Erro de validação",
-      erros: error.details.map((d) => d.message),
-    };
+  if (
+    data.studentId !== undefined ||
+    data.courseId !== undefined ||
+    data.completionDate !== undefined
+  ) {
+    if (data.studentId !== undefined || data.courseId !== undefined) {
+      const { error } = enrollmentSchema.validate(data, {
+        abortEarly: false,
+      });
+      if (error) {
+        throw {
+          type: "validation",
+          mensagem: "Erro de validação",
+          erros: error.details.map((d) => d.message),
+        };
+      }
+    }
   }
 
   if (data.studentId || data.courseId) {
+    const currentEnrollment = await enrollmentRepository.getEnrollmentById(id);
+    const studentIdToCheck = data.studentId || currentEnrollment.studentId;
+    const courseIdToCheck = data.courseId || currentEnrollment.courseId;
+
     const existe = await enrollmentRepository.getEnrollmentByStudentAndCourse(
-      data.studentId ?? undefined,
-      data.courseId ?? undefined
+      studentIdToCheck,
+      courseIdToCheck
     );
     if (existe && existe.id !== id) {
       throw {
@@ -111,6 +117,7 @@ export const updateEnrollment = async (id, data) => {
   }
 
   if (data.completionDate) {
+    data.completionDate = new Date(data.completionDate);
     data.status = calculateStatus(data.completionDate);
   }
 

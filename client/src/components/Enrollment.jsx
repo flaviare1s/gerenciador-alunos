@@ -11,7 +11,7 @@ export const Enrollment = ({
   handleAddCourse
 }) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-end gap-4 w-full">
+    <div className="flex flex-col md:flex-row md:items-end gap-4 w-full px-2">
       <div className="flex-1 md:flex-3">
         <label className="text-sm font-medium text-neutral-black" htmlFor="course">
           Curso
@@ -36,7 +36,7 @@ export const Enrollment = ({
         </select>
       </div>
 
-      <div className="flex items-end gap-4 flex-1">
+      <div className="flex items-end gap-6 sm:gap-4 flex-1">
         <div className="flex-1">
           <label className="text-sm font-medium text-neutral-black" htmlFor="completionDate">
             Data de Conclusão

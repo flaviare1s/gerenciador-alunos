@@ -8,7 +8,7 @@ export const StudentCourse = ({ allCourses = [], handleRemoveCourse, handleUpdat
       {allCourses.length > 0 && (
         <div className="flex flex-col gap-4 w-full mb-[26px]">
           {allCourses.map((course, index) => (
-            <div key={course.matriculaId || course.id || index} className="flex flex-col md:flex-row md:items-center gap-4">
+            <div key={course.matriculaId || course.id || index} className="flex flex-col md:flex-row md:items-center gap-4 border sm:border-none border-border-input p-2 rounded-md mb-2 sm:mb-0">
               <div className="flex-1 md:flex-3 relative">
                 <select
                   disabled
@@ -27,7 +27,7 @@ export const StudentCourse = ({ allCourses = [], handleRemoveCourse, handleUpdat
                 </button>
               </div>
 
-              <div className="flex items-center gap-4 flex-1">
+              <div className="flex items-center gap-6 sm:gap-4 flex-1">
                 <div className="flex-1 relative">
                   <input
                     type="date"

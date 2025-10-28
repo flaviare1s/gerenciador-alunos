@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { updateEnrollment, deleteEnrollment } from "../services/enrollment";
+import { updateEnrollment, deleteEnrollment, createEnrollment } from "../services/enrollment";
 import { toast } from "react-hot-toast";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { StudentCourse } from "./StudentCourse";
@@ -11,7 +11,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
   const [loading, setLoading] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [completionDate, setCompletionDate] = useState("");
-  const [submitting] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState(null);
 
@@ -20,7 +20,6 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       setLoading(true);
       getStudentById(studentId)
         .then((data) => {
-
           const formattedCourses = data.enrollments?.map(enrollment => ({
             id: enrollment.courseId,
             matriculaId: enrollment.id,
@@ -43,15 +42,9 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
     }
   }, [studentId]);
 
-  const handleAddCourse = () => {
+  const handleAddCourse = async () => {
     if (!selectedCourse) {
       toast.error("Selecione um curso");
-      return;
-    }
-
-    const alreadyAdded = pendingCourses.some((c) => c.id === parseInt(selectedCourse));
-    if (alreadyAdded) {
-      toast.error("Curso já adicionado!");
       return;
     }
 
@@ -61,18 +54,60 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       return;
     }
 
-    setPendingCourses((prevCourses) => [
-      ...prevCourses,
-      {
-        id: newCourse.id,
-        name: newCourse.name,
-        completionDate: completionDate || null,
-      },
-    ]);
+    if (isCreateMode) {
+      const alreadyAdded = pendingCourses.some((c) => c.id === parseInt(selectedCourse));
+      if (alreadyAdded) {
+        toast.error("Curso já adicionado!");
+        return;
+      }
 
-    setSelectedCourse("");
-    setCompletionDate("");
-    toast.success("Curso adicionado! Salve o aluno para confirmar a matrícula.");
+      setPendingCourses((prevCourses) => [
+        ...prevCourses,
+        {
+          id: newCourse.id,
+          name: newCourse.name,
+          completionDate: completionDate || null,
+        },
+      ]);
+
+      setSelectedCourse("");
+      setCompletionDate("");
+      toast.success("Curso adicionado! Salve o aluno para confirmar a matrícula.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const completionDateISO = completionDate
+        ? new Date(completionDate + 'T00:00:00').toISOString()
+        : new Date().toISOString();
+
+      const result = await createEnrollment({
+        studentId: parseInt(studentId),
+        courseId: parseInt(selectedCourse),
+        completionDate: completionDateISO
+      });
+
+      setEnrolledCourses([
+        ...enrolledCourses,
+        {
+          id: newCourse.id,
+          matriculaId: result.id,
+          name: newCourse.name,
+          completionDate: completionDate ? completionDate : null,
+          status: result.status || "IN_PROGRESS"
+        }
+      ]);
+
+      setSelectedCourse("");
+      setCompletionDate("");
+      toast.success("Matrícula criada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao criar matrícula:", error);
+      toast.error("Erro ao criar matrícula. Tente novamente.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleUpdateCourse = async (matriculaId, courseId, novaData) => {
@@ -81,30 +116,39 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       return;
     }
 
+    const completionDateISO = novaData ? new Date(novaData + 'T00:00:00').toISOString() : null;
+
+    const payload = {
+      studentId: parseInt(studentId),
+      courseId: parseInt(courseId),
+      completionDate: completionDateISO,
+    };
+
     try {
-      await updateEnrollment(matriculaId, {
-        studentId: parseInt(studentId),
-        courseId: courseId,
-        completionDate: novaData || null,
-      });
+      const result = await updateEnrollment(matriculaId, payload);
 
       setEnrolledCourses(
         enrolledCourses.map((c) =>
           c.matriculaId === matriculaId
-            ? { ...c, completionDate: novaData }
+            ? {
+              ...c,
+              completionDate: novaData,
+              status: result.status || c.status
+            }
             : c
         )
       );
 
       toast.success("Data de conclusão atualizada!");
     } catch (error) {
-      console.error("Erro ao atualizar:", error);
+      console.error("Erro completo:", error);
+      console.error("Response data:", error.response?.data);
       toast.error("Erro ao atualizar data de conclusão.");
     }
   };
 
-  const handleRemoveCourse = (courseId) => {
-    setCourseToDelete(courseId);
+  const handleRemoveCourse = (matriculaId) => {
+    setCourseToDelete(matriculaId);
     setModalOpen(true);
   };
 
