@@ -17,8 +17,8 @@ export const StudentList = ({ filteredstudents = [], setStudents }) => {
     setSortOrder(newOrder);
 
     filteredstudents.sort((a, b) => {
-      const dateA = new Date(a.criadoEm);
-      const dateB = new Date(b.criadoEm);
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
 
       if (newOrder === "asc") {
         return dateA - dateB;
