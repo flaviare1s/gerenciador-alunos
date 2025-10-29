@@ -1,5 +1,18 @@
 import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
 
+/**
+ * Componente reutilizável de paginação.
+ * 
+ * Este componente exibe uma navegação entre as páginas de cursos.
+ * Permite navegar para a página anterior, próxima e selecionar páginas específicas.
+ * Mantém o estilo apresentado no Figma.
+ * 
+ * Props:
+ *  - totalPages: o total de páginas disponíveis.
+ *  - currentPage: a página atual.
+ *  - onPageChange: a função chamada quando uma nova página é selecionada.
+ */
+
 export const Pagination = ({ totalPages, currentPage, onPageChange }) => {
   const handlePrevious = () => {
     if (currentPage > 1) {

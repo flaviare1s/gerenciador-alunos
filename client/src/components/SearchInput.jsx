@@ -1,5 +1,11 @@
 import { FiSearch } from "react-icons/fi"
 
+/**
+ * Componente reutilizável de campo de busca.
+ * 
+ * Este componente exibe um campo de busca com um icone de lupa e o placeholder que varia conforme o tipo de busca (aluno ou curso).
+ */
+
 export const SearchInput = ({ search, setSearch, placeholder }) => {
 
   return (

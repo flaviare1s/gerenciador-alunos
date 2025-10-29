@@ -1,5 +1,12 @@
 import { LiaPlusCircleSolid } from "react-icons/lia"
 
+/**
+ * Componente para gerenciar a seleção e adição de cursos em um formulário de aluno (gerencia matrículas).
+ * 
+ * Este componente exibe um dropdown para selecionar cursos disponíveis (excluindo os já selecionados),
+ * um campo de data de conclusão e um botão para adicionar o curso selecionado ao aluno.
+ */
+
 export const Enrollment = ({
   courses = [],
   allCourses = [],

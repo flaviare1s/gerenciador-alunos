@@ -3,6 +3,14 @@ import { CourseList } from "../components/CourseList";
 import { SearchBar } from "../components/SearchBar";
 import { getAllCourses } from "../services/course";
 
+/**
+ * Página de listagem de cursos.
+ * 
+ * Esta página exibe uma tabela de cursos, permitindo a navegação entre as páginas e a busca por cursos.
+ * 
+ * Utiliza o componente `CourseList` para exibir os cursos e o componente `SearchBar` para permitir a busca por cursos.
+ */
+
 export const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");

@@ -1,3 +1,9 @@
+/**
+ * Componente reutilizável de modal de confirmação de exclusão.
+ * 
+ * Este modal exibe uma mensagem de confirmação quando o usuário tenta excluir um item.
+ */
+
 export const ConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
 

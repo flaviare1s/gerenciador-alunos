@@ -1,3 +1,11 @@
+/**
+ * Componente reutilizável de input field com label e validação.
+ * 
+ * Este componente exibe um campo de entrada (input) com um label associado.
+ * Também exibe mensagens de erro de validação quando aplicável.
+ * Utiliza a biblioteca react-hook-form para registro e validação do campo.
+ */
+
 export const InputField = ({
   label,
   name,

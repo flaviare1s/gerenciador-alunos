@@ -7,6 +7,18 @@ import trash from "../assets/img/Trash.png";
 import { IoIosArrowBack } from "react-icons/io";
 import { HeaderToggle } from "./HeaderToggle";
 
+/**
+ * Componente de cabeçalho reutilizável.
+ * 
+ * Este componente exibe o cabeçalho com o logotipo e o cabeçalho de navegação.
+ * 
+ * A logo é substituída por um botão de voltar quando o usuário não está na página raiz ("/alunos" ou "/cursos").
+ * 
+ * Também exibe um botão de exclusão quando a página atual possui uma função `onDelete` definida no contexto da página.
+ * 
+ * Ao clicar no botão de exclusão, um modal de confirmação é exibido, utilizando o componente `ConfirmationModal`.
+ */
+
 export const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();

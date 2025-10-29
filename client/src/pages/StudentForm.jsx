@@ -11,6 +11,14 @@ import { createStudent, deleteStudent, getStudentById, updateStudent } from "../
 import { getAllCourses } from "../services/course";
 import { createEnrollment } from "../services/enrollment";
 
+/**
+ * Página de formulário para criação e edição de alunos.
+ * 
+ * Esta página exibe um formulário para criar um novo aluno ou editar um aluno existente.
+ * Utiliza a biblioteca react-hook-form para gerenciamento do formulário e a biblioteca zod para validação dos campos.
+ * Ao submeter o formulário, chama as funções de serviço apropriadas para criar ou atualizar o aluno e caso necessário, fazer matrícula ao adicionar um novo aluno.
+ */
+
 export const StudentForm = () => {
   const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm({
     resolver: zodResolver(studentSchema)
@@ -38,7 +46,7 @@ export const StudentForm = () => {
 
         const formattedCourses = student.enrollments?.map(enr => ({
           id: enr.courseId,
-          matriculaId: enr.id,
+          enrollmentId: enr.id,
           name: enr.courseName,
           completionDate: enr.completionDate || "",
           status: enr.status

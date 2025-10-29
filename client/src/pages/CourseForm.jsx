@@ -5,6 +5,14 @@ import toast from "react-hot-toast";
 import { InputField } from "../components/InputField";
 import { createCourse, getCourseById, updateCourse } from "../services/course";
 
+/**
+ * Página de formulário para criação e edição de cursos.
+ * 
+ * Esta página exibe um formulário para criar um novo curso ou editar um curso existente.
+ * Utiliza a biblioteca react-hook-form para gerenciamento do formulário e validação dos campos.
+ * Ao submeter o formulário, chama as funções de serviço apropriadas para criar ou atualizar o curso.
+ */
+
 export const CourseForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
