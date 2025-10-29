@@ -22,7 +22,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
         .then((data) => {
           const formattedCourses = data.enrollments?.map(enrollment => ({
             id: enrollment.courseId,
-            matriculaId: enrollment.id,
+            enrollmentId: enrollment.id,
             name: enrollment.course?.name || "Curso desconhecido",
             completionDate: enrollment.completionDate ? enrollment.completionDate.split('T')[0] : null,
             status: enrollment.status || "IN_PROGRESS"
@@ -93,7 +93,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
         ...enrolledCourses,
         {
           id: newCourse.id,
-          matriculaId: result.id,
+          enrollmentId: result.id,
           name: newCourse.name,
           completionDate: completionDate ? completionDate : null,
           status: result.status || "IN_PROGRESS"
@@ -111,8 +111,8 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
     }
   };
 
-  const handleUpdateCourse = async (matriculaId, courseId, novaData) => {
-    if (!matriculaId) {
+  const handleUpdateCourse = async (enrollmentId, courseId, novaData) => {
+    if (!enrollmentId) {
       toast.error("Erro ao atualizar matrícula: ID da matrícula não encontrado.");
       return;
     }
@@ -126,11 +126,11 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
     };
 
     try {
-      await updateEnrollment(matriculaId, payload);
+      await updateEnrollment(enrollmentId, payload);
 
       setEnrolledCourses(
         enrolledCourses.map((c) =>
-          c.matriculaId === matriculaId
+          c.enrollmentId === enrollmentId
             ? {
               ...c,
               completionDate: novaData,
@@ -148,8 +148,8 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
     }
   };
 
-  const handleRemoveCourse = (matriculaId) => {
-    setCourseToDelete(matriculaId);
+  const handleRemoveCourse = (enrollmentId) => {
+    setCourseToDelete(enrollmentId);
     setModalOpen(true);
   };
 
@@ -161,7 +161,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
           toast.success("Curso removido!");
         } else {
           await deleteEnrollment(courseToDelete);
-          setEnrolledCourses(enrolledCourses.filter(c => c.matriculaId !== courseToDelete));
+          setEnrolledCourses(enrolledCourses.filter(c => c.enrollmentId !== courseToDelete));
           toast.success("Matrícula removida com sucesso!");
         }
       } catch (error) {

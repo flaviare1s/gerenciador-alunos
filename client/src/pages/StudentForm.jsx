@@ -38,7 +38,7 @@ export const StudentForm = () => {
 
         const formattedCourses = student.enrollments?.map(enr => ({
           id: enr.courseId,
-          matriculaId: enr.id,
+          enrollmentId: enr.id,
           name: enr.courseName,
           completionDate: enr.completionDate || "",
           status: enr.status

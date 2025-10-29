@@ -8,7 +8,7 @@ export const StudentCourse = ({ allCourses = [], handleRemoveCourse, handleUpdat
       {allCourses.length > 0 && (
         <div className="flex flex-col gap-4 w-full mb-[26px]">
           {allCourses.map((course, index) => (
-            <div key={course.matriculaId || course.id || index} className="flex flex-col md:flex-row md:items-center gap-4 border sm:border-none border-border-input p-2 rounded-md mb-2 sm:mb-0">
+            <div key={course.enrollmentId || course.id || index} className="flex flex-col md:flex-row md:items-center gap-4 border sm:border-none border-border-input p-2 rounded-md mb-2 sm:mb-0">
               <div className="flex-1 md:flex-3 relative">
                 <select
                   disabled
@@ -18,7 +18,7 @@ export const StudentCourse = ({ allCourses = [], handleRemoveCourse, handleUpdat
                 </select>
                 <button
                   type="button"
-                  onClick={() => handleRemoveCourse(course.matriculaId)}
+                  onClick={() => handleRemoveCourse(course.enrollmentId)}
                   className="flex items-center justify-center text-primary cursor-pointer absolute right-3 top-2.5 center"
                   style={{ width: "30px", height: "30px" }}
                   title="Remover curso"
@@ -35,7 +35,7 @@ export const StudentCourse = ({ allCourses = [], handleRemoveCourse, handleUpdat
                     onChange={(e) => {
                       if (!isCreateMode) {
                         handleUpdateCourse(
-                          course.matriculaId,
+                          course.enrollmentId,
                           course.id,
                           e.target.value
                         );
