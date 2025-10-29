@@ -7,10 +7,9 @@ import * as courseService from "../../services/course";
 import toast from "react-hot-toast";
 
 vi.mock("../../services/course");
-// mock default export of react-hot-toast (component imports default)
 vi.mock("react-hot-toast", () => ({ default: { success: vi.fn(), error: vi.fn() } }));
 
-describe("CourseForm", () => {
+describe("Componente CourseForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -27,14 +26,14 @@ describe("CourseForm", () => {
     );
   };
 
-  it("renders create form correctly", () => {
+  it("deve renderizar o formulário de cadastro de curso corretamente", () => {
     renderForm();
     expect(screen.getByRole('heading', { name: /Cadastrar Curso/i })).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Digite o nome do curso/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Cadastrar Curso/i })).toBeInTheDocument();
   });
 
-  it("submits and creates a course", async () => {
+  it("deve cadastrar um novo curso", async () => {
     courseService.createCourse.mockResolvedValue({ id: 10 });
 
     renderForm();
@@ -50,7 +49,7 @@ describe("CourseForm", () => {
     });
   });
 
-  it("loads course data in edit mode", async () => {
+  it("deve carregar os dados do curso no modo de edição", async () => {
     courseService.getCourseById.mockResolvedValue({ name: "React Intermediário" });
 
     renderForm("/courses/5");
@@ -60,7 +59,7 @@ describe("CourseForm", () => {
     });
   });
 
-  it("updates course in edit mode", async () => {
+  it("deve atualizar o curso no modo de edição", async () => {
     courseService.getCourseById.mockResolvedValue({ name: "Curso Antigo" });
     courseService.updateCourse.mockResolvedValue({});
 
@@ -79,7 +78,7 @@ describe("CourseForm", () => {
     });
   });
 
-  it("shows error when loading fails", async () => {
+  it("deve mostrar erro ao carregar curso", async () => {
     courseService.getCourseById.mockRejectedValue(new Error("Erro"));
 
     renderForm("/courses/9");

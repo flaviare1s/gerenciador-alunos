@@ -83,7 +83,6 @@ describe('Header Component', () => {
 
   it('deve renderizar HeaderToggle na rota raiz', () => {
     renderWithRouter('/alunos');
-    // HeaderToggle deve estar presente (você pode adicionar um data-testid nele)
     expect(screen.getByRole('banner')).toBeInTheDocument();
   });
 });

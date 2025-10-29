@@ -46,7 +46,7 @@ const renderForm = (route = "/student") => {
   );
 };
 
-describe("StudentForm", () => {
+describe("Componente StudentForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     globalThis.fetch = vi.fn(() =>
