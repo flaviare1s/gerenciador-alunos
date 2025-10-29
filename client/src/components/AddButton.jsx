@@ -7,6 +7,7 @@ export const AddButton = ({ type = "student" }) => {
     <Link
       to={type === "student" ? "/cadastro-aluno" : "/cadastro-curso"}
       className="flex items-center justify-center gap-2 py-2 px-6 text-neutral-black text-sm border border-gray-medium rounded-md cursor-pointer hover:bg-gray-light hover:text-primary w-full sm:w-auto"
+      data-testid="add-button"
     >
       <span className="w-6 h-6 flex items-center justify-center">
         {type === "student" ? (

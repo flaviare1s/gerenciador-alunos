@@ -32,8 +32,8 @@ export const Header = () => {
       <div className="py-[18px] px-4 sm:px-[42px] flex justify-between items-center">
         <div className="flex items-center gap-[25px]">
           {!isRoot && (
-            <Link to="/">
-              <IoIosArrowBack className="text-white text-2xl" />
+            <Link to="/" data-testid="back-link" aria-label="voltar">
+              <IoIosArrowBack className="text-white text-2xl" aria-label="voltar" />
             </Link>
           )}
           <Link to={isRoot ? location.pathname : "/"}>
@@ -41,7 +41,7 @@ export const Header = () => {
               <img className="w-full" src={logo} alt="Logo" />
             </div>
           </Link>
-          <h1 className="text-white font-bold sm:font-extrabold tracking-[1%] leading-[30px] flex items-center gap-1 sm:gap-2 text-sm sm:text-base -ml-2.5 sm:-ml-0">
+          <h1 className="text-white font-bold sm:font-extrabold tracking-[1%] leading-[30px] flex items-center gap-1 sm:gap-2 text-sm sm:text-base -ml-2.5 sm:ml-0">
             {pageData.title}
           </h1>
         </div>
