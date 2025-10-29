@@ -102,6 +102,19 @@ A coleção do Insomnia também está disponível na pasta `docs`.
 A documentação da API está disponível em:
 [http://localhost:3000/api-docs/](http://localhost:3000/api-docs/)
 
+## Testes
+
+- Os testes foram feitos em um ambiente separado (branch test).
+- **Back-end**:
+  - **Jest**: Framework de testes para JavaScript.
+  - **Supertest**: Biblioteca para testar endpoints HTTP.
+  - **Cross-env**: Ferramenta para definir variáveis de ambiente de forma consistente entre sistemas operacionais.
+- **Front-end**:
+  - **Vitest**: Framework de testes para aplicações modernas.
+  - **Jsdom**: Simula um ambiente de navegador para testes.
+  - **Vitest/coverage-v8**: Gera relatórios de cobertura de código.
+  - **Vitest/ui**: Interface gráfica para visualizar os testes.
+
 ## Deploy
 
 - **Banco de Dados**: Supabase
