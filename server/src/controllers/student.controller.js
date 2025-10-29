@@ -67,7 +67,7 @@ export const updateStudent = async (req, res) => {
       req.body
     );
     return res.status(200).json({
-      mensagem: "student atualizado com sucesso",
+      mensagem: "Aluno atualizado com sucesso",
       student: studentUpdated,
     });
   } catch (err) {
