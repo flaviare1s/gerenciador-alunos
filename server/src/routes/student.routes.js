@@ -94,6 +94,54 @@ const router = Router();
  *           type: array
  *           items:
  *             type: string
+ *     AlunoSemMatricula:
+ *       type: object
+ *       properties:
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
+ *         birthDate:
+ *           type: string
+ *           format: date-time
+ *         cpf:
+ *           type: string
+ *         gender:
+ *           type: string
+ *           enum: [MALE, FEMALE, OTHER]
+ *         email:
+ *           type: string
+ *         zipCode:
+ *           type: string
+ *         street:
+ *           type: string
+ *         number:
+ *           type: string
+ *         complement:
+ *           type: string
+ *         neighborhood:
+ *           type: string
+ *         city:
+ *           type: string
+ *         state:
+ *           type: string
+ *         country:
+ *           type: string
+ *     AlunoComMatricula:
+ *       allOf:
+ *         - $ref: '#/components/schemas/AlunoSemMatricula'
+ *         - type: object
+ *           properties:
+ *             enrollments:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   courseId:
+ *                     type: integer
+ *                   completionDate:
+ *                     type: string
+ *                     format: date-time
  */
 
 /**
@@ -107,22 +155,45 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Aluno'
- *           example:
- *             firstName: Matheus
- *             lastName: Souza
- *             birthDate: 2002-10-10T00:00:00.000Z
- *             cpf: 12345678903
- *             gender: MALE
- *             email: matheue@example.com
- *             zipCode: 60115060
- *             street: Rua das Palmeiras
- *             number: 123
- *             complement: Apto 402
- *             neighborhood: Aldeota
- *             city: Fortaleza
- *             state: CE
- *             country: Brasil
+ *             oneOf:
+ *               - $ref: '#/components/schemas/AlunoSemMatricula'
+ *               - $ref: '#/components/schemas/AlunoComMatricula'
+ *           examples:
+ *             SemMatricula:
+ *               value:
+ *                 firstName: Matheus
+ *                 lastName: Souza
+ *                 birthDate: 2002-10-10T00:00:00.000Z
+ *                 cpf: 12345678903
+ *                 gender: MALE
+ *                 email: matheue@example.com
+ *                 zipCode: 60115060
+ *                 street: Rua das Palmeiras
+ *                 number: 123
+ *                 complement: Apto 402
+ *                 neighborhood: Aldeota
+ *                 city: Fortaleza
+ *                 state: CE
+ *                 country: Brasil
+ *             ComMatricula:
+ *               value:
+ *                 firstName: Matheus
+ *                 lastName: Souza
+ *                 birthDate: 2002-10-10T00:00:00.000Z
+ *                 cpf: 12345678903
+ *                 gender: MALE
+ *                 email: matheue@example.com
+ *                 zipCode: 60115060
+ *                 street: Rua das Palmeiras
+ *                 number: 123
+ *                 complement: Apto 402
+ *                 neighborhood: Aldeota
+ *                 city: Fortaleza
+ *                 state: CE
+ *                 country: Brasil
+ *                 enrollments:
+ *                   - courseId: 1
+ *                     completionDate: 2025-08-30T00:00:00.000Z
  *     responses:
  *       201:
  *         description: Aluno criado com sucesso
@@ -161,9 +232,11 @@ const router = Router();
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Aluno'
+ *                 oneOf:
+ *                   - $ref: '#/components/schemas/AlunoSemMatricula'
+ *                   - $ref: '#/components/schemas/AlunoComMatricula'
  *       500:
- *         description: Erro interno ao listar students
+ *         description: Erro interno ao listar alunos
  */
 
 /**
@@ -185,7 +258,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Aluno'
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/AlunoSemMatricula'
+ *                 - $ref: '#/components/schemas/AlunoComMatricula'
  *       404:
  *         description: Aluno não encontrado
  *         content:
