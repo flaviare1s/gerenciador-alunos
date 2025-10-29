@@ -50,23 +50,6 @@ export const getStudentById = async (req, res) => {
   }
 };
 
-export const getStudentWithCoursesById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const student = await studentService.getStudentWithCoursesById(Number(id));
-    return res.status(200).json(student);
-  } catch (err) {
-    if (err.type === "not_found") {
-      return res.status(404).json({ mensagem: err.mensagem });
-    }
-
-    console.error("Erro ao buscar aluno com cursos:", err);
-    return res
-      .status(500)
-      .json({ mensagem: "Erro interno ao buscar aluno com cursos" });
-  }
-};
-
 export const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -111,17 +94,5 @@ export const deleteStudent = async (req, res) => {
 
     console.error("Erro ao deletar aluno:", err);
     return res.status(500).json({ mensagem: "Erro interno ao deletar aluno" });
-  }
-};
-
-export const getStudentsWithCourses = async (_req, res) => {
-  try {
-    const students = await studentService.getStudentsWithCourses();
-    return res.status(200).json(students);
-  } catch (err) {
-    console.error("Erro ao listar alunos com cursos:", err);
-    return res
-      .status(500)
-      .json({ mensagem: "Erro interno ao listar alunos com cursos" });
   }
 };
