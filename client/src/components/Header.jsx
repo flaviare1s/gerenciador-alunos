@@ -32,7 +32,7 @@ export const Header = () => {
       <div className="py-[18px] px-4 sm:px-[42px] flex justify-between items-center">
         <div className="flex items-center gap-[25px]">
           {!isRoot && (
-            <Link to="/">
+            <Link to="/" aria-label="voltar">
               <IoIosArrowBack className="text-white text-2xl" />
             </Link>
           )}
