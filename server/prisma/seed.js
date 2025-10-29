@@ -104,6 +104,7 @@ async function main() {
         zipCode: "91530566",
         street: "Beco H",
         number: "123",
+        complement: "casa",
         country: "Brasil",
         neighborhood: "Partenon",
         city: "Porto Alegre",
