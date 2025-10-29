@@ -33,7 +33,7 @@ export const Header = () => {
         <div className="flex items-center gap-[25px]">
           {!isRoot && (
             <Link to="/" data-testid="back-link" aria-label="voltar">
-              <IoIosArrowBack className="text-white text-2xl" aria-label="voltar" />
+              <IoIosArrowBack className="text-white text-2xl" />
             </Link>
           )}
           <Link to={isRoot ? location.pathname : "/"}>
