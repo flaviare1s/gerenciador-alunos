@@ -7,6 +7,12 @@ import { ConfirmationModal } from "./ConfirmationModal";
 import { deleteStudent } from "../services/student";
 import ReactDOM from "react-dom";
 
+/**
+ * Componente de listar um aluno específico na tabela de alunos.
+ * 
+ * Esse componente representa uma linha da tabela de alunos, exibindo a data de cadastro, o nome, o estado e os botões para editar ou excluir o aluno. Essa exibição é responsiva, adaptando a quantidade de cursos exibidos conforme o tamanho da tela. Escondi alguns campos em telas menores para melhorar a usabilidade.
+ */
+
 export const Student = ({ student, onStudentDeleted }) => {
   const [sliceCount, setSliceCount] = useState(1);
   const [isModalOpen, setModalOpen] = useState(false);

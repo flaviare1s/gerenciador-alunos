@@ -7,6 +7,13 @@ import { deleteCourse } from "../services/course";
 import ReactDOM from "react-dom";
 import { useState } from "react";
 
+/**
+ * Componente de listar um curso específico na tabela de cursos.
+ * 
+ * Esse componente representa uma linha da tabela de cursos, exibindo o nome do curso
+ * e botões para editar ou excluir o curso.
+ */
+
 export const Course = ({ course, onCourseDeleted }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 

@@ -3,6 +3,16 @@ import { Student } from "./Student";
 import { HiOutlineArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
 import { Pagination } from "./Pagination";
 
+/**
+ * Componente de listar alunos em uma tabela com paginação e ordenação.
+ * 
+ * Este componente exibe uma tabela de alunos, permitindo a ordenação pela data de cadastro do aluno e a navegação entre as páginas.
+ * 
+ * Ele contem o cabeçalho da tabela, gerencia o estado de ordenação e paginação, e renderiza os alunos usando o componente `Student`.
+ * 
+ * Também chama o componente `Pagination` para permitir a navegação entre as páginas de alunos.
+ */
+
 export const StudentList = ({ filteredstudents = [], setStudents }) => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);

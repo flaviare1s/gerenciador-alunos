@@ -3,6 +3,14 @@ import { StudentList } from "../components/StudentList";
 import { SearchBar } from "../components/SearchBar";
 import { getAllStudents } from "../services/student";
 
+/**
+ * Página de listagem de alunos.
+ * 
+ * Esta página exibe uma tabela de alunos, permitindo a navegação entre as páginas e a busca por alunos.
+ * 
+ * Utiliza o componente `StudentList` para exibir os alunos e o componente `SearchBar` para permitir a busca por alunos.
+ */
+
 export const Students = () => {
   const [students, setstudents] = useState([]);
   const [search, setSearch] = useState("");

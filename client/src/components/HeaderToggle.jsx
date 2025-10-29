@@ -1,5 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
+/**
+ * Componente de alternância entre as páginas de "Alunos" e "Cursos".
+ * 
+ * Este componente exibe um toggle switch que permite ao usuário alternar entre as páginas de "Alunos" e "Cursos".
+ * A navegação é realizada utilizando o hook `useNavigate` do React Router.
+ */
+
 export const HeaderToggle = () => {
   const location = useLocation();
   const navigate = useNavigate();
