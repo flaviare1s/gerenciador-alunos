@@ -130,7 +130,7 @@ A coleção do Insomnia também está disponível na pasta `docs`.
 ## Deploy
 
 - **Banco de Dados**: Supabase
-- **Back-end**: Render
+- **Back-end**: Vercel
 - **Front-end**: Vercel
 
 Acesse o sistema em produção:
