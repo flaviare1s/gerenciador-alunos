@@ -13,6 +13,20 @@ import { getStudentById } from "../services/student";
  * atualizar a data de conclusão dos cursos existentes e remover cursos. Também lida com o estado de carregamento e submissão.
  */
 
+/**
+ * Função para calcular o status do curso com base na data de conclusão.
+ * Esta lógica deve replicar a função `calculateStatus` do backend para consistência.
+ * @param {string | null} completionDate - Data de conclusão no formato 'YYYY-MM-DD' ou null.
+ * @returns {"COMPLETED" | "IN_PROGRESS"}
+ */
+const calculateStatus = (completionDate) => {
+  if (!completionDate) return "IN_PROGRESS";
+  const data = new Date(completionDate + 'T00:00:00');
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  return data <= hoje ? "COMPLETED" : "IN_PROGRESS";
+};
+
 export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false, pendingCourses, setPendingCourses }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -70,13 +84,17 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
 
       const hasValidCompletionDate = completionDate && completionDate.trim() !== "";
 
+      const newStatus = hasValidCompletionDate
+        ? calculateStatus(completionDate)
+        : "IN_PROGRESS";
+
       setPendingCourses((prevCourses) => [
         ...prevCourses,
         {
           id: newCourse.id,
           name: newCourse.name,
           completionDate: hasValidCompletionDate ? completionDate : null,
-          status: hasValidCompletionDate ? "COMPLETED" : "IN_PROGRESS",
+          status: newStatus,
         },
       ]);
 
