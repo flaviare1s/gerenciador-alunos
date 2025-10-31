@@ -12,6 +12,7 @@ import { getAllStudents } from "../services/student";
 export const Students = () => {
   const [students, setstudents] = useState([]);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredstudents = search
     ? students.filter((student) => {
@@ -26,6 +27,10 @@ export const Students = () => {
     : students;
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  useEffect(() => {
     const fetchstudents = async () => {
       try {
         const data = await getAllStudents();
@@ -37,9 +42,6 @@ export const Students = () => {
     fetchstudents();
   }, []);
 
-  console.log("Termo de busca:", search);
-  console.log("Alunos filtrados:", filteredstudents);
-
   return (
     <div>
       <SearchBar
@@ -50,6 +52,8 @@ export const Students = () => {
       <StudentList
         filteredstudents={filteredstudents}
         setStudents={setstudents}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
     </div>
   );
