@@ -4,7 +4,6 @@ import check from "../assets/img/Check.png";
 
 /**
  * Componente de listar cursos associados a um aluno em um formulário.
- * 
  * Este componente exibe uma lista de cursos associados ao aluno, permitindo ao usuário remover ou atualizar os cursos.
  * Também exibe o status de cada curso (concluído ou em andamento) e a data de conclusão.
  * O status é representado por um ícone ou imagem: uma imagem de check importada do Figma para cursos concluídos e um ícone de progresso para cursos em andamento.
@@ -26,7 +25,7 @@ export const StudentCourse = ({ allCourses = [], handleRemoveCourse, handleUpdat
                 </select>
                 <button
                   type="button"
-                  onClick={() => handleRemoveCourse(course.enrollmentId)}
+                  onClick={() => handleRemoveCourse(isCreateMode ? course.id : course.enrollmentId)}
                   className="flex items-center justify-center text-primary cursor-pointer absolute right-3 top-2.5 center"
                   style={{ width: "30px", height: "30px" }}
                   title="Remover curso"
