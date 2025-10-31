@@ -79,6 +79,25 @@ const students = [
   },
 ];
 
+function generateValidCPF() {
+  const randomDigits = () => Math.floor(Math.random() * 9);
+
+  const calculateDigit = (base) => {
+    let sum = 0;
+    for (let i = 0; i < base.length; i++) {
+      sum += base[i] * (base.length + 1 - i);
+    }
+    const remainder = sum % 11;
+    return remainder < 2 ? 0 : 11 - remainder;
+  };
+
+  const base = Array.from({ length: 9 }, randomDigits);
+  const firstDigit = calculateDigit(base);
+  const secondDigit = calculateDigit([...base, firstDigit]);
+
+  return `${base.join("")}${firstDigit}${secondDigit}`;
+}
+
 async function main() {
   for (const name of courses) {
     const exists = await prisma.course.findUnique({ where: { name } });
@@ -99,7 +118,7 @@ async function main() {
         lastName,
         state,
         email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`,
-        cpf: `${Math.floor(10000000000 + Math.random() * 90000000000)}`,
+        cpf: generateValidCPF(),
         gender: "OTHER",
         zipCode: "91530566",
         street: "Beco H",
@@ -112,6 +131,8 @@ async function main() {
       },
     });
 
+    let completionDate = new Date("2025-08-30");
+
     for (const courseName of courses) {
       const course = await prisma.course.findUnique({
         where: { name: courseName },
@@ -122,9 +143,10 @@ async function main() {
             studentId: newStudent.id,
             courseId: course.id,
             status: "IN_PROGRESS",
-            completionDate: new Date("2025-08-30"),
+            completionDate: new Date(completionDate),
           },
         });
+        completionDate.setDate(completionDate.getDate() + 30);
       }
     }
 

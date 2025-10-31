@@ -1,7 +1,13 @@
 import * as courseService from "../services/course.service.js";
+import { courseSchema } from "../validations/course.validation.js";
 
 export const createCourse = async (req, res) => {
   try {
+    const { error } = courseSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ mensagem: "Dados inválidos", erros: error.details });
+    }
+
     const course = await courseService.createCourse(req.body);
     res.status(201).json(course);
   } catch (err) {

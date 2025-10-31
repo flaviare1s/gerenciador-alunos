@@ -50,8 +50,18 @@ export const CourseForm = () => {
         toast.success("Curso criado com sucesso!");
       }
       navigate("/cursos");
-    } catch {
-      toast.error("Erro ao salvar curso");
+    } catch (error) {
+      const validationErrors = error.response?.data?.erros;
+      if (validationErrors && Array.isArray(validationErrors)) {
+        validationErrors.forEach((err) => {
+          toast.error(err.mensagem);
+        });
+      } else if (error.response?.status === 409) {
+        toast.error("Curso já existe");
+      } else {
+        const errorMessage = error.response?.data?.mensagem || "Erro ao salvar curso";
+        toast.error(errorMessage);
+      }
     } finally {
       setLoading(false);
     }

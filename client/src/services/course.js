@@ -6,11 +6,7 @@ const handleRequest = async (request, errorMessage) => {
     return response.data;
   } catch (error) {
     console.error(`${errorMessage}:`, error.response || error.message);
-    throw new Error(
-      `${errorMessage}. Detalhes: ${
-        error.response?.data?.message || error.message
-      }`
-    );
+    throw error;
   }
 };
 
@@ -21,10 +17,7 @@ export const getCourseById = (id) =>
   handleRequest(() => api.get(`/cursos/${id}`), "Falha ao buscar curso");
 
 export const createCourse = (courseData) =>
-  handleRequest(
-    () => api.post("/cursos", courseData),
-    "Falha ao criar curso"
-  );
+  handleRequest(() => api.post("/cursos", courseData), "Falha ao criar curso");
 
 export const updateCourse = (id, courseData) =>
   handleRequest(

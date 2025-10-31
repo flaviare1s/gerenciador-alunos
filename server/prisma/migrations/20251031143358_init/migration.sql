@@ -43,7 +43,7 @@ CREATE TABLE "Enrollment" (
     "studentId" INTEGER NOT NULL,
     "courseId" INTEGER NOT NULL,
     "status" "CourseStatus" NOT NULL DEFAULT 'IN_PROGRESS',
-    "completionDate" TIMESTAMP(3),
+    "completionDate" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Enrollment_pkey" PRIMARY KEY ("id")
 );
