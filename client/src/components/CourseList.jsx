@@ -1,22 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react"; // 👈 Importe useEffect
 import { Course } from "./Course";
 import { Pagination } from "./Pagination";
 import { HiOutlineArrowNarrowUp, HiOutlineArrowNarrowDown } from "react-icons/hi";
 
 /**
  * Componente de listar cursos em uma tabela com paginação e ordenação.
- * 
  * Este componente exibe uma tabela de cursos, permitindo a ordenação pelo nome do curso e a navegação entre as páginas.
- * 
+ * A ordenação é salva no localStorage para persistência entre sessões.
  * Ele contem o cabeçalho da tabela, gerencia o estado de ordenação e paginação, e renderiza os cursos usando o componente `Course`.
- * 
  * Também chama o componente `Pagination` para permitir a navegação entre as páginas de cursos.
  */
 
+const getInitialSortOrder = () => {
+  const storedOrder = localStorage.getItem("courseSortOrder");
+  return storedOrder ? storedOrder : "asc";
+};
+
 export const CourseList = ({ filteredItems = [], setItems }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortOrder, setSortOrder] = useState(getInitialSortOrder);
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    localStorage.setItem("courseSortOrder", sortOrder);
+    setCurrentPage(1);
+  }, [sortOrder]);
 
   const handleCourseDeleted = (id) => {
     setItems(prev => prev.filter(c => c.id !== id));
