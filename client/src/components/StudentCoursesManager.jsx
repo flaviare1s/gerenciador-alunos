@@ -68,13 +68,15 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
         return;
       }
 
+      const hasValidCompletionDate = completionDate && completionDate.trim() !== "";
+
       setPendingCourses((prevCourses) => [
         ...prevCourses,
         {
           id: newCourse.id,
           name: newCourse.name,
-          completionDate: completionDate || null,
-          status: completionDate ? "COMPLETED" : "IN_PROGRESS",
+          completionDate: hasValidCompletionDate ? completionDate : null,
+          status: hasValidCompletionDate ? "COMPLETED" : "IN_PROGRESS",
         },
       ]);
 
@@ -86,9 +88,10 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
 
     setSubmitting(true);
     try {
-      const completionDateISO = completionDate
+      const hasValidDate = completionDate && completionDate.trim() !== "";
+      const completionDateISO = hasValidDate
         ? new Date(completionDate + 'T00:00:00').toISOString()
-        : new Date().toISOString();
+        : null;
 
       const result = await createEnrollment({
         studentId: parseInt(studentId),
@@ -102,7 +105,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
           id: newCourse.id,
           enrollmentId: result.id,
           name: newCourse.name,
-          completionDate: completionDate ? completionDate : null,
+          completionDate: hasValidDate ? completionDate : null,
           status: result.status || "IN_PROGRESS"
         }
       ]);

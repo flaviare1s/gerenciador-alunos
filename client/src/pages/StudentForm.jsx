@@ -42,7 +42,15 @@ export const StudentForm = () => {
       try {
         const student = await getStudentById(id);
 
-        Object.keys(student).forEach((key) => setValue(key, student[key]));
+        Object.keys(student).forEach((key) => {
+          if (key === 'birthDate' && student[key]) {
+            const date = new Date(student[key]);
+            const formattedDate = date.toISOString().split('T')[0];
+            setValue(key, formattedDate);
+          } else {
+            setValue(key, student[key]);
+          }
+        });
 
         const formattedCourses = student.enrollments?.map(enr => ({
           id: enr.courseId,
@@ -128,9 +136,10 @@ export const StudentForm = () => {
 
         if (pendingCourses.length > 0) {
           const enrollmentPromises = pendingCourses.map(course => {
-            const completionDate = course.completionDate
+            const hasValidDate = course.completionDate && course.completionDate.trim() !== "";
+            const completionDate = hasValidDate
               ? new Date(course.completionDate + 'T00:00:00').toISOString()
-              : new Date().toISOString();
+              : null;
 
             return createEnrollment({
               studentId,
