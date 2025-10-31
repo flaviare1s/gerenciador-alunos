@@ -49,13 +49,13 @@ INSERT INTO "Student" (
   firstName, lastName, birthDate, cpf, gender, email, zipCode, street, number,
   complement, neighborhood, city, state, country
 ) VALUES
-('Matheus', 'Souza', '2002-10-10', '12345678906', 'MALE', 'matheus@example.com',
+('Matheus', 'Souza', '2002-10-10', '10709804040', 'MALE', 'matheus@example.com',
  '60115060', 'Rua das Palmeiras', '123', 'Apto 402', 'Aldeota', 'Fortaleza', 'CE', 'Brasil'),
 
-('Ana', 'Silva', '1998-05-12', '98765432100', 'FEMALE', 'ana.silva@example.com',
+('Ana', 'Silva', '1998-05-12', '47734599052', 'FEMALE', 'ana.silva@example.com',
  '01001000', 'Av. Paulista', '1000', NULL, 'Bela Vista', 'São Paulo', 'SP', 'Brasil'),
 
-('Lucas', 'Oliveira', '1999-08-23', '22233344455', 'MALE', 'lucas@example.com',
+('Lucas', 'Oliveira', '1999-08-23', '56888423000', 'MALE', 'lucas@example.com',
  '30140071', 'Rua da Bahia', '250', NULL, 'Centro', 'Belo Horizonte', 'MG', 'Brasil');
 
 INSERT INTO "Enrollment" (studentId, courseId, status, completionDate) VALUES

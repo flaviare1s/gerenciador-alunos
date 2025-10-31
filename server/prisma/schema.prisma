@@ -43,7 +43,7 @@ model Enrollment {
   course       Course      @relation(fields: [courseId], references: [id])
   courseId     Int
   status       CourseStatus @default(IN_PROGRESS)
-  completionDate DateTime?
+  completionDate DateTime
 
   @@unique([studentId, courseId])
 }
