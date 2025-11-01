@@ -16,8 +16,7 @@ const getInitialSortOrder = () => {
   return storedOrder ? storedOrder : "asc";
 };
 
-export const CourseList = ({ filteredItems = [], setItems }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+export const CourseList = ({ filteredItems = [], setItems, currentPage, setCurrentPage }) => {
   const [sortOrder, setSortOrder] = useState(getInitialSortOrder);
   const itemsPerPage = 10;
 

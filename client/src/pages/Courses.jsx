@@ -14,6 +14,7 @@ import { getAllCourses } from "../services/course";
 export const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredCourses = search
     ? courses.filter((course) =>
@@ -22,6 +23,10 @@ export const Courses = () => {
       )
     )
     : courses;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -46,6 +51,8 @@ export const Courses = () => {
       <CourseList
         filteredItems={filteredCourses}
         setItems={setCourses}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
     </div>
   );
