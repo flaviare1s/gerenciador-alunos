@@ -6,6 +6,16 @@ describe("Students API", () => {
   let studentId;
   let testCounter = 0;
 
+  const originalPrismaMethods = {
+    student: {
+      findMany: prisma.student.findMany,
+      findUnique: prisma.student.findUnique,
+      create: prisma.student.create,
+      update: prisma.student.update,
+      delete: prisma.student.delete,
+    },
+  };
+
   beforeAll(async () => {
     await prisma.enrollment.deleteMany();
     await prisma.student.deleteMany();
@@ -35,6 +45,12 @@ describe("Students API", () => {
   });
 
   afterEach(async () => {
+    prisma.student.findMany = originalPrismaMethods.student.findMany;
+    prisma.student.findUnique = originalPrismaMethods.student.findUnique;
+    prisma.student.create = originalPrismaMethods.student.create;
+    prisma.student.update = originalPrismaMethods.student.update;
+    prisma.student.delete = originalPrismaMethods.student.delete;
+
     if (studentId) {
       await prisma.enrollment.deleteMany({ where: { studentId } });
       await prisma.student.delete({ where: { id: studentId } }).catch(() => {});
@@ -168,6 +184,189 @@ describe("Students API", () => {
 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty("mensagem", "Erro de validação");
+    });
+  });
+
+  describe("Cenários de Erro Adicionais", () => {
+    it("deve retornar 400 ao criar aluno com CPF duplicado", async () => {
+      const uniqueId = Date.now();
+      const duplicateCpf = `${50000000000 + uniqueId}`.slice(0, 11);
+
+      await request(app)
+        .post("/api/alunos")
+        .send({
+          firstName: "Primeiro",
+          lastName: "Aluno",
+          birthDate: "2002-10-10T00:00:00.000Z",
+          cpf: duplicateCpf,
+          gender: "MALE",
+          email: `primeiro${uniqueId}@example.com`,
+          zipCode: "60115060",
+          street: "Rua das Palmeiras",
+          number: "123",
+          complement: "Apto 402",
+          neighborhood: "Aldeota",
+          city: "Fortaleza",
+          state: "CE",
+          country: "Brasil",
+        });
+
+      const response = await request(app)
+        .post("/api/alunos")
+        .send({
+          firstName: "Segundo",
+          lastName: "Aluno",
+          birthDate: "2002-10-10T00:00:00.000Z",
+          cpf: duplicateCpf,
+          gender: "MALE",
+          email: `segundo${uniqueId}@example.com`,
+          zipCode: "60115060",
+          street: "Rua das Palmeiras",
+          number: "123",
+          complement: "Apto 402",
+          neighborhood: "Aldeota",
+          city: "Fortaleza",
+          state: "CE",
+          country: "Brasil",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("mensagem", "Erro de validação");
+      expect(response.body).toHaveProperty("erros");
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao listar alunos", async () => {
+      const originalFindMany = prisma.student.findMany;
+      prisma.student.findMany = async () => {
+        throw new Error("Database error");
+      };
+
+      const response = await request(app).get("/api/alunos");
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.student.findMany = originalFindMany;
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao buscar aluno por ID", async () => {
+      const originalFindUnique = prisma.student.findUnique;
+      prisma.student.findUnique = async () => {
+        throw new Error("Database error");
+      };
+
+      const response = await request(app).get(`/api/alunos/${studentId}`);
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.student.findUnique = originalFindUnique;
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao criar aluno", async () => {
+      const originalCreate = prisma.student.create;
+      prisma.student.create = async () => {
+        throw new Error("Database error");
+      };
+
+      const uniqueId = Date.now();
+      const response = await request(app)
+        .post("/api/alunos")
+        .send({
+          firstName: "Erro",
+          lastName: "Test",
+          birthDate: "2002-10-10T00:00:00.000Z",
+          cpf: `${60000000000 + uniqueId}`.slice(0, 11),
+          gender: "MALE",
+          email: `erro${uniqueId}@example.com`,
+          zipCode: "60115060",
+          street: "Rua das Palmeiras",
+          number: "123",
+          complement: "Apto 402",
+          neighborhood: "Aldeota",
+          city: "Fortaleza",
+          state: "CE",
+          country: "Brasil",
+        });
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.student.create = originalCreate;
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao atualizar aluno", async () => {
+      const originalFindUnique = prisma.student.findUnique;
+      const originalUpdate = prisma.student.update;
+
+      let callCount = 0;
+      prisma.student.findUnique = async () => {
+        callCount++;
+        if (callCount === 1) {
+          return { id: studentId, firstName: "Test" };
+        }
+        throw new Error("Database error");
+      };
+
+      prisma.student.update = async () => {
+        throw new Error("Database error");
+      };
+
+      const uniqueId = Date.now();
+      const response = await request(app)
+        .put(`/api/alunos/${studentId}`)
+        .send({
+          firstName: "Update Erro",
+          lastName: "Test",
+          birthDate: "2002-10-10T00:00:00.000Z",
+          cpf: `${70000000000 + uniqueId}`.slice(0, 11),
+          gender: "MALE",
+          email: `updateerro${uniqueId}@example.com`,
+          zipCode: "60115060",
+          street: "Rua das Palmeiras",
+          number: "123",
+          complement: "Apto 402",
+          neighborhood: "Aldeota",
+          city: "Fortaleza",
+          state: "CE",
+          country: "Brasil",
+        });
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.student.findUnique = originalFindUnique;
+      prisma.student.update = originalUpdate;
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao deletar aluno", async () => {
+      const originalFindUnique = prisma.student.findUnique;
+      const originalDeleteMany = prisma.enrollment.deleteMany;
+      const originalDelete = prisma.student.delete;
+
+      let callCount = 0;
+      prisma.student.findUnique = async () => {
+        callCount++;
+        if (callCount === 1) {
+          return { id: studentId, firstName: "Test" };
+        }
+        throw new Error("Database error");
+      };
+
+      prisma.enrollment.deleteMany = async () => ({});
+
+      prisma.student.delete = async () => {
+        throw new Error("Database error");
+      };
+
+      const response = await request(app).delete(`/api/alunos/${studentId}`);
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.student.findUnique = originalFindUnique;
+      prisma.enrollment.deleteMany = originalDeleteMany;
+      prisma.student.delete = originalDelete;
     });
   });
 });

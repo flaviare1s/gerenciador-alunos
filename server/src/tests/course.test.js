@@ -5,9 +5,25 @@ import prisma from "../../src/config/database.js";
 describe("Courses API", () => {
   let courseId;
 
+  const originalPrismaMethods = {
+    findMany: prisma.course.findMany,
+    findUnique: prisma.course.findUnique,
+    create: prisma.course.create,
+    update: prisma.course.update,
+    delete: prisma.course.delete,
+  };
+
   beforeAll(async () => {
     await prisma.enrollment.deleteMany();
     await prisma.course.deleteMany();
+  });
+
+  afterEach(() => {
+    prisma.course.findMany = originalPrismaMethods.findMany;
+    prisma.course.findUnique = originalPrismaMethods.findUnique;
+    prisma.course.create = originalPrismaMethods.create;
+    prisma.course.update = originalPrismaMethods.update;
+    prisma.course.delete = originalPrismaMethods.delete;
   });
 
   beforeEach(async () => {
@@ -130,6 +146,116 @@ describe("Courses API", () => {
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty("mensagem");
+    });
+  });
+
+  describe("Cenários de Erro Adicionais", () => {
+    it("deve retornar 500 ao ocorrer erro inesperado ao listar cursos", async () => {
+      const originalFindMany = prisma.course.findMany;
+      prisma.course.findMany = async () => {
+        throw new Error("Database error");
+      };
+
+      const response = await request(app).get("/api/cursos");
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.course.findMany = originalFindMany;
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao buscar curso por ID", async () => {
+      const originalFindUnique = prisma.course.findUnique;
+      prisma.course.findUnique = async () => {
+        throw new Error("Database error");
+      };
+
+      const response = await request(app).get(`/api/cursos/${courseId}`);
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.course.findUnique = originalFindUnique;
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao criar curso", async () => {
+      const originalCreate = prisma.course.create;
+      prisma.course.create = async () => {
+        throw new Error("Database error");
+      };
+
+      const response = await request(app)
+        .post("/api/cursos")
+        .send({ name: `Curso Erro ${Date.now()}` });
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.course.create = originalCreate;
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao atualizar curso", async () => {
+      const originalFindUnique = prisma.course.findUnique;
+      const originalUpdate = prisma.course.update;
+
+      let callCount = 0;
+      prisma.course.findUnique = async () => {
+        callCount++;
+        if (callCount === 1) {
+          return { id: courseId, name: "Test" };
+        }
+        throw new Error("Database error");
+      };
+
+      prisma.course.update = async () => {
+        throw new Error("Database error");
+      };
+
+      const response = await request(app)
+        .put(`/api/cursos/${courseId}`)
+        .send({ name: `Curso Update Erro ${Date.now()}` });
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.course.findUnique = originalFindUnique;
+      prisma.course.update = originalUpdate;
+    });
+
+    it("deve retornar 500 ao ocorrer erro inesperado ao deletar curso", async () => {
+      const testCourse = await prisma.course.create({
+        data: { name: `Curso Delete Erro ${Date.now()}` },
+      });
+
+      const originalFindUnique = prisma.course.findUnique;
+      const originalDelete = prisma.course.delete;
+
+      let callCount = 0;
+      prisma.course.findUnique = async () => {
+        callCount++;
+        if (callCount === 1) {
+          return testCourse;
+        }
+        throw new Error("Database error");
+      };
+
+      prisma.course.delete = async () => {
+        throw new Error("Database error");
+      };
+
+      const response = await request(app).delete(
+        `/api/cursos/${testCourse.id}`
+      );
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("mensagem");
+
+      prisma.course.findUnique = originalFindUnique;
+      prisma.course.delete = originalDelete;
+
+      await prisma.course
+        .delete({ where: { id: testCourse.id } })
+        .catch(() => {});
     });
   });
 });
