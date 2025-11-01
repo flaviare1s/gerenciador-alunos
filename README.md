@@ -122,10 +122,10 @@ A coleção do Insomnia também está disponível na pasta `docs`.
   - **Vitest/ui**: Interface gráfica para visualizar os testes.
 
  ### Cobertura de testes no backend
- <img width="920" height="463" alt="testes-back" src="https://github.com/user-attachments/assets/2bb55f98-43fa-4849-ba7a-30458544a7a0" />
+<img width="941" height="472" alt="testes-back" src="https://github.com/user-attachments/assets/b9184a88-b2e1-43d3-b58a-c0afa9d27cea" />
 
 ### Cobertura de testes no frontend
-<img width="962" height="482" alt="testes-front" src="https://github.com/user-attachments/assets/dc49b22d-1043-4236-867b-c8f2e992f29f" />
+<img width="952" height="487" alt="testes-front" src="https://github.com/user-attachments/assets/b39c4d28-63ac-4881-b864-9f09edc91dfa" />
 
 ## Deploy
 
