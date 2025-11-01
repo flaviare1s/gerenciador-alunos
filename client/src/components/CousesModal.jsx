@@ -1,5 +1,14 @@
 import { IoClose } from "react-icons/io5"
 
+/**
+ * Componente modal para exibir a lista completa de cursos de um aluno.
+ * Este componente é utilizado para mostrar todos os cursos associados a um aluno específico em uma janela modal.
+ * 
+ * Props:
+ *  - student: objeto do aluno contendo a lista de cursos.
+ *  - setCoursesModalOpen: função para fechar o modal.
+ */
+
 export const CoursesModal = ({ student, setCoursesModalOpen }) => {
   return (
     <div
