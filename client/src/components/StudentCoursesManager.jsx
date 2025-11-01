@@ -6,6 +6,26 @@ import { StudentCourse } from "./StudentCourse";
 import { Enrollment } from "./Enrollment";
 import { getStudentById } from "../services/student";
 
+/**
+ * Componente para gerenciar as matrículas de um aluno, incluindo exibição, adição, atualização e remoção de cursos.
+ * Este componente exibe a lista de cursos associados a um aluno específico, permitindo ao usuário adicionar novos cursos,
+ * atualizar a data de conclusão dos cursos existentes e remover cursos. Também lida com o estado de carregamento e submissão.
+ */
+
+/**
+ * Função para calcular o status do curso com base na data de conclusão.
+ * Esta lógica deve replicar a função `calculateStatus` do backend para consistência.
+ * @param {string | null} completionDate - Data de conclusão no formato 'YYYY-MM-DD' ou null.
+ * @returns {"COMPLETED" | "IN_PROGRESS"}
+ */
+const calculateStatus = (completionDate) => {
+  if (!completionDate) return "IN_PROGRESS";
+  const data = new Date(completionDate + 'T00:00:00');
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  return data <= hoje ? "COMPLETED" : "IN_PROGRESS";
+};
+
 export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false, pendingCourses, setPendingCourses }) => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +67,10 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       toast.error("Selecione um curso");
       return;
     }
+    if (!completionDate || completionDate.trim() === "") {
+      toast.error("A data de conclusão é obrigatória.");
+      return;
+    }
 
     const newCourse = courses.find((c) => c.id === parseInt(selectedCourse));
     if (!newCourse) {
@@ -61,13 +85,15 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
         return;
       }
 
+      const newStatus = calculateStatus(completionDate);
+
       setPendingCourses((prevCourses) => [
         ...prevCourses,
         {
           id: newCourse.id,
           name: newCourse.name,
-          completionDate: completionDate || null,
-          status: completionDate ? "COMPLETED" : "IN_PROGRESS",
+          completionDate: completionDate,
+          status: newStatus,
         },
       ]);
 
@@ -79,9 +105,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
 
     setSubmitting(true);
     try {
-      const completionDateISO = completionDate
-        ? new Date(completionDate + 'T00:00:00').toISOString()
-        : new Date().toISOString();
+      const completionDateISO = new Date(completionDate + 'T00:00:00').toISOString();
 
       const result = await createEnrollment({
         studentId: parseInt(studentId),
@@ -95,8 +119,8 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
           id: newCourse.id,
           enrollmentId: result.id,
           name: newCourse.name,
-          completionDate: completionDate ? completionDate : null,
-          status: result.status || "IN_PROGRESS"
+          completionDate: completionDate,
+          status: result.status || "COMPLETED"
         }
       ]);
 
@@ -117,7 +141,12 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
       return;
     }
 
-    const completionDateISO = novaData ? new Date(novaData + 'T00:00:00').toISOString() : null;
+    if (!novaData || novaData.trim() === "") {
+      toast.error("A data de conclusão não pode ser removida ou estar vazia.");
+      return;
+    }
+
+    const completionDateISO = new Date(novaData + 'T00:00:00').toISOString();
 
     const payload = {
       studentId: parseInt(studentId),
@@ -134,7 +163,7 @@ export const StudentCoursesManager = ({ studentId, courses, isCreateMode = false
             ? {
               ...c,
               completionDate: novaData,
-              status: novaData ? "COMPLETED" : "IN_PROGRESS",
+              status: "COMPLETED",
             }
             : c
         )

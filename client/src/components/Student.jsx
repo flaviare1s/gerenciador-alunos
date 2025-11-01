@@ -6,10 +6,18 @@ import toast from "react-hot-toast";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { deleteStudent } from "../services/student";
 import ReactDOM from "react-dom";
+import { CoursesModal } from "./CousesModal";
+
+/**
+ * Componente de listar um aluno específico na tabela de alunos.
+ * 
+ * Esse componente representa uma linha da tabela de alunos, exibindo a data de cadastro, o nome, o estado e os botões para editar ou excluir o aluno. Essa exibição é responsiva, adaptando a quantidade de cursos exibidos conforme o tamanho da tela. Escondi alguns campos em telas menores para melhorar a usabilidade.
+ */
 
 export const Student = ({ student, onStudentDeleted }) => {
   const [sliceCount, setSliceCount] = useState(1);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isCoursesModalOpen, setCoursesModalOpen] = useState(false);
   const [studentIdToDelete, setStudentIdToDelete] = useState(null);
 
   const handleDeleteClick = (id) => {
@@ -84,7 +92,10 @@ export const Student = ({ student, onStudentDeleted }) => {
               </li>
             ))}
             {student.courses.length > sliceCount && (
-              <li className="text-xs bg-gray-100 text-dark-gray px-3 py-1 rounded-full font-medium border border-light-gray">
+              <li
+                onClick={() => setCoursesModalOpen(true)}
+                className="text-xs bg-gray-100 text-dark-gray px-3 py-1 rounded-full font-medium border border-light-gray cursor-pointer hover:bg-gray-200 transition-colors"
+              >
                 +{student.courses.length - sliceCount}
               </li>
             )}
@@ -105,12 +116,23 @@ export const Student = ({ student, onStudentDeleted }) => {
           </button>
         </td>
       </tr>
+
       {ReactDOM.createPortal(
         <ConfirmationModal
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
           onConfirm={confirmDelete}
         />,
+        document.body
+      )}
+
+      {ReactDOM.createPortal(
+        isCoursesModalOpen && (
+          <CoursesModal
+            student={student}
+            setCoursesModalOpen={setCoursesModalOpen}
+          />
+        ),
         document.body
       )}
     </>

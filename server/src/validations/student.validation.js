@@ -2,14 +2,14 @@ import Joi from "joi";
 
 export const studentSchema = Joi.object({
   firstName: Joi.string().min(3).max(100).required().messages({
-    "string.empty": "O name é obrigatório",
-    "string.min": "O name deve ter pelo menos 3 caracteres",
-    "string.max": "O name deve ter no máximo 100 caracteres",
+    "string.empty": "O nome é obrigatório",
+    "string.min": "O nome deve ter pelo menos 3 caracteres",
+    "string.max": "O nome deve ter no máximo 100 caracteres",
   }),
   lastName: Joi.string().min(2).max(100).required().messages({
-    "string.empty": "O lastName é obrigatório",
-    "string.min": "O lastName deve ter pelo menos 2 caracteres",
-    "string.max": "O lastName deve ter no máximo 100 caracteres",
+    "string.empty": "O sobrenome é obrigatório",
+    "string.min": "O sobrenome deve ter pelo menos 2 caracteres",
+    "string.max": "O sobrenome deve ter no máximo 100 caracteres",
   }),
   birthDate: Joi.date().iso().optional().messages({
     "date.format": "A data de nascimento deve estar em formato ISO",
@@ -34,8 +34,8 @@ export const studentSchema = Joi.object({
     "string.empty": "O CEP é obrigatório",
   }),
   street: Joi.string().min(3).required().messages({
-    "string.empty": "A street é obrigatória",
-    "string.min": "A street deve ter pelo menos 3 caracteres",
+    "string.empty": "A rua é obrigatória",
+    "string.min": "A rua deve ter pelo menos 3 caracteres",
   }),
   number: Joi.string().required().messages({
     "string.empty": "O número é obrigatório",

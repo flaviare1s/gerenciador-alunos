@@ -89,6 +89,17 @@ Este sistema permite gerenciar cursos e alunos, oferecendo funcionalidades para 
 
 ## Documentação
 
+### Documentação com Swagger
+
+A documentação da API está disponível em:
+[http://localhost:3000/api-docs/](http://localhost:3000/api-docs/)
+
+### Documentação dos Componentes
+
+- Todos os componentes no projeto possuem comentários diretamente no código.
+- Esses comentários explicam o propósito do componente, as funcionalidades e o comportamento esperado.
+- Para consultar a documentação de um componente específico, basta acessar o arquivo correspondente nas pastas `src/components` ou `src/pages`.
+
 ### Scripts do Banco de Dados
 
 Os scripts do banco estão disponíveis na pasta `docs`. No entanto, não é necessário utilizá-los diretamente, pois o comando `npm run dev` já executa as migrations e seeds, criando e populando o banco automaticamente.
@@ -97,15 +108,29 @@ Os scripts do banco estão disponíveis na pasta `docs`. No entanto, não é nec
 
 A coleção do Insomnia também está disponível na pasta `docs`.
 
-### Documentação com Swagger
+## Testes
 
-A documentação da API está disponível em:
-[http://localhost:3000/api-docs/](http://localhost:3000/api-docs/)
+- Os testes foram feitos em um ambiente separado (branch test).
+- **Back-end**:
+  - **Jest**: Framework de testes para JavaScript.
+  - **Supertest**: Biblioteca para testar endpoints HTTP.
+  - **Cross-env**: Ferramenta para definir variáveis de ambiente de forma consistente entre sistemas operacionais.
+- **Front-end**:
+  - **Vitest**: Framework de testes para aplicações modernas.
+  - **Jsdom**: Simula um ambiente de navegador para testes.
+  - **Vitest/coverage-v8**: Gera relatórios de cobertura de código.
+  - **Vitest/ui**: Interface gráfica para visualizar os testes.
+
+ ### Cobertura de testes no backend
+ <img width="920" height="463" alt="testes-back" src="https://github.com/user-attachments/assets/2bb55f98-43fa-4849-ba7a-30458544a7a0" />
+
+### Cobertura de testes no frontend
+<img width="962" height="482" alt="testes-front" src="https://github.com/user-attachments/assets/dc49b22d-1043-4236-867b-c8f2e992f29f" />
 
 ## Deploy
 
 - **Banco de Dados**: Supabase
-- **Back-end**: Render
+- **Back-end**: Vercel
 - **Front-end**: Vercel
 
 Acesse o sistema em produção:

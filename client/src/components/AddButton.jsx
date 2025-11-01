@@ -2,7 +2,22 @@ import { Link } from "react-router-dom";
 import addIcon from "../assets/img/Add.png";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 
+/**
+ * Componente reutilizável de "botão Adicionar".
+ * 
+ * Este "botão" (na verdade é um Link) é usado para navegar para as páginas de cadastro de alunos ou cursos.
+ * O tipo de cadastro é definido pelo prop `type`, que altera o link e o ícone exibido.
+ * 
+ * Props:
+ *  - type: "student" | "course" (padrão: "student")
+ * 
+ * A rota é definida com base no valor do prop `type`:
+ *  - "student": navega para "/cadastro-aluno"
+ *  - "course": navega para "/cadastro-curso"
+ */
+
 export const AddButton = ({ type = "student" }) => {
+  
   return (
     <Link
       to={type === "student" ? "/cadastro-aluno" : "/cadastro-curso"}

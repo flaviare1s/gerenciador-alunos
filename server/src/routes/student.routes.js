@@ -23,6 +23,8 @@ const router = Router();
  *     Aluno:
  *       type: object
  *       properties:
+ *         id:
+ *           type: integer
  *         firstName:
  *           type: string
  *         lastName:
@@ -53,28 +55,93 @@ const router = Router();
  *           type: string
  *         country:
  *           type: string
- *     AlunoComCursos:
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *         enrollments:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               studentId:
+ *                 type: integer
+ *               courseId:
+ *                 type: integer
+ *               status:
+ *                 type: string
+ *               completionDate:
+ *                 type: string
+ *                 format: date-time
+ *               course:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *         courses:
+ *           type: array
+ *           items:
+ *             type: string
+ *     AlunoSemMatricula:
+ *       type: object
+ *       properties:
+ *         firstName:
+ *           type: string
+ *         lastName:
+ *           type: string
+ *         birthDate:
+ *           type: string
+ *           format: date-time
+ *         cpf:
+ *           type: string
+ *         gender:
+ *           type: string
+ *           enum: [MALE, FEMALE, OTHER]
+ *         email:
+ *           type: string
+ *         zipCode:
+ *           type: string
+ *         street:
+ *           type: string
+ *         number:
+ *           type: string
+ *         complement:
+ *           type: string
+ *         neighborhood:
+ *           type: string
+ *         city:
+ *           type: string
+ *         state:
+ *           type: string
+ *         country:
+ *           type: string
+ *     AlunoComMatricula:
  *       allOf:
- *         - $ref: '#/components/schemas/Aluno'
+ *         - $ref: '#/components/schemas/AlunoSemMatricula'
  *         - type: object
  *           properties:
- *             courses:
+ *             enrollments:
  *               type: array
  *               items:
- *                 type: integer
- *     AlunoResposta:
- *       allOf:
- *         - $ref: '#/components/schemas/Aluno'
- *         - type: object
- *           properties:
- *             id:
- *               type: integer
- *             createdAt:
- *               type: string
- *               format: date-time
- *             updatedAt:
- *               type: string
- *               format: date-time
+ *                 type: object
+ *                 properties:
+ *                   courseId:
+ *                     type: integer
+ *                   completionDate:
+ *                     type: string
+ *                     format: date-time
  */
 
 /**
@@ -89,17 +156,17 @@ const router = Router();
  *         application/json:
  *           schema:
  *             oneOf:
- *               - $ref: '#/components/schemas/Aluno'
- *               - $ref: '#/components/schemas/AlunoComCursos'
+ *               - $ref: '#/components/schemas/AlunoSemMatricula'
+ *               - $ref: '#/components/schemas/AlunoComMatricula'
  *           examples:
- *             Aluno:
+ *             SemMatricula:
  *               value:
- *                 firstName: Matheus2
+ *                 firstName: Matheus
  *                 lastName: Souza
  *                 birthDate: 2002-10-10T00:00:00.000Z
- *                 cpf: 12345678906
+ *                 cpf: 12345678903
  *                 gender: MALE
- *                 email: matheues2@example.com
+ *                 email: matheue@example.com
  *                 zipCode: 60115060
  *                 street: Rua das Palmeiras
  *                 number: 123
@@ -108,14 +175,14 @@ const router = Router();
  *                 city: Fortaleza
  *                 state: CE
  *                 country: Brasil
- *             AlunoComCursos:
+ *             ComMatricula:
  *               value:
- *                 firstName: Matheus2
+ *                 firstName: Matheus
  *                 lastName: Souza
  *                 birthDate: 2002-10-10T00:00:00.000Z
- *                 cpf: 12345678906
+ *                 cpf: 12345678903
  *                 gender: MALE
- *                 email: matheues2@example.com
+ *                 email: matheue@example.com
  *                 zipCode: 60115060
  *                 street: Rua das Palmeiras
  *                 number: 123
@@ -124,14 +191,16 @@ const router = Router();
  *                 city: Fortaleza
  *                 state: CE
  *                 country: Brasil
- *                 courses: [1, 2, 3]
+ *                 enrollments:
+ *                   - courseId: 1
+ *                     completionDate: 2025-08-30T00:00:00.000Z
  *     responses:
  *       201:
  *         description: Aluno criado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AlunoResposta'
+ *               $ref: '#/components/schemas/Aluno'
  *       400:
  *         description: Erro de validação
  *         content:
@@ -146,7 +215,7 @@ const router = Router();
  *                   items:
  *                     type: string
  *       500:
- *         description: Erro interno ao criar student
+ *         description: Erro interno ao criar aluno
  */
 
 /**
@@ -163,9 +232,11 @@ const router = Router();
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/AlunoResposta'
+ *                 oneOf:
+ *                   - $ref: '#/components/schemas/AlunoSemMatricula'
+ *                   - $ref: '#/components/schemas/AlunoComMatricula'
  *       500:
- *         description: Erro interno ao listar students
+ *         description: Erro interno ao listar alunos
  */
 
 /**
@@ -187,7 +258,9 @@ const router = Router();
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/AlunoResposta'
+ *               oneOf:
+ *                 - $ref: '#/components/schemas/AlunoSemMatricula'
+ *                 - $ref: '#/components/schemas/AlunoComMatricula'
  *       404:
  *         description: Aluno não encontrado
  *         content:
@@ -198,7 +271,7 @@ const router = Router();
  *                 mensagem:
  *                   type: string
  *       500:
- *         description: Erro interno ao buscar student
+ *         description: Erro interno ao buscar aluno
  */
 
 /**
@@ -246,7 +319,7 @@ const router = Router();
  *                 mensagem:
  *                   type: string
  *                 student:
- *                   $ref: '#/components/schemas/AlunoResposta'
+ *                   $ref: '#/components/schemas/Aluno'
  *       400:
  *         description: Erro de validação
  *         content:
@@ -288,7 +361,7 @@ const router = Router();
  *                 mensagem:
  *                   type: string
  *                 student:
- *                   $ref: '#/components/schemas/AlunoResposta'
+ *                   $ref: '#/components/schemas/Aluno'
  *       404:
  *         description: Aluno não encontrado
  *         content:
