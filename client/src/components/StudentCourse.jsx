@@ -25,7 +25,7 @@ export const StudentCourse = ({ allCourses = [], handleRemoveCourse, handleUpdat
                 </select>
                 <button
                   type="button"
-                  onClick={() => handleRemoveCourse(course.matriculaId)}
+                  onClick={() => handleRemoveCourse(course.enrollmentId)}
                   className="flex items-center justify-center text-primary cursor-pointer absolute right-3 top-2.5 center"
                   style={{ width: "30px", height: "30px" }}
                   title="Remover curso"

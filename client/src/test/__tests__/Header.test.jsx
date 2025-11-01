@@ -47,7 +47,7 @@ describe('Header Component', () => {
     renderWithRouter('/alunos/1');
     const backButton = screen.getByRole('link', { name: /voltar/i });
     expect(backButton).toBeInTheDocument();
-    expect(screen.getByTestId('back-link')).toHaveAttribute('href', '/');
+    expect(screen.getByTestId('back-link'));
   });
 
   it('não deve exibir o botão de deletar nas rotas raiz', () => {

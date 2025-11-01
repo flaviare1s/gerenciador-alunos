@@ -31,6 +31,7 @@ export const SearchInput = ({ search, setSearch, placeholder }) => {
         className="text-gray-medium py-2 pl-3 pr-10 font-medium border border-gray-light rounded-md w-full focus:outline-none focus:ring-1 focus:ring-primary"
         value={search}
         onChange={handleSearchChange}
+        data-testid="search-input"
       />
       <FiSearch
         className="absolute right-3 top-1/2 -translate-y-1/2 text-dark-gray text-lg cursor-pointer"
