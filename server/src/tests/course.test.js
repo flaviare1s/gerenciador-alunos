@@ -8,16 +8,20 @@ describe("Courses API", () => {
   beforeAll(async () => {
     await prisma.enrollment.deleteMany();
     await prisma.course.deleteMany();
+  });
 
+  beforeEach(async () => {
     const course = await prisma.course.create({
       data: {
-        name: "Curso de Teste Inicial",
+        name: `Curso de Teste Inicial ${Date.now()}`,
       },
     });
     courseId = course.id;
   });
 
   afterAll(async () => {
+    await prisma.enrollment.deleteMany();
+    await prisma.course.deleteMany();
     await prisma.$disconnect();
   });
 

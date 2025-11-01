@@ -31,6 +31,7 @@ describe("Enrollments API", () => {
       },
     });
 
+    // Cria o curso
     const course = await prisma.course.create({
       data: {
         name: "Curso Teste",
@@ -97,6 +98,8 @@ describe("Enrollments API", () => {
         `/api/matriculas/${enrollmentId}`
       );
       expect(response.status).toBe(204);
+      
+      enrollmentId = null;
     });
   });
 
@@ -114,11 +117,13 @@ describe("Enrollments API", () => {
     });
 
     it("deve retornar 409 quando aluno ja estiver matriculado", async () => {
-      await request(app).post("/api/matriculas").send({
+      const firstResponse = await request(app).post("/api/matriculas").send({
         studentId,
         courseId,
         completionDate: "2025-12-31",
       });
+
+      expect(firstResponse.status).toBe(201);
 
       const response = await request(app).post("/api/matriculas").send({
         studentId,
@@ -128,6 +133,10 @@ describe("Enrollments API", () => {
 
       expect(response.status).toBe(409);
       expect(response.body).toHaveProperty("mensagem");
+
+      if (firstResponse.body.id) {
+        await prisma.enrollment.delete({ where: { id: firstResponse.body.id } });
+      }
     });
   });
 });

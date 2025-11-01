@@ -4,18 +4,23 @@ import prisma from "../../src/config/database.js";
 
 describe("Students API", () => {
   let studentId;
+  let testCounter = 0;
 
   beforeAll(async () => {
     await prisma.enrollment.deleteMany();
     await prisma.student.deleteMany();
+  });
+
+  beforeEach(async () => {
+    testCounter++;
     const student = await prisma.student.create({
       data: {
         firstName: "Estudante Inicial",
         lastName: "Souza",
         birthDate: "2002-10-10T00:00:00.000Z",
-        cpf: "12345678903",
+        cpf: `${10000000000 + testCounter}`,
         gender: "MALE",
-        email: "matheue@example.com",
+        email: `teste${testCounter}@example.com`,
         zipCode: "60115060",
         street: "Rua das Palmeiras",
         number: "123",
@@ -29,19 +34,29 @@ describe("Students API", () => {
     studentId = student.id;
   });
 
+  afterEach(async () => {
+    if (studentId) {
+      await prisma.enrollment.deleteMany({ where: { studentId } });
+      await prisma.student.delete({ where: { id: studentId } }).catch(() => {});
+    }
+  });
+
   afterAll(async () => {
+    await prisma.enrollment.deleteMany();
+    await prisma.student.deleteMany();
     await prisma.$disconnect();
   });
 
   describe("Cenários Felizes", () => {
     it("deve criar um novo estudante", async () => {
+      const uniqueId = Date.now();
       const newStudent = {
         firstName: "Ana",
         lastName: "Souza",
         birthDate: "2002-10-10T00:00:00.000Z",
-        cpf: "12345678910",
+        cpf: `${20000000000 + uniqueId}`.slice(0, 11),
         gender: "FEMALE",
-        email: "ana@example.com",
+        email: `ana${uniqueId}@example.com`,
         zipCode: "60115060",
         street: "Rua das Palmeiras",
         number: "123",
@@ -76,13 +91,14 @@ describe("Students API", () => {
     });
 
     it("deve atualizar um aluno existente", async () => {
+      const uniqueId = Date.now();
       const updateData = {
         firstName: "Atualizado",
         lastName: "Souza",
         birthDate: "2002-10-10T00:00:00.000Z",
-        cpf: "12345678903",
+        cpf: `${30000000000 + uniqueId}`.slice(0, 11),
         gender: "MALE",
-        email: "matheue@example.com",
+        email: `atualizado${uniqueId}@example.com`,
         zipCode: "60115060",
         street: "Rua das Palmeiras",
         number: "123",
@@ -97,19 +113,20 @@ describe("Students API", () => {
         .send(updateData);
 
       expect(response.status).toBe(200);
-      expect(response.body.mensagem).toBe("student atualizado com sucesso");
+      expect(response.body.mensagem).toBe("Aluno atualizado com sucesso");
       expect(response.body.student.firstName).toBe("Atualizado");
     });
 
     it("deve deletar um aluno existente", async () => {
+      const uniqueId = Date.now();
       const student = await prisma.student.create({
         data: {
           firstName: "Deletar",
           lastName: "Aluno",
           birthDate: "2000-01-01T00:00:00.000Z",
-          cpf: "99999999999",
+          cpf: `${40000000000 + uniqueId}`.slice(0, 11),
           gender: "MALE",
-          email: "deletar@example.com",
+          email: `deletar${uniqueId}@example.com`,
           zipCode: "60115060",
           street: "Rua X",
           number: "10",
