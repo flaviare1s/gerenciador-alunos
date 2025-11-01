@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Student } from "./Student";
 import { HiOutlineArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
 import { Pagination } from "./Pagination";
-import { useEffect } from "react";
 
 /**
  * Componente de listar alunos em uma tabela com paginação e ordenação.
@@ -17,9 +16,13 @@ const getInitialSortOrder = () => {
   return storedOrder ? storedOrder : "asc";
 };
 
-export const StudentList = ({ filteredstudents = [], setStudents }) => {
+export const StudentList = ({
+  filteredstudents = [],
+  setStudents,
+  currentPage,
+  setCurrentPage
+}) => {
   const [sortOrder, setSortOrder] = useState(getInitialSortOrder);
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -32,9 +35,7 @@ export const StudentList = ({ filteredstudents = [], setStudents }) => {
 
   const sortstudents = () => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
-
     setSortOrder(newOrder);
-
     setCurrentPage(1);
   };
 
