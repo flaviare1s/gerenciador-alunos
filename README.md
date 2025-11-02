@@ -125,7 +125,7 @@ A coleção do Insomnia também está disponível na pasta `docs`.
 <img width="941" height="472" alt="testes-back" src="https://github.com/user-attachments/assets/b9184a88-b2e1-43d3-b58a-c0afa9d27cea" />
 
 ### Cobertura de testes no frontend
-<img width="952" height="487" alt="testes-front" src="https://github.com/user-attachments/assets/b39c4d28-63ac-4881-b864-9f09edc91dfa" />
+<img width="1066" height="487" alt="testes-front" src="https://github.com/user-attachments/assets/71bcbdd7-f9e5-46c3-b86d-2f3ef2968dfb" />
 
 ## Deploy
 
