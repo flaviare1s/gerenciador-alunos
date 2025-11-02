@@ -23,7 +23,7 @@ export const CourseList = ({ filteredItems = [], setItems, currentPage, setCurre
   useEffect(() => {
     localStorage.setItem("courseSortOrder", sortOrder);
     setCurrentPage(1);
-  }, [sortOrder]);
+  }, [sortOrder, setCurrentPage]);
 
   const handleCourseDeleted = (id) => {
     setItems(prev => prev.filter(c => c.id !== id));

@@ -3,7 +3,6 @@ import { StudentForm } from "../pages/StudentForm";
 import { CourseForm } from "../pages/CourseForm";
 import { Students } from "../pages/Students";
 import { Courses } from "../pages/Courses";
-import { PageWrapper } from "../components/PageWrapper";
 
 export function AppRoutes() {
   return (
