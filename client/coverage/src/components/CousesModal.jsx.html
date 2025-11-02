@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -129,32 +129,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,22 +184,22 @@
  *  - setCoursesModalOpen: função para fechar o modal.
  */
 &nbsp;
-export const CoursesModal = <span class="fstat-no" title="function not covered" >({</span> student, setCoursesModalOpen }) =&gt; {
-<span class="cstat-no" title="statement not covered" >  return (</span>
+export const CoursesModal = ({ student, setCoursesModalOpen }) =&gt; {
+  return (
     &lt;div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-      onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etCoursesModalOpen(false)}</span>
+      onClick={() =&gt; setCoursesModalOpen(false)}
     &gt;
       &lt;div
         className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[80vh] overflow-hidden"
-        onClick={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >e.stopPropagation()}</span>
+        onClick={(e) =&gt; e.stopPropagation()}
       &gt;
         &lt;div className="flex items-center justify-between px-6 py-4 border-b border-gray-200"&gt;
           &lt;h3 className="text-lg font-semibold text-neutral-black"&gt;
             {student.firstName} {student.lastName}
           &lt;/h3&gt;
           &lt;button
-            onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etCoursesModalOpen(false)}</span>
+            onClick={() =&gt; setCoursesModalOpen(false)}
             className="text-dark-gray hover:text-neutral-black transition-colors"
           &gt;
             &lt;IoClose className="w-6 h-6 cursor-pointer" /&gt;
@@ -208,8 +208,8 @@ export const CoursesModal = <span class="fstat-no" title="function not covered" 
 &nbsp;
         &lt;div className="p-6 overflow-y-auto max-h-[60vh]"&gt;
           &lt;ul className="flex flex-wrap gap-2"&gt;
-            {student.courses.map(<span class="fstat-no" title="function not covered" >(c</span>ourse, index) =&gt; (
-<span class="cstat-no" title="statement not covered" >              &lt;li</span>
+            {student.courses.map((course, index) =&gt; (
+              &lt;li
                 key={index}
                 className="text-xs bg-bg-badge text-secondary px-3 py-1 rounded-full font-medium border border-light-blue"
               &gt;
@@ -220,7 +220,7 @@ export const CoursesModal = <span class="fstat-no" title="function not covered" 
 &nbsp;
           &lt;div className="mt-4 pt-4 border-t border-gray-200"&gt;
             &lt;p className="text-sm text-dark-gray"&gt;
-              Total: &lt;span className="font-medium text-neutral-black"&gt;{student.courses.length}&lt;/span&gt; {student.courses.length === 1 ? 'curso' : 'cursos'}
+              Total: &lt;span className="font-medium text-neutral-black"&gt;{student.courses.length}&lt;/span&gt; {student.courses.length === 1 ? <span class="branch-0 cbranch-no" title="branch not covered" >'curso' : '</span>cursos'}
             &lt;/p&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -235,7 +235,7 @@ export const CoursesModal = <span class="fstat-no" title="function not covered" 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-11-02T10:48:55.229Z
+                at 2025-11-02T11:17:21.929Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
