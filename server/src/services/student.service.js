@@ -28,7 +28,8 @@ export const getStudents = async () => {
 
   return students.map((student) => ({
     ...student,
-    courses: student.enrollments.map((enrollment) => enrollment.course.name),
+    courses:
+      student.enrollments?.map((enrollment) => enrollment.course.name) || [],
   }));
 };
 
@@ -53,7 +54,8 @@ export const getStudentById = async (id) => {
 
   return {
     ...student,
-    courses: student.enrollments.map((enrollment) => enrollment.course.name),
+    courses:
+      student.enrollments?.map((enrollment) => enrollment.course.name) || [],
   };
 };
 
@@ -73,9 +75,9 @@ export const updateStudent = async (id, data) => {
 
   return {
     ...updatedStudent,
-    courses: updatedStudent.enrollments.map(
-      (enrollment) => enrollment.course.name
-    ),
+    courses:
+      updatedStudent.enrollments?.map((enrollment) => enrollment.course.name) ||
+      [],
   };
 };
 
