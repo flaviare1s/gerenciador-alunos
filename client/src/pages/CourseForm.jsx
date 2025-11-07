@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { InputField } from "../components/InputField";
-import { createCourse, getCourseById, updateCourse } from "../services/course";
+import { createCourse, getCourseById, updateCourse, deleteCourse } from "../services/course";
+import { usePage } from "../contexts/PageContext";
 
 /**
  * Página de formulário para criação e edição de cursos.
@@ -16,6 +17,7 @@ import { createCourse, getCourseById, updateCourse } from "../services/course";
 export const CourseForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { setPageData } = usePage();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -31,13 +33,22 @@ export const CourseForm = () => {
       getCourseById(id)
         .then((course) => {
           setValue("name", course.name || "");
+          setPageData({
+            title: "Gerenciador de cursos",
+            subtitle: course.name,
+            onDelete: async () => {
+              await deleteCourse(id);
+              toast.success("Curso deletado com sucesso!");
+              navigate("/cursos");
+            },
+          });
         })
         .catch(() => {
           toast.error("Erro ao carregar curso");
         })
         .finally(() => setLoading(false));
     }
-  }, [id, setValue]);
+  }, [id, setValue, setPageData, navigate]);
 
   const onSubmit = async (data) => {
     try {
