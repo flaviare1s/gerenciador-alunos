@@ -25,6 +25,7 @@ export const Header = () => {
   const { pageData, setPageData } = usePage();
 
   const isRoot = location.pathname === "/alunos" || location.pathname === "/cursos";
+  const isUpdateStudent = location.pathname.startsWith("/edicao-aluno/");
 
   const handleDelete = async () => {
     if (pageData.onDelete) await pageData.onDelete();
@@ -48,14 +49,22 @@ export const Header = () => {
               <IoIosArrowBack className="text-white text-2xl" />
             </Link>
           )}
-          <Link to={isRoot ? location.pathname : "/"}>
-            <div className="w-7 sm:w-[38px]">
-              <img className="w-full" src={logo} alt="Logo" />
-            </div>
-          </Link>
-          <h1 className="text-white font-bold sm:font-extrabold tracking-[1%] leading-[30px] flex items-center gap-1 sm:gap-2 text-sm sm:text-base -ml-2.5 sm:ml-0">
+          {!isUpdateStudent && (
+            <Link to={isRoot ? location.pathname : "/"}>
+              <div className="w-7 sm:w-[38px]">
+                <img className="w-full" src={logo} alt="Logo" />
+              </div>
+            </Link>
+          )}
+          <h1 className="text-white font-bold sm:font-extrabold tracking-[1%] leading-[30px] flex items-center gap-1 sm:gap-2 text-sm sm:text-base -ml-2.5 sm:ml-0 sm:-mr-2">
             {pageData.title}
           </h1>
+          {isUpdateStudent && pageData.subtitle && (
+            <div className="hidden sm:flex items-center gap-4 text-white font-medium text-sm">
+              <span>|</span>
+              <span>{pageData.subtitle}</span>
+            </div>
+          )}
         </div>
 
         {isRoot ? (
