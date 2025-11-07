@@ -41,8 +41,8 @@ export const Header = () => {
   }, [location.pathname, setPageData]);
 
   return (
-    <header className="bg-primary">
-      <div className="py-[18px] px-4 sm:px-[42px] flex justify-between items-center">
+    <header className="bg-primary h-[67px]">
+      <div className="p-4 sm:px-[42px] flex justify-between items-center">
         <div className="flex items-center gap-[25px]">
           {!isRoot && (
             <Link to="/" aria-label="voltar">
