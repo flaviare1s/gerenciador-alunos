@@ -16,9 +16,9 @@ function App() {
   return (
     <PageProvider>
       <Toaster position="top center" />
-      <DatabasePausedModal 
-        isOpen={showDatabaseModal} 
-        onClose={() => setShowDatabaseModal(false)} 
+      <DatabasePausedModal
+        isOpen={showDatabaseModal}
+        onClose={() => setShowDatabaseModal(false)}
       />
       <div className="font-montserrat">
         <Header />
