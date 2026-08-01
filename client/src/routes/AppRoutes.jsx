@@ -3,6 +3,7 @@ import { StudentForm } from "../pages/StudentForm";
 import { CourseForm } from "../pages/CourseForm";
 import { Students } from "../pages/Students";
 import { Courses } from "../pages/Courses";
+import { NotFound } from "../pages/NotFound";
 
 export function AppRoutes() {
   return (
@@ -30,6 +31,7 @@ export function AppRoutes() {
       <Route path="/edicao-aluno/:id" element={<StudentForm />} />
       <Route path="/cadastro-curso" element={<CourseForm />} />
       <Route path="/edicao-curso/:id" element={<CourseForm />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

@@ -23,7 +23,7 @@ export const InputField = ({
         id={name}
         {...register(name, validation)}
         placeholder={placeholder}
-        className="text-gray-medium bg-[#dbdbdb20] w-full px-5 py-[13px] font-medium font-sm rounded-md border border-border-input mt-2"
+        className="text-gray-medium bg-[#dbdbdb20] w-full px-5 py-[13px] font-medium font-sm rounded-md border border-border-input mt-2 h-[50px]"
       />
       {error && <small className="text-xs font-medium text-primary">{error}</small>}
     </div>
