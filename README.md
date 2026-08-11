@@ -39,13 +39,33 @@ Este sistema permite gerenciar cursos e alunos, oferecendo funcionalidades para 
 ### Back-end
 
 1. **API**:
-
    - Endpoints REST para operações de CRUD de cursos, alunos e matrículas.
    - Endpoint para vincular/desvincular alunos a cursos.
    - Validações para garantir a integridade dos dados recebidos.
 
 2. **Banco de Dados**:
    - Armazenamento de dados de cursos e alunos, incluindo associações (matrículas).
+
+## CI/CD e Imagens Docker
+
+O projeto possui integração contínua via GitHub Actions em dois workflows:
+
+- `client-ci.yml`: executa lint, testes e build do frontend.
+- `server-ci.yml`: executa testes do backend com PostgreSQL em ambiente de CI.
+
+As imagens Docker do projeto são publicadas no Docker Hub para uso em deploy:
+
+- `flaviare1s/gerenciador-alunos-client`
+- `flaviare1s/gerenciador-alunos-server`
+
+Para gerar localmente as imagens, use:
+
+```bash
+docker build -t flaviare1s/gerenciador-alunos-client:latest ./client
+docker build -t flaviare1s/gerenciador-alunos-server:latest ./server
+```
+
+Para publicar as imagens, crie a tag desejada e faça o push no Docker Hub.
 
 ## Como Rodar o Projeto
 
@@ -121,10 +141,12 @@ A coleção do Insomnia também está disponível na pasta `docs`.
   - **Vitest/coverage-v8**: Gera relatórios de cobertura de código.
   - **Vitest/ui**: Interface gráfica para visualizar os testes.
 
- ### Cobertura de testes no backend
+### Cobertura de testes no backend
+
 <img width="941" height="472" alt="testes-back" src="https://github.com/user-attachments/assets/b9184a88-b2e1-43d3-b58a-c0afa9d27cea" />
 
 ### Cobertura de testes no frontend
+
 <img width="1066" height="487" alt="testes-front" src="https://github.com/user-attachments/assets/71bcbdd7-f9e5-46c3-b86d-2f3ef2968dfb" />
 
 ## Deploy
@@ -132,6 +154,8 @@ A coleção do Insomnia também está disponível na pasta `docs`.
 - **Banco de Dados**: Supabase
 - **Back-end**: Vercel
 - **Front-end**: Vercel
+
+As imagens Docker do frontend e do backend também podem ser usadas em ambientes de deploy que aceitem containers.
 
 Acesse o sistema em produção:
 [https://gerenciador-alunos-beta.vercel.app/alunos](https://gerenciador-alunos-beta.vercel.app/alunos)

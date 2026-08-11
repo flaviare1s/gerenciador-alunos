@@ -5,13 +5,20 @@ import { swaggerUi, swaggerSpec } from "./swagger.js";
 
 export const app = express();
 
+const defaultOrigins = [
+  "http://localhost:5173",
+  "http://localhost:8080",
+  "https://gerenciador-alunos-beta.vercel.app",
+];
+
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
+  : defaultOrigins;
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://gerenciador-alunos-beta.vercel.app",
-    ],
-  })
+    origin: allowedOrigins,
+  }),
 );
 
 app.use(express.json());
