@@ -69,6 +69,35 @@ A publicação é automática: todo push na `main` que altere `client/**` ou `se
 
 ## Como Rodar o Projeto
 
+### Com Docker Compose
+
+O jeito mais rápido: sobe frontend, backend e PostgreSQL de uma vez, usando as imagens publicadas no Docker Hub. Não precisa de Node instalado nem de `.env`.
+
+```bash
+docker compose up -d
+```
+
+- Frontend: [http://localhost](http://localhost)
+- API: [http://localhost:3000](http://localhost:3000)
+- Swagger: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+- Banco: PostgreSQL na porta `5432`, com os dados persistidos no volume `postgres_data`
+
+As migrations do Prisma rodam sozinhas quando o container do backend sobe.
+
+Para baixar a versão mais recente das imagens:
+
+```bash
+docker compose pull && docker compose up -d
+```
+
+Para parar (adicione `-v` para apagar também o volume do banco):
+
+```bash
+docker compose down
+```
+
+Para rodar sem Docker, siga os passos de Backend e Frontend abaixo.
+
 ### Backend
 
 1. Entre na pasta `server`:
@@ -130,7 +159,7 @@ A coleção do Insomnia também está disponível na pasta `docs`.
 
 ## Testes
 
-- Os testes foram feitos em um ambiente separado (branch test).
+- Os testes estão na `main` e rodam automaticamente na CI a cada push e pull request.
 - **Back-end**:
   - **Jest**: Framework de testes para JavaScript.
   - **Supertest**: Biblioteca para testar endpoints HTTP.
@@ -159,3 +188,11 @@ As imagens Docker do frontend e do backend também podem ser usadas em ambientes
 
 Acesse o sistema em produção:
 [https://gerenciador-alunos-beta.vercel.app/alunos](https://gerenciador-alunos-beta.vercel.app/alunos)
+
+## Créditos
+
+A camada de DevOps — containerização com Docker, orquestração com Docker Compose, pipelines de CI/CD no GitHub Actions e publicação automática das imagens no Docker Hub — foi desenvolvida como trabalho final do **Bootcamp de DevOps da Avanti (Instituto Atlântico)** pela equipe:
+
+- [Ana Lara](https://github.com/AnaLara714)
+- [Flávia](https://github.com/flaviare1s)
+- [Gabriela](https://github.com/Gabriela-ALima)
