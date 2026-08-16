@@ -65,7 +65,7 @@ docker build -t flaviare1s/gerenciador-alunos-client:latest ./client
 docker build -t flaviare1s/gerenciador-alunos-server:latest ./server
 ```
 
-Para publicar as imagens, crie a tag desejada e faça o push no Docker Hub.
+A publicação é automática: todo push na `main` que altere `client/**` ou `server/**` roda a CI correspondente e, se ela passar, envia a imagem para o Docker Hub com as tags `latest` e o SHA do commit. Requer os secrets `DOCKERHUB_USERNAME` e `DOCKERHUB_TOKEN` no repositório.
 
 ## Como Rodar o Projeto
 
